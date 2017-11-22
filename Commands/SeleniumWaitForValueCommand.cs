@@ -20,14 +20,14 @@ namespace G1ANT.Addon.Selenium
             public TextStructure ExpectedValue { get; set; }
 
             [Argument(DefaultVariable = "timeoutie", Tooltip = "Specifies maximum number of milliseconds to wait for browser to get expected value")]
-            public override int Timeout { get; set; } = (SeleniumSettings.SeleniumTimeout);
-                    }
+            public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
+        }
         public SeleniumWaitForValueCommand(AbstractScripter scripter) : base(scripter)
         {
         }
         public void Execute(Arguments arguments)
         {
-            int timeout = arguments.Timeout;
+            int timeout = arguments.Timeout.Value.Milliseconds;
             int start = Environment.TickCount;
             string result = string.Empty;
             SeleniumWrapper seleniumWrapper = SeleniumManager.CurrentWrapper;

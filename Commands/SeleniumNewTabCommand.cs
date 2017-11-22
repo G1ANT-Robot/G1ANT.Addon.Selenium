@@ -12,7 +12,7 @@ namespace G1ANT.Addon.Selenium
             public TextStructure Url { get; set; }
 
             [Argument(DefaultVariable = "timeoutselenium")]
-            public override int Timeout { get; set; } = (SeleniumSettings.SeleniumTimeout);
+            public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
             [Argument(Tooltip = "Does not wait for a webpage to fully load")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
@@ -25,7 +25,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                SeleniumManager.CurrentWrapper.NewTab(arguments.Timeout/ 1000, arguments.Url?.Value, arguments.NoWait.Value);
+                SeleniumManager.CurrentWrapper.NewTab(arguments.Timeout.Value.Milliseconds/ 1000, arguments.Url?.Value, arguments.NoWait.Value);
             }
             catch (Exception ex)
             {

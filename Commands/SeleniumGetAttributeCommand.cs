@@ -19,7 +19,7 @@ namespace G1ANT.Addon.Selenium
             public TextStructure By { get; set; } = new TextStructure(ElementSearchBy.Id.ToString().ToLower());
 
             [Argument(DefaultVariable = "timeoutselenium")]
-            public override int Timeout { get; set; } = (SeleniumSettings.SeleniumTimeout);
+            public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
             [Argument(Tooltip = "Name of variable where value of specified attribute will be stored")]
             public TextStructure Result { get; set; } = new TextStructure("result");
@@ -35,7 +35,7 @@ namespace G1ANT.Addon.Selenium
                 arguments.Name.Value,
                 arguments.Search.Value,
                 arguments.By.Value,
-                arguments.Timeout / 1000);
+                arguments.Timeout.Value.Milliseconds / 1000);
 
                Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(attributeValue));
             }

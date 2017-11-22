@@ -13,7 +13,7 @@ namespace G1ANT.Addon.Selenium
             public TextStructure Url { get; set; } = new TextStructure(string.Empty);
 
             [Argument(DefaultVariable = "timeoutselenium")]
-            public override int Timeout { get; set; } = (SeleniumSettings.SeleniumTimeout);
+            public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
             [Argument]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
@@ -26,7 +26,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                SeleniumManager.CurrentWrapper.Navigate(arguments.Url.Value, arguments.Timeout, arguments.NoWait.Value);
+                SeleniumManager.CurrentWrapper.Navigate(arguments.Url.Value, arguments.Timeout.Value.Milliseconds, arguments.NoWait.Value);
             }
             catch (Exception ex)
             {

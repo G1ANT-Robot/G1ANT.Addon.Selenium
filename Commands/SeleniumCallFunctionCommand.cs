@@ -26,7 +26,7 @@ namespace G1ANT.Addon.Selenium
             public TextStructure By { get; set; } = new TextStructure(ElementSearchBy.Id.ToString().ToLower());
 
             [Argument(DefaultVariable = "timeoutselenium")]
-            public override int Timeout { get; set; } = SeleniumSettings.SeleniumTimeout;
+            public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout); 
         }
         public SeleniumCallFunctionCommand(AbstractScripter scripter) : base(scripter)
         {
@@ -43,7 +43,7 @@ namespace G1ANT.Addon.Selenium
                     arguments.Type.Value,
                     arguments.Search.Value,
                     arguments.By.Value,
-                    arguments.Timeout / 1000);
+                    arguments.Timeout.Value.Milliseconds / 1000);
             }
             catch (Exception ex)
             {
