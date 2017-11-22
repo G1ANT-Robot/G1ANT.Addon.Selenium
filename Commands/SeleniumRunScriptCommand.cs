@@ -14,7 +14,7 @@ namespace G1ANT.Addon.Selenium
             public TextStructure Script { get; set; }
 
             [Argument]
-            public TextStructure Result { get; set; } = new TextStructure("result");
+            public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
 
         public SeleniumRunScriptCommandCommand(AbstractScripter scripter) : base(scripter)

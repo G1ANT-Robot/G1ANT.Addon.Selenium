@@ -25,7 +25,7 @@ namespace G1ANT.Addon.Selenium
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
 
             [Argument]
-            public TextStructure Result { get; set; } = new TextStructure("result");
+            public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public SeleniumOpenCommand(AbstractScripter scripter) : base(scripter)
         {

@@ -22,7 +22,7 @@ namespace G1ANT.Addon.Selenium
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
             [Argument(Tooltip = "Name of variable where value of specified attribute will be stored")]
-            public TextStructure Result { get; set; } = new TextStructure("result");
+            public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public SeleniumGetAttributeCommand(AbstractScripter scripter) : base(scripter)
         {
