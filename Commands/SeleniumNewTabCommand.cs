@@ -25,7 +25,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                SeleniumManager.CurrentWrapper.NewTab(arguments.Timeout.Value.Milliseconds/ 1000, arguments.Url?.Value, arguments.NoWait.Value);
+                SeleniumManager.CurrentWrapper.NewTab((int)arguments.Timeout.Value.TotalMilliseconds/ 1000, arguments.Url?.Value, arguments.NoWait.Value);
             }
             catch (Exception ex)
             {

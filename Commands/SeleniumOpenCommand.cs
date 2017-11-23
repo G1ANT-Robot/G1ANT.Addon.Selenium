@@ -37,7 +37,7 @@ namespace G1ANT.Addon.Selenium
                 SeleniumWrapper wrapper = SeleniumManager.CreateWrapper(
                         arguments.Type.Value,
                         arguments.Url?.Value,
-                        arguments.Timeout.Value.Milliseconds / 1000,
+                        (int)arguments.Timeout.Value.TotalMilliseconds / 1000,
                         arguments.NoWait.Value);
                 OnScriptEnd = () =>
                 {

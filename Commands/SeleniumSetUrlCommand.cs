@@ -26,7 +26,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                SeleniumManager.CurrentWrapper.Navigate(arguments.Url.Value, arguments.Timeout.Value.Milliseconds, arguments.NoWait.Value);
+                SeleniumManager.CurrentWrapper.Navigate(arguments.Url.Value, (int)arguments.Timeout.Value.TotalMilliseconds, arguments.NoWait.Value);
             }
             catch (Exception ex)
             {
