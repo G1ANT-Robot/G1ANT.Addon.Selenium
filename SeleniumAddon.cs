@@ -12,6 +12,7 @@ namespace G1ANT.Addon.Core
 {
     [Addon(Name = "Selenuium",
         Tooltip = "Selenium Commands")]
+    [CommandGroup(Name = "selenium", Tooltip = "Commands to work with web pages via supported web browsers.")]
     public class SeleniumAddon : Language.Addon
     {
         public override void Initialize()
