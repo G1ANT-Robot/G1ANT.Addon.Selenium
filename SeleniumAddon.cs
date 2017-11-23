@@ -12,6 +12,8 @@ namespace G1ANT.Addon.Core
 {
     [Addon(Name = "Selenuium",
         Tooltip = "Selenium Commands")]
+    [CommandGroup(Name = "selenium", Tooltip = "Command connected with creating, editing and generally working on selenium")]
+
     public class SeleniumAddon : Language.Addon
     {
         public override void Initialize()
