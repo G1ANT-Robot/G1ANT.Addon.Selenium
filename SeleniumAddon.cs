@@ -24,7 +24,7 @@ namespace G1ANT.Addon.Core
 
         private void UnpackDrivers()
         {
-            var unpackfolder = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var unpackfolder = Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location);
             Dictionary<string, byte[]> exeList = new Dictionary<string, byte[]>();
             exeList.Add("chrome.exe", Resources.chromedriver);
             exeList.Add("geckodriver.exe", Resources.geckodriver);
