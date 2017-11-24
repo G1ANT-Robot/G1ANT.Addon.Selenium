@@ -8,11 +8,11 @@ using G1ANT.Language;
 using G1ANT.Addon.Selenium.Properties;
 using System.IO;
 
-namespace G1ANT.Addon.Core
+namespace G1ANT.Addon.Selenium
 {
     [Addon(Name = "Selenuium",
         Tooltip = "Selenium Commands")]
-    [CommandGroup(Name = "selenium", Tooltip = "Commands to work with web pages via supported web browsers.")]
+    [CommandGroup(Name = "selenium", Icon = Properties.Resources.seleniumicon, Tooltip = "Commands to work with web pages via supported web browsers.")]
     public class SeleniumAddon : Language.Addon
     {
         public override void Initialize()

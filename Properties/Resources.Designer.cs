@@ -22,7 +22,7 @@ namespace G1ANT.Addon.Selenium.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace G1ANT.Addon.Selenium.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("G1ANT.Addon.Selenium.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace G1ANT.Addon.Selenium.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace G1ANT.Addon.Selenium.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] chromedriver {
+        public static byte[] chromedriver {
             get {
                 object obj = ResourceManager.GetObject("chromedriver", resourceCulture);
                 return ((byte[])(obj));
@@ -73,7 +73,7 @@ namespace G1ANT.Addon.Selenium.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] geckodriver {
+        public static byte[] geckodriver {
             get {
                 object obj = ResourceManager.GetObject("geckodriver", resourceCulture);
                 return ((byte[])(obj));
@@ -83,7 +83,7 @@ namespace G1ANT.Addon.Selenium.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] IEDriverServer {
+        public static byte[] IEDriverServer {
             get {
                 object obj = ResourceManager.GetObject("IEDriverServer", resourceCulture);
                 return ((byte[])(obj));
@@ -93,10 +93,20 @@ namespace G1ANT.Addon.Selenium.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] MicrosoftWebDriver {
+        public static byte[] MicrosoftWebDriver {
             get {
                 object obj = ResourceManager.GetObject("MicrosoftWebDriver", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap seleniumicon {
+            get {
+                object obj = ResourceManager.GetObject("seleniumicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }
