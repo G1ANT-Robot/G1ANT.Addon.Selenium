@@ -39,7 +39,7 @@ namespace G1ANT.Addon.Selenium
                 
                 wrapper.CallFunction(
                     arguments.FunctionName.Value,
-                    GetParameters((arguments.Parameters?.Value)), // TODO 
+                    GetParameters((arguments.Parameters?.Value)),  
                     arguments.Type.Value,
                     arguments.Search.Value,
                     arguments.By.Value,
