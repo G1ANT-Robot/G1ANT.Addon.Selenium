@@ -34,7 +34,7 @@ namespace G1ANT.Addon.Selenium
             try
             {
                 while (Math.Abs(Environment.TickCount - start) < timeout &&
-                            //ShouldStopScript() == false && //TODO coś
+                            Scripter.Stopped == false && 
                             result.ToLower() != arguments.ExpectedValue?.Value?.ToLower())
                 {
                     try
