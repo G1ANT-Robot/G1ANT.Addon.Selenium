@@ -21,7 +21,7 @@ namespace G1ANT.Addon.Selenium
             [Argument(DefaultVariable = "timeoutselenium")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
-            [Argument]
+            [Argument(Tooltip = "Does not wait for a webpage to fully load")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
 
             [Argument]
