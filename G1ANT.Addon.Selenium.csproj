@@ -103,6 +103,17 @@
     <EmbeddedResource Include="Resources\IEDriverServer.exe" />
     <EmbeddedResource Include="Resources\MicrosoftWebDriver.exe" />
   </ItemGroup>
+  <ItemGroup>		
+			<EmbeddedResource Include="$(OutputPath)\WebDriver.dll">
+      <Link>WebDriver.dll</Link>
+    </EmbeddedResource>
+	</ItemGroup>
+	
+		<ItemGroup>		
+			<EmbeddedResource Include="$(OutputPath)\WebDriver.Support.dll">
+      <Link>WebDriver.Support.dll</Link>
+    </EmbeddedResource>
+	</ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
