@@ -104,13 +104,13 @@
     <EmbeddedResource Include="Resources\MicrosoftWebDriver.exe" />
   </ItemGroup>
   <ItemGroup>		
-			<EmbeddedResource Include="$(OutputPath)\WebDriver.dll">
+			<EmbeddedResource Include="..\packages\*\lib\net45\WebDriver.dll">
       <Link>WebDriver.dll</Link>
     </EmbeddedResource>
 	</ItemGroup>
 	
 		<ItemGroup>		
-			<EmbeddedResource Include="$(OutputPath)\WebDriver.Support.dll">
+			<EmbeddedResource Include="..\packages\*\lib\net45\WebDriver.Support.dll">
       <Link>WebDriver.Support.dll</Link>
     </EmbeddedResource>
 	</ItemGroup>
