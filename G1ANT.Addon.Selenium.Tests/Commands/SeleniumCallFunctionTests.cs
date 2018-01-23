@@ -25,12 +25,12 @@ namespace G1ANT.Addon.Selenium.Tests
 scripter.InitVariables.Clear();
             scripter.Text = $@"
                 selenium.open type {SpecialChars.Text}ie{SpecialChars.Text} url {SpecialChars.Text}msn.com{SpecialChars.Text} timeout 30000
-                list.create text {SpecialChars.Text}aa{SpecialChars.Text}  result lista
-                selenium.callfunction search {SpecialChars.Text}q{SpecialChars.Text} by {SpecialChars.Text}id{SpecialChars.Text} functionname {SpecialChars.Text}val{SpecialChars.Text} parameters ♥lista type {SpecialChars.Text}jquery{SpecialChars.Text}
+                list.create text {SpecialChars.Text}aa{SpecialChars.Text}  result {SpecialChars.Variable}lista
+                selenium.callfunction search {SpecialChars.Text}q{SpecialChars.Text} by {SpecialChars.Text}id{SpecialChars.Text} functionname {SpecialChars.Text}val{SpecialChars.Text} parameters {SpecialChars.Variable}lista type {SpecialChars.Text}jquery{SpecialChars.Text}
                 selenium.runscript script {SpecialChars.Text}return $('#q').val();{SpecialChars.Text} result {SpecialChars.Variable}wynik
 
-                list.create text {SpecialChars.Text}id{SpecialChars.Text} result lista
-                selenium.callfunction search {SpecialChars.Text}q{SpecialChars.Text} by {SpecialChars.Text}id{SpecialChars.Text} functionname {SpecialChars.Text}getAttribute{SpecialChars.Text} parameters ♥lista type {SpecialChars.Text}javascript{SpecialChars.Text}
+                list.create text {SpecialChars.Text}id{SpecialChars.Text} result {SpecialChars.Variable}lista
+                selenium.callfunction search {SpecialChars.Text}q{SpecialChars.Text} by {SpecialChars.Text}id{SpecialChars.Text} functionname {SpecialChars.Text}getAttribute{SpecialChars.Text} parameters {SpecialChars.Variable}lista type {SpecialChars.Text}javascript{SpecialChars.Text}
                 selenium.close";
             scripter.Run();
             Assert.AreEqual("aa", scripter.Variables.GetVariableValue<string>("wynik"));
