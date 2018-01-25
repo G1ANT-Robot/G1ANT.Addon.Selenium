@@ -36,9 +36,6 @@
     <Reference Include="G1ANT.Language">
       <HintPath>..\..\..\G1ANT.Bin\debug\G1ANT.Language.dll</HintPath>
     </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -103,17 +100,16 @@
     <EmbeddedResource Include="Resources\IEDriverServer.exe" />
     <EmbeddedResource Include="Resources\MicrosoftWebDriver.exe" />
   </ItemGroup>
-  <ItemGroup>		
-			<EmbeddedResource Include="..\packages\*\lib\net45\WebDriver.dll">
+  <ItemGroup>
+    <EmbeddedResource Include="..\packages\*\lib\net45\WebDriver.dll">
       <Link>WebDriver.dll</Link>
     </EmbeddedResource>
-	</ItemGroup>
-	
-		<ItemGroup>		
-			<EmbeddedResource Include="..\packages\*\lib\net45\WebDriver.Support.dll">
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\packages\*\lib\net45\WebDriver.Support.dll">
       <Link>WebDriver.Support.dll</Link>
     </EmbeddedResource>
-	</ItemGroup>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

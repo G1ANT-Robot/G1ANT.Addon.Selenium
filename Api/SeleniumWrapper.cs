@@ -9,6 +9,7 @@ using OpenQA.Selenium.Interactions;
 using System.Threading;
 using OpenQA.Selenium.IE;
 using System.Runtime.InteropServices;
+using G1ANT.Language;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -16,8 +17,9 @@ namespace G1ANT.Addon.Selenium
     {
         private IWebDriver webDriver = null;
         private int scriptSeconds = 4;
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private IntPtr mainWindowHandle = IntPtr.Zero;
+        AbstractScripter scripter = null;
+
 
         public BrowserType BrowserType {get; set;}
 
@@ -39,8 +41,9 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
-        public SeleniumWrapper(IWebDriver webDriver, IntPtr mainWindowHandle, BrowserType type)
+        public SeleniumWrapper(IWebDriver webDriver, IntPtr mainWindowHandle, BrowserType type, AbstractScripter scr)
         {
+            this.scripter = scr;
             this.mainWindowHandle = mainWindowHandle;
             this.webDriver = webDriver;
             this.BrowserType = type;
@@ -123,7 +126,7 @@ namespace G1ANT.Addon.Selenium
                 }
                 catch (Exception ex)
                 {
-                    logger.Log(NLog.LogLevel.Error, ex, $"Problem while navigating to url: '{url}'.");
+                    scripter.AddLog($"Problem while navigating to url: '{url}' :  {ex.Message}");
                 }
             }
         }

@@ -17,6 +17,7 @@ using System.IO;
 using OpenQA.Selenium.Remote;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using G1ANT.Language;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -84,7 +85,7 @@ namespace G1ANT.Addon.Selenium
             return (BrowserType)type;
         }
 
-        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, int timeoutSeconds, bool noWait)
+        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, int timeoutSeconds, bool noWait, AbstractScripter scr)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
             BrowserType type = GetBrowserType(webBrowserName);
@@ -93,7 +94,7 @@ namespace G1ANT.Addon.Selenium
                 throw new ApplicationException("Using multiple Edge instances at once is not supported.");
             }
             IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle);
-            SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type)
+            SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type,scr)
             {
                 Id = wrappers.Count > 0 ? wrappers.Max(x => x.Id) + 1 : 0
             };
