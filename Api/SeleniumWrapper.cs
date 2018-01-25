@@ -18,7 +18,7 @@ namespace G1ANT.Addon.Selenium
         private IWebDriver webDriver = null;
         private int scriptSeconds = 4;
         private IntPtr mainWindowHandle = IntPtr.Zero;
-        AbstractScripter scripter = null;
+        AbstractLogger logger = null;
 
 
         public BrowserType BrowserType {get; set;}
@@ -41,9 +41,9 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
-        public SeleniumWrapper(IWebDriver webDriver, IntPtr mainWindowHandle, BrowserType type, AbstractScripter scr)
+        public SeleniumWrapper(IWebDriver webDriver, IntPtr mainWindowHandle, BrowserType type, AbstractLogger scr)
         {
-            this.scripter = scr;
+            this.logger = scr;
             this.mainWindowHandle = mainWindowHandle;
             this.webDriver = webDriver;
             this.BrowserType = type;
@@ -126,7 +126,7 @@ namespace G1ANT.Addon.Selenium
                 }
                 catch (Exception ex)
                 {
-                    scripter.AddLog($"Problem while navigating to url: '{url}' :  {ex.Message}");
+                    logger.Log(AbstractLogger.Level.Error,$"Problem while navigating to url: '{url}' :  {ex.Message}");
                 }
             }
         }

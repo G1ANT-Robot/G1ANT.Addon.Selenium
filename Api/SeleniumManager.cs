@@ -85,7 +85,7 @@ namespace G1ANT.Addon.Selenium
             return (BrowserType)type;
         }
 
-        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, int timeoutSeconds, bool noWait, AbstractScripter scr)
+        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, int timeoutSeconds, bool noWait, AbstractLogger scr)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
             BrowserType type = GetBrowserType(webBrowserName);

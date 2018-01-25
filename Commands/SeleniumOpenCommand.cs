@@ -39,7 +39,7 @@ namespace G1ANT.Addon.Selenium
                         arguments.Url?.Value,
                         (int)arguments.Timeout.Value.TotalMilliseconds / 1000,
                         arguments.NoWait.Value,
-                        Scripter);
+                        Scripter.Log);
                 OnScriptEnd = () =>
                 {
                     SeleniumManager.DisposeAllOpenedDrivers();
