@@ -18,22 +18,30 @@ namespace G1ANT.Addon.Selenium
         public override void Initialize()
         {
             base.Initialize();
+        }
+
+        public override void LoadDlls()
+        {
             UnpackDrivers();
+            base.LoadDlls();
         }
 
         private void UnpackDrivers()
         {
-            var unpackfolder = Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location);
-            Dictionary<string, byte[]> exeList = new Dictionary<string, byte[]>();
-            exeList.Add("chrome.exe", Resources.chromedriver);
-            exeList.Add("geckodriver.exe", Resources.geckodriver);
-            exeList.Add("IEDriverServer.exe", Resources.IEDriverServer);
-            exeList.Add("MicrosoftWebDriver.exe", Resources.MicrosoftWebDriver);
+            var unpackfolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
+            Dictionary<string, byte[]> exeList = new Dictionary<string, byte[]>()
+            {
+                { "chromedriver.exe", Resources.chromedriver },
+                { "geckodriver.exe", Resources.geckodriver },
+                { "IEDriverServer.exe", Resources.IEDriverServer },
+                { "MicrosoftWebDriver.exe", Resources.MicrosoftWebDriver }
+            };
             foreach (var exe in exeList)
             {
-                var stream = File.Create(Path.Combine(unpackfolder, exe.Key));
-                stream.Write(exe.Value, 0, exe.Value.Length);
-                stream.Close();
+                using (FileStream stream = File.Create(Path.Combine(unpackfolder, exe.Key)))
+                {
+                    stream.Write(exe.Value, 0, exe.Value.Length);
+                }
             }
         }
     }

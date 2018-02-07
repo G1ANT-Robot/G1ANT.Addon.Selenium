@@ -25,20 +25,6 @@ namespace G1ANT.Addon.Selenium
     {
         private static SeleniumWrapper currentWrapper = null;
 
-        private static string driversDirectory = Environment.CurrentDirectory;
-
-        public static string DriversDirectory
-        {
-            get
-            {
-                return driversDirectory;
-            }
-            set
-            {
-                driversDirectory = value;
-            }
-        }
-
         public static SeleniumWrapper CurrentWrapper
         {
             get
@@ -85,7 +71,7 @@ namespace G1ANT.Addon.Selenium
             return (BrowserType)type;
         }
 
-        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, int timeoutSeconds, bool noWait, AbstractLogger scr)
+        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, int timeoutSeconds, bool noWait, AbstractLogger scr, string driversDirectory)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
             BrowserType type = GetBrowserType(webBrowserName);
@@ -93,7 +79,7 @@ namespace G1ANT.Addon.Selenium
             {
                 throw new ApplicationException("Using multiple Edge instances at once is not supported.");
             }
-            IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle);
+            IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle, driversDirectory);
             SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type,scr)
             {
                 Id = wrappers.Count > 0 ? wrappers.Max(x => x.Id) + 1 : 0
@@ -151,7 +137,7 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
-        private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle)
+        private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory)
         {
             webBrowserName = webBrowserName.ToLower();
             IWebDriver iWebDriver = null;
