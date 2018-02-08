@@ -21,6 +21,8 @@ namespace G1ANT.Addon.Selenium
 {
     [Addon(Name = "Selenuium",
         Tooltip = "Selenium Commands")]
+    [Copyright(Author = "G1ANT LTD", Copyright = "G1ANT LTD", Email = "hi@g1ant.com", Website = "www.g1ant.com")]
+    [License(Type = "LGPL", ResourceName = "License.txt")]
     [CommandGroup(Name = "selenium", Tooltip = "Commands to work with web pages via supported web browsers.")]
     public class SeleniumAddon : Language.Addon
     {
