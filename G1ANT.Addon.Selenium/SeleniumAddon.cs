@@ -19,7 +19,7 @@ using System.IO;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Addon(Name = "Selenuium",
+    [Addon(Name = "Selenium",
         Tooltip = "Selenium Commands")]
     [Copyright(Author = "G1ANT LTD", Copyright = "G1ANT LTD", Email = "hi@g1ant.com", Website = "www.g1ant.com")]
     [License(Type = "LGPL", ResourceName = "License.txt")]
