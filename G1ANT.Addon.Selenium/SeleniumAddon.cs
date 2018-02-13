@@ -49,10 +49,14 @@ namespace G1ANT.Addon.Selenium
             };
             foreach (var exe in exeList)
             {
-                using (FileStream stream = File.Create(Path.Combine(unpackfolder, exe.Key)))
+                try
                 {
-                    stream.Write(exe.Value, 0, exe.Value.Length);
+                    using (FileStream stream = File.Create(Path.Combine(unpackfolder, exe.Key)))
+                    {
+                        stream.Write(exe.Value, 0, exe.Value.Length);
+                    }
                 }
+                catch { }                
             }
         }
     }
