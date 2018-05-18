@@ -73,22 +73,22 @@ namespace G1ANT.Addon.Selenium
                 {
                     case ElementSearchBy.Id:
                         search = search.StartsWith("#") ? search.TrimStart(new char[] { '#' }) : search;
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(ExpectedConditions.ElementExists(By.Id(search)));
+                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Id(search)));
                         break;
                     case ElementSearchBy.Class:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(ExpectedConditions.ElementExists(By.ClassName(search)));
+                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.ClassName(search)));
                         break;
                     case ElementSearchBy.CssSelector:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(ExpectedConditions.ElementExists(By.CssSelector(search)));
+                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.CssSelector(search)));
                         break;
                     case ElementSearchBy.Tag:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(ExpectedConditions.ElementExists(By.TagName(search)));
+                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.TagName(search)));
                         break;
                     case ElementSearchBy.Xpath:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(ExpectedConditions.ElementExists(By.XPath(search)));
+                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(search)));
                         break;
                     case ElementSearchBy.Name:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(ExpectedConditions.ElementExists(By.Name(search)));
+                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Name(search)));
                         break;
                     case ElementSearchBy.Query:
                         element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(CustomExpectedConditions.ElementExistsByJavaScript(search));

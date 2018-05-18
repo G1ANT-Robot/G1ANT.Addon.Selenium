@@ -158,6 +158,7 @@ namespace G1ANT.Addon.Selenium
                     var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
                     chromeService.HideCommandPromptWindow = true;
                     var chromeOptions = new Chrome.ChromeOptions();
+                    chromeOptions.PageLoadStrategy = PageLoadStrategy.None;
                     chromeOptions.AddArgument("disable-infobars");
                     chromeOptions.AddArgument("--disable-bundled-ppapi-flash");
                     chromeOptions.AddArgument("--log-level=3");
@@ -165,7 +166,7 @@ namespace G1ANT.Addon.Selenium
                     chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
                     chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
                     chromeOptions.AddUserProfilePreference("auto-open-devtools-for-tabs", false);
-                    chromeOptions.AddAdditionalCapability("pageLoadStrategy", "none", true);
+                    //chromeOptions.AddAdditionalCapability("pageLoadStrategy", "none", true);
                     iWebDriver = new Chrome.ChromeDriver(chromeService, chromeOptions);
                     newProcessFilter = "chrome";
                     break;
@@ -192,7 +193,7 @@ namespace G1ANT.Addon.Selenium
                     var edgeService = Edge.EdgeDriverService.CreateDefaultService(driversDirectory);
                     edgeService.HideCommandPromptWindow = true;
                     var edgeOptions = new Edge.EdgeOptions();
-                    edgeOptions.PageLoadStrategy = Edge.EdgePageLoadStrategy.Eager;
+                    edgeOptions.PageLoadStrategy = PageLoadStrategy.Eager;
                     iWebDriver = new Edge.EdgeDriver(edgeService, edgeOptions);
                     newProcessFilter = "edge";
                     break;
