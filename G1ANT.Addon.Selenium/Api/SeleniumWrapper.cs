@@ -161,6 +161,21 @@ namespace G1ANT.Addon.Selenium
             return result?.ToString() ?? string.Empty;
         }
 
+        public void CloseTab(int timeoutSeconds)
+        {
+            switch (BrowserType)
+            {
+                case BrowserType.Edge:
+                case BrowserType.InternetExplorer:
+                    throw new ApplicationException("CloseTab command is not supported by Edge and Internet Explorer selenium driver.");
+                case BrowserType.Firefox:
+                case BrowserType.Chrome:
+                    RunScript(string.Format($"window.close();"));
+                    break;
+            }
+            webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+        }
+
         public void NewTab(int timeoutSeconds, string url, bool noWait)
         {
             url = ValidateUrl(url);
