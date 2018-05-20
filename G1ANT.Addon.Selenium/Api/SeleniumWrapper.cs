@@ -158,6 +158,7 @@ namespace G1ANT.Addon.Selenium
         public string RunScript(string script)
         {
             object result = webDriver.JavaScriptExecutor().ExecuteScript(script);
+            webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
             return result?.ToString() ?? string.Empty;
         }
 
@@ -236,6 +237,7 @@ namespace G1ANT.Addon.Selenium
         {
             IWebElement elem = FindElement(search, by, timeoutSeconds);
             elem.Click();
+            webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
         }
 
         public void TypeText(string text, string search, string by, int timeoutSeconds)
