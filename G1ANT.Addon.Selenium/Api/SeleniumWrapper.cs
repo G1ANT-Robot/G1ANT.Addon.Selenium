@@ -29,6 +29,25 @@ namespace G1ANT.Addon.Selenium
         private IntPtr mainWindowHandle = IntPtr.Zero;
         AbstractLogger logger = null;
 
+        public class NewPopupWindowHandler
+        {
+            protected IWebDriver webDriver = null;
+            protected int initialWindowHandlesCount = 0;
+            public NewPopupWindowHandler(IWebDriver driver)
+            {
+                webDriver = driver;
+                initialWindowHandlesCount = webDriver.WindowHandles.Count;
+            }
+
+            ~NewPopupWindowHandler()
+            {
+                if (webDriver.WindowHandles.Count != initialWindowHandlesCount)
+                {
+                    webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+                }
+            }
+        }
+
 
         public BrowserType BrowserType {get; set;}
 
@@ -118,6 +137,21 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
+        private void PreCheckCurrentWindowHandle()
+        {
+            string found = null;
+            try
+            {
+                found = webDriver.WindowHandles.Where(x => x == webDriver.CurrentWindowHandle).FirstOrDefault();
+            }
+            catch
+            { }
+            if (found == null)
+            {
+                webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+            }
+        }
+
         public void Navigate(string url, int timeoutSeconds, bool noWait)
         {
             url = ValidateUrl(url);
@@ -157,13 +191,15 @@ namespace G1ANT.Addon.Selenium
 
         public string RunScript(string script)
         {
+            NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
+            PreCheckCurrentWindowHandle();
             object result = webDriver.JavaScriptExecutor().ExecuteScript(script);
-            webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
             return result?.ToString() ?? string.Empty;
         }
 
         public void CloseTab(int timeoutSeconds)
         {
+            PreCheckCurrentWindowHandle();
             switch (BrowserType)
             {
                 case BrowserType.Edge:
@@ -235,19 +271,23 @@ namespace G1ANT.Addon.Selenium
 
         public void Click(string search, string by, int timeoutSeconds)
         {
+            NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
+            PreCheckCurrentWindowHandle();
             IWebElement elem = FindElement(search, by, timeoutSeconds);
             elem.Click();
-            webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
         }
 
         public void TypeText(string text, string search, string by, int timeoutSeconds)
         {
+            PreCheckCurrentWindowHandle();
             IWebElement elem = FindElement(search, by, timeoutSeconds);
             elem.SendKeys(text);
         }
 
         public void PressKey(string keyText, string search, string by, int timeoutSeconds)
         {
+            NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
+            PreCheckCurrentWindowHandle();
             IWebElement elem = FindElement(search, by, timeoutSeconds);
             string convertedText = typeof(Keys).GetFields().Where(x => x.Name.ToLower() == keyText.ToLower()).FirstOrDefault()?.GetValue(null) as string;
             if (convertedText == null)
@@ -259,18 +299,22 @@ namespace G1ANT.Addon.Selenium
 
         public string GetAttributeValue(string attributeName, string search, string by, int timeoutSeconds)
         {
+            PreCheckCurrentWindowHandle();
             IWebElement element = FindElement(search, by, timeoutSeconds);
             return element?.GetAttribute(attributeName) ?? string.Empty;
         }
 
         public void SetAttributeValue(string attributeName, string attributeValue, string search, string by, int timeoutSeconds)
         {
+            PreCheckCurrentWindowHandle();
             IWebElement element = FindElement(search, by, timeoutSeconds);
             element?.SetAttribute(attributeName, attributeValue);
         }
 
         public void CallFunction(string functionName, object[] arguments, string type, string search, string by, int timeoutSeconds)
         {
+            NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
+            PreCheckCurrentWindowHandle();
             IWebElement element = FindElement(search, by, timeoutSeconds);
             element?.CallFunction(functionName, arguments, type);
         }
