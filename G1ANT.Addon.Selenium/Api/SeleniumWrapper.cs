@@ -33,9 +33,13 @@ namespace G1ANT.Addon.Selenium
         {
             protected IWebDriver webDriver = null;
             protected int initialWindowHandlesCount = 0;
-            public NewPopupWindowHandler(IWebDriver driver)
+            protected bool waitForNewWindow = false;
+            protected TimeSpan timeout;
+            public NewPopupWindowHandler(IWebDriver driver, bool _waitForNewWindow = false, TimeSpan _timeout = new TimeSpan())
             {
                 webDriver = driver;
+                waitForNewWindow = _waitForNewWindow;
+                timeout = _timeout;
                 initialWindowHandlesCount = webDriver.WindowHandles.Count;
             }
 
@@ -43,7 +47,16 @@ namespace G1ANT.Addon.Selenium
             {
                 try
                 {
-                    if (webDriver.WindowHandles.Count != initialWindowHandlesCount)
+                    if (waitForNewWindow == true)
+                    {
+                        var wait = new WebDriverWait(webDriver, timeout);
+                        wait.Until(driver =>
+                        {
+                            return driver.WindowHandles.Count != initialWindowHandlesCount;
+                        });
+                        webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+                    }
+                    else if (webDriver.WindowHandles.Count != initialWindowHandlesCount)
                     {
                         webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
                     }
@@ -292,9 +305,9 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
-        public void Click(string search, string by, TimeSpan timeout)
+        public void Click(string search, string by, TimeSpan timeout, bool waitForNewWindow = false)
         {
-            NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
+            NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver, waitForNewWindow, timeout);
             PreCheckCurrentWindowHandle();
             IWebElement elem = FindElement(search, by, timeout);
             elem.Click();
