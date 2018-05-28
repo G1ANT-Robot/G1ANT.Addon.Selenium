@@ -41,10 +41,15 @@ namespace G1ANT.Addon.Selenium
 
             ~NewPopupWindowHandler()
             {
-                if (webDriver.WindowHandles.Count != initialWindowHandlesCount)
+                try
                 {
-                    webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+                    if (webDriver.WindowHandles.Count != initialWindowHandlesCount)
+                    {
+                        webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+                    }
                 }
+                catch
+                { }
             }
         }
 
@@ -78,7 +83,7 @@ namespace G1ANT.Addon.Selenium
             webDriver.Manage().Timeouts().AsynchronousJavaScript = new TimeSpan(0, 0, scriptSeconds);
         }
 
-        private IWebElement FindElement(string search, string by, int timeoutSeconds)
+        private IWebElement FindElement(string search, string by, TimeSpan timeout)
         {
             IWebElement element = null;
             ElementSearchBy searchBy;
@@ -92,28 +97,28 @@ namespace G1ANT.Addon.Selenium
                 {
                     case ElementSearchBy.Id:
                         search = search.StartsWith("#") ? search.TrimStart(new char[] { '#' }) : search;
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Id(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Id(search)));
                         break;
                     case ElementSearchBy.Class:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.ClassName(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.ClassName(search)));
                         break;
                     case ElementSearchBy.CssSelector:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.CssSelector(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.CssSelector(search)));
                         break;
                     case ElementSearchBy.Tag:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.TagName(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.TagName(search)));
                         break;
                     case ElementSearchBy.Xpath:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(search)));
                         break;
                     case ElementSearchBy.Name:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Name(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Name(search)));
                         break;
                     case ElementSearchBy.Query:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(CustomExpectedConditions.ElementExistsByJavaScript(search));
+                        element = new WebDriverWait(webDriver, timeout).Until(CustomExpectedConditions.ElementExistsByJavaScript(search));
                         break;
                     case ElementSearchBy.Jquery:
-                        element = new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSeconds)).Until(CustomExpectedConditions.ElementExistsByJquery(search));
+                        element = new WebDriverWait(webDriver, timeout).Until(CustomExpectedConditions.ElementExistsByJquery(search));
                         break;
                 }
             }
@@ -152,13 +157,13 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
-        public void Navigate(string url, int timeoutSeconds, bool noWait)
+        public void Navigate(string url, TimeSpan timeout, bool noWait)
         {
             url = ValidateUrl(url);
             if (!noWait)
             {
                 webDriver.Navigate().GoToUrl(url);
-                WebDriverWait wait = new WebDriverWait(webDriver, new TimeSpan(0, 0, timeoutSeconds));
+                WebDriverWait wait = new WebDriverWait(webDriver, new TimeSpan(0, 0, timeout));
                 wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
             }
             else
@@ -197,7 +202,7 @@ namespace G1ANT.Addon.Selenium
             return result?.ToString() ?? string.Empty;
         }
 
-        public void CloseTab(int timeoutSeconds)
+        public void CloseTab(TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
             switch (BrowserType)
@@ -213,7 +218,7 @@ namespace G1ANT.Addon.Selenium
             webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
         }
 
-        public void NewTab(int timeoutSeconds, string url, bool noWait)
+        public void NewTab(TimeSpan timeout, string url, bool noWait)
         {
             url = ValidateUrl(url);
             switch (BrowserType)
@@ -229,7 +234,7 @@ namespace G1ANT.Addon.Selenium
             webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
             if (!string.IsNullOrEmpty(url))
             {
-                Navigate(url, timeoutSeconds, noWait);
+                Navigate(url, timeout, noWait);
             }
         }
 
@@ -269,26 +274,44 @@ namespace G1ANT.Addon.Selenium
             throw new ArgumentException($"Specified tab (by: '{by}, search: '{phrase}') not found.");
         }
 
-        public void Click(string search, string by, int timeoutSeconds)
+        public void AlertPerformAction(string action, TimeSpan timeout)
+        {
+            WebDriverWait wait = new WebDriverWait(webDriver, timeout);
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
+            var alert = webDriver.SwitchTo().Alert();
+            switch (action)
+            {
+                case "accept":
+                    alert.Accept();
+                    break;
+                case "decline":
+                    alert.Dismiss();
+                    break;
+                default:
+                    throw new NotSupportedException($"Action '{action}' is not supported.");
+            }
+        }
+
+        public void Click(string search, string by, TimeSpan timeout)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
-            IWebElement elem = FindElement(search, by, timeoutSeconds);
+            IWebElement elem = FindElement(search, by, timeout);
             elem.Click();
         }
 
-        public void TypeText(string text, string search, string by, int timeoutSeconds)
+        public void TypeText(string text, string search, string by, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
-            IWebElement elem = FindElement(search, by, timeoutSeconds);
+            IWebElement elem = FindElement(search, by, timeout);
             elem.SendKeys(text);
         }
 
-        public void PressKey(string keyText, string search, string by, int timeoutSeconds)
+        public void PressKey(string keyText, string search, string by, TimeSpan timeout)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
-            IWebElement elem = FindElement(search, by, timeoutSeconds);
+            IWebElement elem = FindElement(search, by, timeout);
             string convertedText = typeof(Keys).GetFields().Where(x => x.Name.ToLower() == keyText.ToLower()).FirstOrDefault()?.GetValue(null) as string;
             if (convertedText == null)
             {
@@ -297,25 +320,25 @@ namespace G1ANT.Addon.Selenium
             elem.SendKeys(convertedText);
         }
 
-        public string GetAttributeValue(string attributeName, string search, string by, int timeoutSeconds)
+        public string GetAttributeValue(string attributeName, string search, string by, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
-            IWebElement element = FindElement(search, by, timeoutSeconds);
+            IWebElement element = FindElement(search, by, timeout);
             return element?.GetAttribute(attributeName) ?? string.Empty;
         }
 
-        public void SetAttributeValue(string attributeName, string attributeValue, string search, string by, int timeoutSeconds)
+        public void SetAttributeValue(string attributeName, string attributeValue, string search, string by, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
-            IWebElement element = FindElement(search, by, timeoutSeconds);
+            IWebElement element = FindElement(search, by, timeout);
             element?.SetAttribute(attributeName, attributeValue);
         }
 
-        public void CallFunction(string functionName, object[] arguments, string type, string search, string by, int timeoutSeconds)
+        public void CallFunction(string functionName, object[] arguments, string type, string search, string by, TimeSpan timeout)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
-            IWebElement element = FindElement(search, by, timeoutSeconds);
+            IWebElement element = FindElement(search, by, timeout);
             element?.CallFunction(functionName, arguments, type);
         }
 
