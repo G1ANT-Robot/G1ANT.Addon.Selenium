@@ -25,7 +25,7 @@ namespace G1ANT.Addon.Selenium
             public TextStructure By { get; set; } = new TextStructure(ElementSearchBy.Id.ToString().ToLower());
 
             [Argument(Tooltip = "True if command should wait for new window to appear after click the element.")]
-            public BooleanStructure WaitForNewWindw { get; set; } = new BooleanStructure(false);
+            public BooleanStructure WaitForNewWindow { get; set; } = new BooleanStructure(false);
 
             [Argument(DefaultVariable = "timeoutselenium")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
@@ -37,7 +37,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                SeleniumManager.CurrentWrapper.Click(arguments.Search.Value, arguments.By.Value, arguments.Timeout.Value, arguments.WaitForNewWindw.Value);
+                SeleniumManager.CurrentWrapper.Click(arguments.Search.Value, arguments.By.Value, arguments.Timeout.Value, arguments.WaitForNewWindow.Value);
             }
             catch (Exception ex)
             {
