@@ -27,7 +27,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                SeleniumManager.CurrentWrapper.CloseTab((int)arguments.Timeout.Value.TotalMilliseconds / 1000);
+                SeleniumManager.CurrentWrapper.CloseTab(arguments.Timeout.Value);
             }
             catch (Exception ex)
             {

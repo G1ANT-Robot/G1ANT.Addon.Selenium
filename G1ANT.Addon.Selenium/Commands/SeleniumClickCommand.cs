@@ -34,7 +34,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                SeleniumManager.CurrentWrapper.Click(arguments.Search.Value, arguments.By.Value, (int)arguments.Timeout.Value.TotalMilliseconds / 1000);
+                SeleniumManager.CurrentWrapper.Click(arguments.Search.Value, arguments.By.Value, arguments.Timeout.Value);
             }
             catch (Exception ex)
             {

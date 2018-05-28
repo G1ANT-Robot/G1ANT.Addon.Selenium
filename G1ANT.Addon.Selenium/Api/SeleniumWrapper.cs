@@ -163,7 +163,7 @@ namespace G1ANT.Addon.Selenium
             if (!noWait)
             {
                 webDriver.Navigate().GoToUrl(url);
-                WebDriverWait wait = new WebDriverWait(webDriver, new TimeSpan(0, 0, timeout));
+                WebDriverWait wait = new WebDriverWait(webDriver, timeout);
                 wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
             }
             else

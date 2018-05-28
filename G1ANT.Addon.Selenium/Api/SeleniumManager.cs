@@ -80,7 +80,7 @@ namespace G1ANT.Addon.Selenium
             return (BrowserType)type;
         }
 
-        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, int timeoutSeconds, bool noWait, AbstractLogger scr, string driversDirectory)
+        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
             BrowserType type = GetBrowserType(webBrowserName);
@@ -97,7 +97,7 @@ namespace G1ANT.Addon.Selenium
             CurrentWrapper = wrapper;
             if (!string.IsNullOrEmpty(url))
             {
-                CurrentWrapper.Navigate(url, timeoutSeconds, noWait);
+                CurrentWrapper.Navigate(url, timeout, noWait);
             }
             return CurrentWrapper;
         }

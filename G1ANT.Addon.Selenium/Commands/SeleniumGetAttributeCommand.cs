@@ -44,7 +44,7 @@ namespace G1ANT.Addon.Selenium
                 arguments.Name.Value,
                 arguments.Search.Value,
                 arguments.By.Value,
-                (int)arguments.Timeout.Value.TotalMilliseconds / 1000);
+                arguments.Timeout.Value);
 
                Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(attributeValue));
             }

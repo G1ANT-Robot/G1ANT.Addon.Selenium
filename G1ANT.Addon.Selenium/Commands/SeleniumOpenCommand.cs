@@ -46,7 +46,7 @@ namespace G1ANT.Addon.Selenium
                 SeleniumWrapper wrapper = SeleniumManager.CreateWrapper(
                         arguments.Type.Value,
                         arguments.Url?.Value,
-                        (int)arguments.Timeout.Value.TotalMilliseconds / 1000,
+                        arguments.Timeout.Value,
                         arguments.NoWait.Value,
                         Scripter.Log,
                         Scripter.Settings.UserDocsAddonFolder.FullName);

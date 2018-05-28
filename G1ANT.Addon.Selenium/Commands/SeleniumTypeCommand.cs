@@ -40,7 +40,7 @@ namespace G1ANT.Addon.Selenium
                     arguments.Text.Value,
                     arguments.Search.Value,
                     arguments.By.Value,
-                    (int)arguments.Timeout.Value.TotalMilliseconds / 1000);
+                    arguments.Timeout.Value);
             }
             catch (Exception ex)
             {
