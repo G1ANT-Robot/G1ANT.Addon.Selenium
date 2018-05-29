@@ -18,9 +18,14 @@ namespace G1ANT.Addon.Selenium
     {
         public class Arguments : CommandArguments
         {
-
             [Argument(Required = true, Tooltip = "Script which will be used inside web browser")]
             public TextStructure Script { get; set; }
+
+            [Argument(Tooltip = "True if command should wait for new window to appear after click the element.")]
+            public BooleanStructure WaitForNewWindow { get; set; } = new BooleanStructure(false);
+
+            [Argument(DefaultVariable = "timeoutselenium")]
+            public override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
             [Argument]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
@@ -33,7 +38,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                var result = SeleniumManager.CurrentWrapper.RunScript(arguments.Script.Value);
+                var result = SeleniumManager.CurrentWrapper.RunScript(arguments.Script.Value, arguments.Timeout.Value, arguments.WaitForNewWindow.Value);
                 Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(result));
             }
             catch (Exception ex)

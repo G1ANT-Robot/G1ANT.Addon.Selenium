@@ -33,17 +33,13 @@ namespace G1ANT.Addon.Selenium
         {
             protected IWebDriver webDriver = null;
             protected int initialWindowHandlesCount = 0;
-            protected bool waitForNewWindow = false;
-            protected TimeSpan timeout;
-            public NewPopupWindowHandler(IWebDriver driver, bool _waitForNewWindow = false, TimeSpan _timeout = new TimeSpan())
+            public NewPopupWindowHandler(IWebDriver driver)
             {
                 webDriver = driver;
-                waitForNewWindow = _waitForNewWindow;
-                timeout = _timeout;
                 initialWindowHandlesCount = webDriver.WindowHandles.Count;
             }
 
-            ~NewPopupWindowHandler()
+            public void Finish(bool waitForNewWindow = false, TimeSpan timeout = new TimeSpan())
             {
                 try
                 {
@@ -55,6 +51,12 @@ namespace G1ANT.Addon.Selenium
                             return driver.WindowHandles.Count != initialWindowHandlesCount;
                         });
                         webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+                        wait.Until(driver =>
+                        {
+                            if (driver.JavaScriptExecutor().ExecuteScript("return document.readyState;") is string state)
+                                return state.ToLower() == "complete";
+                            return false;
+                        });
                     }
                     else if (webDriver.WindowHandles.Count != initialWindowHandlesCount)
                     {
@@ -207,11 +209,13 @@ namespace G1ANT.Addon.Selenium
             webDriver.Dispose();
         }
 
-        public string RunScript(string script)
+        public string RunScript(string script, TimeSpan timeout = new TimeSpan(), bool waitForNewWindow = false)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
+            script += "; return null;";
             object result = webDriver.JavaScriptExecutor().ExecuteScript(script);
+            popupHandler.Finish(waitForNewWindow, timeout);
             return result?.ToString() ?? string.Empty;
         }
 
@@ -307,10 +311,11 @@ namespace G1ANT.Addon.Selenium
 
         public void Click(string search, string by, TimeSpan timeout, bool waitForNewWindow = false)
         {
-            NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver, waitForNewWindow, timeout);
+            NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
             IWebElement elem = FindElement(search, by, timeout);
             elem.Click();
+            popupHandler.Finish(waitForNewWindow, timeout);
         }
 
         public void TypeText(string text, string search, string by, TimeSpan timeout)
@@ -331,6 +336,7 @@ namespace G1ANT.Addon.Selenium
                 throw new ArgumentException($"Wrong key argument '{keyText}' specified. Please use keys allowed by selenium library.");
             }
             elem.SendKeys(convertedText);
+            popupHandler.Finish();
         }
 
         public string GetAttributeValue(string attributeName, string search, string by, TimeSpan timeout)
@@ -353,6 +359,7 @@ namespace G1ANT.Addon.Selenium
             PreCheckCurrentWindowHandle();
             IWebElement element = FindElement(search, by, timeout);
             element?.CallFunction(functionName, arguments, type);
+            popupHandler.Finish();
         }
 
         public void BringWindowToForeground()
