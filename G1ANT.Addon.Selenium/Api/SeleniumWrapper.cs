@@ -318,7 +318,9 @@ namespace G1ANT.Addon.Selenium
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
             IWebElement elem = FindElement(search, by, timeout);
-            elem.Click();
+            Actions actions = new Actions(webDriver);
+            actions.MoveToElement(elem).Click().Perform();
+            //elem.Click();
             popupHandler.Finish(waitForNewWindow, timeout);
         }
 
@@ -326,7 +328,9 @@ namespace G1ANT.Addon.Selenium
         {
             PreCheckCurrentWindowHandle();
             IWebElement elem = FindElement(search, by, timeout);
-            elem.SendKeys(text);
+            Actions actions = new Actions(webDriver);
+            actions.MoveToElement(elem).SendKeys(text).Perform();
+            //elem.SendKeys(text);
         }
 
         public void PressKey(string keyText, string search, string by, TimeSpan timeout)
@@ -339,7 +343,9 @@ namespace G1ANT.Addon.Selenium
             {
                 throw new ArgumentException($"Wrong key argument '{keyText}' specified. Please use keys allowed by selenium library.");
             }
-            elem.SendKeys(convertedText);
+            Actions actions = new Actions(webDriver);
+            actions.MoveToElement(elem).SendKeys(convertedText).Perform();
+            //elem.SendKeys(convertedText);
             popupHandler.Finish();
         }
 
