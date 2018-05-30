@@ -51,16 +51,20 @@ namespace G1ANT.Addon.Selenium
                             return driver.WindowHandles.Count != initialWindowHandlesCount;
                         });
                         webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
-                        wait.Until(driver =>
+                        if (webDriver.WindowHandles.Count > initialWindowHandlesCount)
                         {
-                            if (driver.JavaScriptExecutor().ExecuteScript("return document.readyState;") is string state)
-                                return state.ToLower() == "complete";
-                            return false;
-                        });
+                            wait = new WebDriverWait(webDriver, timeout);
+                            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
+                        }
                     }
                     else if (webDriver.WindowHandles.Count != initialWindowHandlesCount)
                     {
                         webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+                        if (webDriver.WindowHandles.Count > initialWindowHandlesCount)
+                        {
+                            var wait = new WebDriverWait(webDriver, timeout);
+                            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
+                        }
                     }
                 }
                 catch
