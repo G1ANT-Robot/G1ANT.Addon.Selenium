@@ -60,6 +60,7 @@
     <Compile Include="Api\CustomExpectedConditions.cs" />
     <Compile Include="Api\Enums\BrowserType.cs" />
     <Compile Include="Api\Enums\ElementSearchBy.cs" />
+    <Compile Include="Api\SeleniumCommandArguments.cs" />
     <Compile Include="Api\SeleniumExtensions.cs" />
     <Compile Include="Api\SeleniumManager.cs" />
     <Compile Include="Api\SeleniumSettings.cs" />

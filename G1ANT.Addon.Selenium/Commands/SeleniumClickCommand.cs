@@ -16,14 +16,8 @@ namespace G1ANT.Addon.Selenium
     [Command(Name = "selenium.click", Tooltip = "Clicks event to element of an active webpage.")]
     public class SeleniumClickCommand : Command
     {
-        public class Arguments : CommandArguments
+        public class Arguments : SeleniumCommandArguments
         {
-            [Argument(Required = true, Tooltip = "Phrase to find element by")]
-            public TextStructure Search { get; set; }
-
-            [Argument(Tooltip = "Specifies an element selector, possible values are: 'name', 'text', 'title', 'class', 'id', 'selector', 'query', 'jquery'")]
-            public TextStructure By { get; set; } = new TextStructure(ElementSearchBy.Id.ToString().ToLower());
-
             [Argument(Tooltip = "True if command should wait for new window to appear after click the element.")]
             public BooleanStructure WaitForNewWindow { get; set; } = new BooleanStructure(false);
 
@@ -37,7 +31,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                SeleniumManager.CurrentWrapper.Click(arguments.Search.Value, arguments.By.Value, arguments.Timeout.Value, arguments.WaitForNewWindow.Value);
+                SeleniumManager.CurrentWrapper.Click(arguments, arguments.Timeout.Value, arguments.WaitForNewWindow.Value);
             }
             catch (Exception ex)
             {

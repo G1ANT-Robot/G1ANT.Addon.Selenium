@@ -16,19 +16,13 @@ namespace G1ANT.Addon.Selenium
 
     public class SeleniumSetAttributeCommand : Command
     {
-        public class Arguments : CommandArguments
+        public class Arguments : SeleniumCommandArguments
         {
             [Argument(Required = true, Tooltip = "Name of attribute to set value of")]
             public TextStructure Name { get; set; }
 
             [Argument(Tooltip = "Value to set")]
             public TextStructure Value { get; set; }
-
-            [Argument(Required = true, Tooltip = "Phrase to find element by")]
-            public TextStructure Search { get; set; }
-
-            [Argument(Tooltip = "Specifies an element selector, possible values are: 'name', 'text', 'title', 'class', 'id', 'selector', 'query', 'jquery'")]
-            public TextStructure By { get; set; } = new TextStructure(ElementSearchBy.Id.ToString().ToLower());
 
             [Argument(DefaultVariable = "timeoutselenium")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
@@ -43,8 +37,7 @@ namespace G1ANT.Addon.Selenium
                 SeleniumManager.CurrentWrapper.SetAttributeValue(
                     arguments.Name.Value,
                     arguments.Value?.Value ?? string.Empty,
-                    arguments.Search.Value,
-                    arguments.By.Value,
+                    arguments,
                     arguments.Timeout.Value);
             }
             catch (Exception ex)

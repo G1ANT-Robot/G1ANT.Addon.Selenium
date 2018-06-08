@@ -313,58 +313,82 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
-        public void Click(string search, string by, TimeSpan timeout, bool waitForNewWindow = false)
+        public void Click(SeleniumCommandArguments search, TimeSpan timeout, bool waitForNewWindow = false)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
-            IWebElement elem = FindElement(search, by, timeout);
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            IWebElement elem = FindElement(search.Search.Value, search.By.Value, timeout);
             Actions actions = new Actions(webDriver);
             actions.MoveToElement(elem).Click().Build().Perform();
-            //elem.Click();
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().DefaultContent();
             popupHandler.Finish(waitForNewWindow, timeout);
         }
 
-        public void TypeText(string text, string search, string by, TimeSpan timeout)
+        public void TypeText(string text, SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
-            IWebElement elem = FindElement(search, by, timeout);
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            IWebElement elem = FindElement(search.Search.Value, search.By.Value, timeout);
             elem.SendKeys(text);
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().DefaultContent();
         }
 
-        public void PressKey(string keyText, string search, string by, TimeSpan timeout)
+        public void PressKey(string keyText, SeleniumCommandArguments search, TimeSpan timeout)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
-            IWebElement elem = FindElement(search, by, timeout);
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            IWebElement elem = FindElement(search.Search.Value, search.By.Value, timeout);
             string convertedText = typeof(Keys).GetFields().Where(x => x.Name.ToLower() == keyText.ToLower()).FirstOrDefault()?.GetValue(null) as string;
             if (convertedText == null)
             {
                 throw new ArgumentException($"Wrong key argument '{keyText}' specified. Please use keys allowed by selenium library.");
             }
             elem.SendKeys(convertedText);
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().DefaultContent();
             popupHandler.Finish();
         }
 
-        public string GetAttributeValue(string attributeName, string search, string by, TimeSpan timeout)
+        public string GetAttributeValue(string attributeName, SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
-            IWebElement element = FindElement(search, by, timeout);
-            return element?.GetAttribute(attributeName) ?? string.Empty;
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            IWebElement element = FindElement(search.Search.Value, search.By.Value, timeout);
+            string res = element?.GetAttribute(attributeName) ?? string.Empty;
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().DefaultContent();
+            return res;
         }
 
-        public void SetAttributeValue(string attributeName, string attributeValue, string search, string by, TimeSpan timeout)
+        public void SetAttributeValue(string attributeName, string attributeValue, SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
-            IWebElement element = FindElement(search, by, timeout);
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            IWebElement element = FindElement(search.Search.Value, search.By.Value, timeout);
             element?.SetAttribute(attributeName, attributeValue);
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().DefaultContent();
         }
 
-        public void CallFunction(string functionName, object[] arguments, string type, string search, string by, TimeSpan timeout)
+        public void CallFunction(string functionName, object[] arguments, string type, SeleniumCommandArguments search, TimeSpan timeout)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
-            IWebElement element = FindElement(search, by, timeout);
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            IWebElement element = FindElement(search.Search.Value, search.By.Value, timeout);
             element?.CallFunction(functionName, arguments, type);
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().DefaultContent();
             popupHandler.Finish();
         }
 

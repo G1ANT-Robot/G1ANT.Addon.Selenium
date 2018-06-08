@@ -16,16 +16,10 @@ namespace G1ANT.Addon.Selenium
 
     public class SeleniumGetAttributeCommand : Command
     {
-        public class Arguments : CommandArguments
+        public class Arguments : SeleniumCommandArguments
         {
             [Argument(Required = true, Tooltip = "Name of attribute to obtain value of")]
             public TextStructure Name { get; set; }
-
-            [Argument(Required = true, Tooltip = "Phrase to find element by")]
-            public TextStructure Search { get; set; }
-
-            [Argument(Tooltip = "Specifies an element selector, possible values are: 'name', 'text', 'title', 'class', 'id', 'selector', 'query', 'jquery'")]
-            public TextStructure By { get; set; } = new TextStructure(ElementSearchBy.Id.ToString().ToLower());
 
             [Argument(DefaultVariable = "timeoutselenium")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
@@ -42,8 +36,7 @@ namespace G1ANT.Addon.Selenium
             {
                 string attributeValue = SeleniumManager.CurrentWrapper.GetAttributeValue(
                 arguments.Name.Value,
-                arguments.Search.Value,
-                arguments.By.Value,
+                arguments,
                 arguments.Timeout.Value);
 
                Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(attributeValue));

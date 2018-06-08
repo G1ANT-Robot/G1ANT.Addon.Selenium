@@ -15,16 +15,10 @@ namespace G1ANT.Addon.Selenium
     [Command(Name = "selenium.presskey", Tooltip = "Types text into element.")]
     public class SeleniumPressKeyCommand : Command
     {
-        public class Arguments : CommandArguments
+        public class Arguments : SeleniumCommandArguments
         {
             [Argument(Required = true, Tooltip = "Key to press")]
             public TextStructure Key { get; set; }
-
-            [Argument(Required = true, Tooltip = "Phrase to find element by")]
-            public TextStructure Search { get; set; }
-
-            [Argument(Tooltip = "Specifies an element selector, possible values are: 'name', 'text', 'title', 'class', 'id', 'selector', 'query', 'jquery'")]
-            public TextStructure By { get; set; } = new TextStructure(ElementSearchBy.Id.ToString().ToLower());
 
             [Argument(DefaultVariable = "timeoutselenium")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
@@ -39,8 +33,7 @@ namespace G1ANT.Addon.Selenium
             {
                 SeleniumManager.CurrentWrapper.PressKey(
                     arguments.Key.Value,
-                    arguments.Search.Value,
-                    arguments.By.Value,
+                    arguments,
                     arguments.Timeout.Value);
             }
             catch (Exception ex)

@@ -17,7 +17,7 @@ namespace G1ANT.Addon.Selenium
     [Command(Name = "selenium.callfunction", Tooltip = "Calls function on specified element.")]
     public class SeleniumCallFunctionCommand : Command
     {
-        public class Arguments : CommandArguments
+        public class Arguments : SeleniumCommandArguments
         {
             [Argument(Required = true, Tooltip = "Name of function to call")]
             public TextStructure FunctionName { get; set; }
@@ -27,12 +27,6 @@ namespace G1ANT.Addon.Selenium
 
             [Argument(Required = true, Tooltip = "Function call type, either 'javascript' or 'jquery'")]
             public TextStructure Type { get; set; } = new TextStructure("javascript");
-
-            [Argument(Required = true, Tooltip = "Phrase to find element by")]
-            public TextStructure Search { get; set; }
-
-            [Argument(Tooltip = "Specifies an element selector, possible values are: 'name', 'text', 'title', 'class', 'id', 'selector', 'query', 'jquery'")]
-            public TextStructure By { get; set; } = new TextStructure(ElementSearchBy.Id.ToString().ToLower());
 
             [Argument(DefaultVariable = "timeoutselenium")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout); 
@@ -50,8 +44,7 @@ namespace G1ANT.Addon.Selenium
                     arguments.FunctionName.Value,
                     GetParameters((arguments.Parameters?.Value)),  
                     arguments.Type.Value,
-                    arguments.Search.Value,
-                    arguments.By.Value,
+                    arguments,
                     arguments.Timeout.Value);
             }
             catch (Exception ex)
