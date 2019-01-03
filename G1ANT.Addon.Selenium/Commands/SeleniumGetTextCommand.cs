@@ -31,7 +31,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                string attributeValue = SeleniumManager.CurrentWrapper.GetTextValue(
+                var attributeValue = SeleniumManager.CurrentWrapper.GetTextValue(
                 arguments,
                 arguments.Timeout.Value);
 

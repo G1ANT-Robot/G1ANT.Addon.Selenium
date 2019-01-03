@@ -371,11 +371,11 @@ namespace G1ANT.Addon.Selenium
         public string GetTextValue(SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
                 webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
-            IWebElement element = FindElement(search.Search.Value, search.By.Value, timeout);
-            string res = element?.Text ?? string.Empty;
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+            var element = FindElement(search.Search.Value, search.By.Value, timeout);
+            var res = element?.Text ?? string.Empty;
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
                 webDriver.SwitchTo().DefaultContent();
             return res;
         }
