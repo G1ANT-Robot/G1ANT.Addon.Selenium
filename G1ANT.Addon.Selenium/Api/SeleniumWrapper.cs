@@ -368,6 +368,18 @@ namespace G1ANT.Addon.Selenium
             return res;
         }
 
+        public string GetTextValue(SeleniumCommandArguments search, TimeSpan timeout)
+        {
+            PreCheckCurrentWindowHandle();
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            IWebElement element = FindElement(search.Search.Value, search.By.Value, timeout);
+            string res = element?.Text ?? string.Empty;
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().DefaultContent();
+            return res;
+        }
+
         public void SetAttributeValue(string attributeName, string attributeValue, SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();

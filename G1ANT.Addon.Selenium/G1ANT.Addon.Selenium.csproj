@@ -68,6 +68,7 @@
     <Compile Include="Api\StringExtensions.cs" />
     <Compile Include="Commands\SeleniumAlertActionCommand.cs" />
     <Compile Include="Commands\SeleniumCloseTabCommand.cs" />
+    <Compile Include="Commands\SeleniumGetTextCommand.cs" />
     <Compile Include="Commands\SeleniumSetAttributeCommand.cs" />
     <Compile Include="Commands\SeleniumActivateTabCommand.cs" />
     <Compile Include="Commands\SeleniumGetAttributeCommand.cs" />
