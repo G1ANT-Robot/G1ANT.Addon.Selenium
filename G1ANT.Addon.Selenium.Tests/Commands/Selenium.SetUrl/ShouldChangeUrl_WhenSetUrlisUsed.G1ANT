@@ -1,0 +1,8 @@
+addon selenium version 2.205.17304.1000
+
+♥url = sjp.pl
+selenium.open chrome
+selenium.seturl url ‴♥url‴
+selenium.gettitle
+test ♥result.ToLower().Contains(♥url.ToLower())
+

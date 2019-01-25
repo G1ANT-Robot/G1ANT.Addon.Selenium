@@ -80,6 +80,27 @@
       <Name>G1ANT.Addon.Selenium</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\Selenium.ActivateTab\" />
+    <Folder Include="Commands\Selenium.AlertAction\" />
+    <Folder Include="Commands\Selenium.CallFunction\" />
+    <Folder Include="Commands\Selenium.Click\" />
+    <Folder Include="Commands\Selenium.CloseTab\" />
+    <Folder Include="Commands\Selenium.Close\" />
+    <Folder Include="Commands\Selenium.GetAttribute\" />
+    <Folder Include="Commands\Selenium.GetText\" />
+    <Folder Include="Commands\Selenium.GetTitle\" />
+    <Folder Include="Commands\Selenium.NewTab\" />
+    <Folder Include="Commands\Selenium.Open\" />
+    <Folder Include="Commands\Selenium.PressKey\" />
+    <Folder Include="Commands\Selenium.Refresh\" />
+    <Folder Include="Commands\Selenium.RunScript\" />
+    <Folder Include="Commands\Selenium.SetAttribute\" />
+    <Folder Include="Commands\Selenium.SetUrl\" />
+    <Folder Include="Commands\Selenium.Switch\" />
+    <Folder Include="Commands\Selenium.Type\" />
+    <Folder Include="Commands\Selenium.WaitForValue\" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

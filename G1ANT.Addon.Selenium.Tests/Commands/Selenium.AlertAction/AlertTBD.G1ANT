@@ -1,0 +1,11 @@
+addon selenium version 2.205.17304.1000
+addon core version 4.99.18340.1354
+addon language version 4.99.18340.1354
+
+
+selenium.open chrome
+selenium.runscript javascript:confirm() result ♥res
+selenium.waitforvalue javascript:confirm() expectedvalue true
+selenium.alertaction accept
+test ⊂int.Parse(♥res) == 1⊃
+selenium.close

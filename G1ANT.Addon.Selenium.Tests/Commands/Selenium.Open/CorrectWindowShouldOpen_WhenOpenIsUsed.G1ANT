@@ -1,0 +1,5 @@
+﻿addon selenium version 2.205.17304.1000
+
+selenium.open chrome url google.com
+window title ‴google*‴
+selenium.close 
