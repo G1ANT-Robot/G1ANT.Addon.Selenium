@@ -2,6 +2,7 @@ addon selenium version 2.205.17304.1000
 
 ♥startUrl = ‴imdb.com‴
 ♥targetUrl = ‴google.pl‴
+
 selenium.open chrome url ♥startUrl
 selenium.runscript script ‴return document.readyState‴
 ♥readystate = ♥result
@@ -9,7 +10,8 @@ selenium.gettitle result ♥startUrlTitle
 selenium.newtab url ♥targetUrl
 selenium.gettitle result ♥targetUrlTitle
 selenium.activatetab search ♥startUrl by url
-test ⊂♥targetUrlTitle != ♥startUrlTitle⊃
 selenium.gettitle result ♥finalTitle
-test ⊂♥finalTitle == ♥startUrlTitle⊃
 selenium.close
+
+test ⊂♥targetUrlTitle != ♥startUrlTitle⊃
+test ⊂♥finalTitle == ♥startUrlTitle⊃
