@@ -1,9 +1,11 @@
 addon selenium version 2.205.17304.1000
 
 ♥inputText = ‴robot‴
+
 selenium.open chrome url sjp.pl
 selenium.setattribute name ‴value‴ value ‴♥inputText‴ search ‴//*[@id="inp1"]‴ by xpath
 selenium.presskey key ‴ENTER‴ search ‴//*[@id="inp1"]‴ by xpath
 selenium.gettitle
-test ⊂♥result.Contains(♥inputText)⊃
 selenium.close
+
+test ⊂♥result.Contains(♥inputText)⊃

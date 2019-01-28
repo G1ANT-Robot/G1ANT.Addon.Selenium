@@ -1,9 +1,11 @@
 addon selenium version 2.205.17304.1000
 
 ♥inputText = robot
+
 selenium.open chrome url sjp.pl
 selenium.type search //*[@id="inp1"] by xpath text ♥inputText
 selenium.click search /html/body/div[1]/form/input by xpath
 selenium.gettitle ♥tabTitle
-test ⊂♥tabTitle.ToLower().Contains(♥inputText.ToLower())⊃
 selenium.close
+
+test ⊂♥tabTitle.ToLower().Contains(♥inputText.ToLower())⊃

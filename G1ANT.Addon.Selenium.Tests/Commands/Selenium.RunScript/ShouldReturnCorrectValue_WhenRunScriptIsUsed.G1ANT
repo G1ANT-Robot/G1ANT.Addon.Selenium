@@ -1,7 +1,9 @@
 addon selenium version 2.205.17304.1000
 
 ♥result = 0
+
 selenium.open chrome 
 selenium.runscript ‴return 1‴ result ♥result
-test ⊂int.Parse(♥result) == 1⊃
 selenium.close
+
+test ⊂int.Parse(♥result) == 1⊃

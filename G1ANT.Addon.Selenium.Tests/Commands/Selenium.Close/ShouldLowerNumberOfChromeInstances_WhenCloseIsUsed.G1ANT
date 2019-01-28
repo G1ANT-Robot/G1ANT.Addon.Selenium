@@ -4,4 +4,5 @@ selenium.open chrome url google.com
 window title ‴google*‴
 selenium.close 
 ♥numberOfChromeInstances = ⊂System.Diagnostics.Process.GetProcessesByName("chrome").Length⊃
+
 test ⊂♥numberOfChromeInstances == 0⊃
