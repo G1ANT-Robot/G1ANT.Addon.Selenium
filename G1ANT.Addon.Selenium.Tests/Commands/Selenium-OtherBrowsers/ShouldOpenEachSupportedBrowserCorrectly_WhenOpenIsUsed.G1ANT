@@ -1,0 +1,22 @@
+addon selenium version 2.205.17304.1000
+
+selenium.open ie url google.com
+selenium.gettitle ♥ieresult
+selenium.close
+
+selenium.open edge url google.com
+selenium.gettitle ♥edgeresult
+selenium.close
+
+selenium.open firefox url google.com
+selenium.gettitle ♥firefoxresult
+selenium.close
+
+selenium.open chrome url google.com
+selenium.gettitle ♥chromeresult
+selenium.close
+
+test ⊂!string.IsNullOrEmpty(♥ieresult)⊃
+test ⊂!string.IsNullOrEmpty(♥edgeresult)⊃
+test ⊂!string.IsNullOrEmpty(♥firefoxresult)⊃
+test ⊂!string.IsNullOrEmpty(♥chromeresult)⊃
