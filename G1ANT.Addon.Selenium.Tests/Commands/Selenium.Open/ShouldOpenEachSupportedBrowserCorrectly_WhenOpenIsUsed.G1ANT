@@ -1,19 +1,19 @@
 addon selenium version 2.205.17304.1000
 
 selenium.open ie url google.com
-selenium.gettitle ♥ieresult
+selenium.gettitle ♥ieResult
 selenium.close
 
 selenium.open edge url google.com
-selenium.gettitle ♥edgeresult
+selenium.gettitle ♥edgeResult
 selenium.close
 
 selenium.open firefox url google.com
-selenium.gettitle ♥firefoxresult
+selenium.gettitle ♥firefoxResult
 selenium.close
 
 selenium.open chrome url google.com
-selenium.gettitle ♥chromeresult
+selenium.gettitle ♥chromeResult
 selenium.close
 
 test ⊂!string.IsNullOrEmpty(♥ieresult)⊃
