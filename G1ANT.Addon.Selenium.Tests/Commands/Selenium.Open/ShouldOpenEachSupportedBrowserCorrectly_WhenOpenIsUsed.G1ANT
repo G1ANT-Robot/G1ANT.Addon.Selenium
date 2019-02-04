@@ -16,7 +16,7 @@ selenium.open chrome url google.com
 selenium.gettitle ♥chromeResult
 selenium.close
 
-test ⊂!string.IsNullOrEmpty(♥ieresult)⊃
-test ⊂!string.IsNullOrEmpty(♥edgeresult)⊃
-test ⊂!string.IsNullOrEmpty(♥firefoxresult)⊃
-test ⊂!string.IsNullOrEmpty(♥chromeresult)⊃
+test ⊂!string.IsNullOrEmpty(♥ieResult)⊃
+test ⊂!string.IsNullOrEmpty(♥edgeResult)⊃
+test ⊂!string.IsNullOrEmpty(♥firefoxResult)⊃
+test ⊂!string.IsNullOrEmpty(♥chromeResult)⊃
