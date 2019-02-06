@@ -112,6 +112,25 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
+        public static void CleanUp()
+        {
+            var tempFolder = Path.GetTempPath();
+            var tempScopedFolders = Directory.GetDirectories(tempFolder, "scoped_dir*", SearchOption.TopDirectoryOnly);
+            foreach (var scopedFolder in tempScopedFolders)
+            {
+                try
+                {
+                    var directory = new DirectoryInfo(scopedFolder);
+                    directory.Delete(true);
+                }
+                catch (Exception)
+                {
+                    //Ignored, as some of the scoped_dir are used by not closed selenium.
+                }
+
+            }
+            
+        }
         public static void Quit(SeleniumWrapper wrapper)
         {
             wrapper.Quit();

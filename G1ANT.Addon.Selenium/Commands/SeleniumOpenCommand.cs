@@ -61,6 +61,10 @@ namespace G1ANT.Addon.Selenium
             {
                 throw new ApplicationException($"Error occured while opening new selenium instance. Url '{arguments.Url.Value}'. Message: {ex.Message}", ex);
             }
+
+
+            OnScriptEnd = SeleniumManager.CleanUp;
         }
     }
+
 }
