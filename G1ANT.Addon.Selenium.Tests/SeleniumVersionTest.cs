@@ -7,9 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace G1ANT.Addon.Selenium.Tests
 {
-    /// <summary>
-    /// Summary description for SeleniumVersionTest
-    /// </summary>
     [TestFixture]
     [TestCategory(TestCategories.Slow)]
     public class SeleniumVersionTest
