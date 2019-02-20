@@ -11,7 +11,6 @@ namespace G1ANT.Addon.Selenium.Tests
     [TestCategory(TestCategories.Slow)]
     public class SeleniumVersionTest
     {
-
         [Test]
         public void ValidateSeleniumVersion()
         {
@@ -21,8 +20,8 @@ namespace G1ANT.Addon.Selenium.Tests
                 var ourVersion = Assembly.Load("WebDriver").GetName().Version;
                 var pattern = $@"Selenium.WebDriver -Version (\d+(?:\.\d+)+)";
                 var page = client.DownloadString("https://www.nuget.org/packages/Selenium.WebDriver");
-                Regex regex = new Regex(pattern);
-                Match match = regex.Match(page);
+                var regex = new Regex(pattern);
+                var match = regex.Match(page);
                 var siteVersion = new Version(match.Groups[1].ToString());
                 result = ourVersion.CompareTo(siteVersion);
             }
