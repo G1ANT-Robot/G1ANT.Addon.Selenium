@@ -40,14 +40,15 @@ namespace G1ANT.Addon.Selenium
         private void UnpackDrivers()
         {
             var unpackfolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
-            Dictionary<string, byte[]> exeList = new Dictionary<string, byte[]>()
+            var driversDictionary = new Dictionary<string, byte[]>()
             {
                 { "chromedriver.exe", Resources.chromedriver },
                 { "geckodriver.exe", Resources.geckodriver },
                 { "IEDriverServer.exe", Resources.IEDriverServer },
                 { "MicrosoftWebDriver.exe", Resources.MicrosoftWebDriver }
             };
-            foreach (var exe in exeList)
+            foreach (var exe in driversDictionary.Where(e => !File.Exists(Path.Combine(unpackfolder, e.Key))
+            || e.Value.Length != new FileInfo(Path.Combine(unpackfolder, e.Key)).OpenRead().Length))
             {
                 try
                 {
@@ -56,7 +57,7 @@ namespace G1ANT.Addon.Selenium
                         stream.Write(exe.Value, 0, exe.Value.Length);
                     }
                 }
-                catch { }                
+                catch (Exception ex) { RobotMessageBox.Show(ex.Message); }
             }
         }
     }
