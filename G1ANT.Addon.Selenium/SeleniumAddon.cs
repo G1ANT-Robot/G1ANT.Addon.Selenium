@@ -26,11 +26,6 @@ namespace G1ANT.Addon.Selenium
     [CommandGroup(Name = "selenium", Tooltip = "Commands to work with web pages via supported web browsers.", IconName = "seleniumicon")]
     public class SeleniumAddon : Language.Addon
     {
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
         public override void LoadDlls()
         {
             UnpackDrivers();
