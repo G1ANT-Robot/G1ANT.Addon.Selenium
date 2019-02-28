@@ -60,9 +60,9 @@ namespace G1ANT.Addon.Selenium
             return File.Exists(Path.Combine(folder, fileName));
         }
 
-        private bool AreFilesOfTheSameLength(int lenght, string folder, string fileName)
+        private bool AreFilesOfTheSameLength(int length, string folder, string fileName)
         {
-            return lenght != new FileInfo(Path.Combine(folder, fileName)).Length;
+            return length != new FileInfo(Path.Combine(folder, fileName)).Length;
         }
     }
 }
