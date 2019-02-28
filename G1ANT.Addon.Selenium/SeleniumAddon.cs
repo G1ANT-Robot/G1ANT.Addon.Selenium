@@ -42,8 +42,7 @@ namespace G1ANT.Addon.Selenium
                 { "IEDriverServer.exe", Resources.IEDriverServer },
                 { "MicrosoftWebDriver.exe", Resources.MicrosoftWebDriver }
             };
-            foreach (var exe in driversDictionary.Where(e => !File.Exists(Path.Combine(unpackfolder, e.Key))
-            || e.Value.Length != new FileInfo(Path.Combine(unpackfolder, e.Key)).OpenRead().Length))
+            foreach (var exe in driversDictionary.Where(e => !DoesFileExist(unpackfolder, e.Key) || DoesFileSameLenght(e.Value.Length, unpackfolder, e.Key)))
             {
                 try
                 {
@@ -54,6 +53,16 @@ namespace G1ANT.Addon.Selenium
                 }
                 catch (Exception ex) { RobotMessageBox.Show(ex.Message); }
             }
+        }
+
+        private bool DoesFileExist(string folder, string fileName)
+        {
+            return File.Exists(Path.Combine(folder, fileName));
+        }
+
+        private bool DoesFileSameLenght(int lenght, string folder, string fileName)
+        {
+            return lenght != new FileInfo(Path.Combine(folder, fileName)).Length;
         }
     }
 }
