@@ -42,7 +42,7 @@ namespace G1ANT.Addon.Selenium
                 { "IEDriverServer.exe", Resources.IEDriverServer },
                 { "MicrosoftWebDriver.exe", Resources.MicrosoftWebDriver }
             };
-            foreach (var exe in driversDictionary.Where(e => !DoesFileExist(unpackfolder, e.Key) || DoesFileSameLenght(e.Value.Length, unpackfolder, e.Key)))
+            foreach (var exe in driversDictionary.Where(e => !DoesFileExist(unpackfolder, e.Key) || AreFilesOfTheSameLength(e.Value.Length, unpackfolder, e.Key)))
             {
                 try
                 {
@@ -60,7 +60,7 @@ namespace G1ANT.Addon.Selenium
             return File.Exists(Path.Combine(folder, fileName));
         }
 
-        private bool DoesFileSameLenght(int lenght, string folder, string fileName)
+        private bool AreFilesOfTheSameLength(int lenght, string folder, string fileName)
         {
             return lenght != new FileInfo(Path.Combine(folder, fileName)).Length;
         }
