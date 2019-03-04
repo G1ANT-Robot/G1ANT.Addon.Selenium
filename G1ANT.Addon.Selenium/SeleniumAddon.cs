@@ -34,21 +34,21 @@ namespace G1ANT.Addon.Selenium
 
         private void UnpackDrivers()
         {
-            var unpackfolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
-            var driversDictionary = new Dictionary<string, byte[]>()
+            var unpackFolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
+            var embeddedResourceDictionary = new Dictionary<string, byte[]>()
             {
                 { "chromedriver.exe", Resources.chromedriver },
                 { "geckodriver.exe", Resources.geckodriver },
                 { "IEDriverServer.exe", Resources.IEDriverServer },
                 { "MicrosoftWebDriver.exe", Resources.MicrosoftWebDriver }
             };
-            foreach (var exe in driversDictionary.Where(e => !DoesFileExist(unpackfolder, e.Key) || AreFilesOfTheSameLength(e.Value.Length, unpackfolder, e.Key)))
+            foreach (var embededResource in embeddedResourceDictionary.Where(e => !DoesFileExist(unpackFolder, e.Key) || !AreFilesOfTheSameLength(e.Value.Length, unpackFolder, e.Key)))
             {
                 try
                 {
-                    using (FileStream stream = File.Create(Path.Combine(unpackfolder, exe.Key)))
+                    using (FileStream stream = File.Create(Path.Combine(unpackFolder, embededResource.Key)))
                     {
-                        stream.Write(exe.Value, 0, exe.Value.Length);
+                        stream.Write(embededResource.Value, 0, embededResource.Value.Length);
                     }
                 }
                 catch (Exception ex) { RobotMessageBox.Show(ex.Message); }
@@ -62,7 +62,7 @@ namespace G1ANT.Addon.Selenium
 
         private bool AreFilesOfTheSameLength(int length, string folder, string fileName)
         {
-            return length != new FileInfo(Path.Combine(folder, fileName)).Length;
+            return length == new FileInfo(Path.Combine(folder, fileName)).Length;
         }
     }
 }
