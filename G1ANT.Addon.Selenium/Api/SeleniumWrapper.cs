@@ -7,26 +7,20 @@
 *    See License.txt file in the project root for full license information.
 *
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Interactions;
-using System.Threading;
-using OpenQA.Selenium.IE;
-using System.Runtime.InteropServices;
 using G1ANT.Language;
+using OpenQA.Selenium;
+using OpenQA.Selenium.IE;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
+using System;
+using System.Linq;
 
 namespace G1ANT.Addon.Selenium
 {
     public class SeleniumWrapper
     {
         private IWebDriver webDriver = null;
-        private int scriptSeconds = 4;
-        private IntPtr mainWindowHandle = IntPtr.Zero;
+        private readonly int scriptSeconds = 4;
         AbstractLogger logger = null;
 
         public class NewPopupWindowHandler
@@ -73,15 +67,9 @@ namespace G1ANT.Addon.Selenium
         }
 
 
-        public BrowserType BrowserType {get; set;}
+        public BrowserType BrowserType { get; set; }
 
-        public IntPtr MainWindowHandle
-        {
-            get
-            {
-                return mainWindowHandle;
-            }
-        }
+        public IntPtr MainWindowHandle { get; } = IntPtr.Zero;
 
         public int Id { get; set; }
 
@@ -95,25 +83,26 @@ namespace G1ANT.Addon.Selenium
 
         public SeleniumWrapper(IWebDriver webDriver, IntPtr mainWindowHandle, BrowserType type, AbstractLogger scr)
         {
-            this.logger = scr;
-            this.mainWindowHandle = mainWindowHandle;
+            logger = scr;
+            this.MainWindowHandle = mainWindowHandle;
             this.webDriver = webDriver;
-            this.BrowserType = type;
+            BrowserType = type;
             webDriver.Manage().Timeouts().AsynchronousJavaScript = new TimeSpan(0, 0, scriptSeconds);
         }
 
         private IWebElement FindElement(string search, string by, TimeSpan timeout)
         {
             IWebElement element = null;
-            ElementSearchBy searchBy;
-            if (Enum.TryParse<ElementSearchBy>(by.CapitalizeFirstLetter(), out searchBy) == false)
-            {
-                throw new ArgumentException("Argument 'By' was not recognized");
-            }
+            var searchBy = Enum.GetValues(typeof(ElementSearchBy))
+                .Cast<ElementSearchBy?>()
+                .FirstOrDefault(e => e.ToString().Equals(by, StringComparison.OrdinalIgnoreCase));
+
             try
             {
                 switch (searchBy)
                 {
+                    case null:
+                        throw new ArgumentException("Value for argument 'By' was not recognized");
                     case ElementSearchBy.Id:
                         search = search.StartsWith("#") ? search.TrimStart(new char[] { '#' }) : search;
                         element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Id(search)));
@@ -141,18 +130,23 @@ namespace G1ANT.Addon.Selenium
                         break;
                 }
             }
+            catch (ArgumentException)
+            {
+                throw;
+            }
             catch
             {
                 string errorMessage = $"Timeout occured while waiting for element. Search phrase: '{search}', by: '{by}' {(webDriver is InternetExplorerDriver ? ". It might be necessary to disable protection mode and lower security level in Internet Explorer." : string.Empty)}";
                 throw new TimeoutException(errorMessage);
             }
+
             return element;
         }
 
         private static string ValidateUrl(string url)
         {
             try
-            {                 
+            {
                 return new UriBuilder(url).ToString();
             }
             catch
@@ -193,7 +187,7 @@ namespace G1ANT.Addon.Selenium
                 }
                 catch (Exception ex)
                 {
-                    logger.Log(AbstractLogger.Level.Error,$"Problem while navigating to url: '{url}' :  {ex.Message}");
+                    logger.Log(AbstractLogger.Level.Error, $"Problem while navigating to url: '{url}' :  {ex.Message}");
                 }
             }
         }
@@ -251,7 +245,7 @@ namespace G1ANT.Addon.Selenium
                 case BrowserType.Chrome:
                     RunScript(string.Format($"window.open('','_blank');"));
                     break;
-            }            
+            }
             webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
             if (!string.IsNullOrEmpty(url))
             {
