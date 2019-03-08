@@ -1,46 +1,34 @@
 # selenium.newtab
 
-**Syntax:**
+## Syntax
 
 ```G1ANT
 selenium.newtab
 ```
 
-**Description:**
+## Description
 
-Command `selenium.newtab` creates new tab in current browser.
+This command adds a new tab to the current browser.
 
 | Argument | Type | Required | Default Value | Description |
 | -------- | ---- | -------- | ------------- | ----------- |
-|`url`| [string](https://github.com/G1ANT-Robot/G1ANT.Manual/blob/master/G1ANT-Language/Structures/string.md) | no|  | webpage address to load |
-|`nowait` | [bool](https://github.com/G1ANT-Robot/G1ANT.Manual/blob/master/G1ANT-Language/Structures/bool.md) | no | false | waits until the web page fully loads |
-|`if`| [bool](https://github.com/G1ANT-Robot/G1ANT.Manual/blob/master/G1ANT-Language/Structures/bool.md) | no | true | runs the command only if condition is true |
-|`timeout`| [variable](https://github.com/G1ANT-Robot/G1ANT.Manual/blob/master/G1ANT-Language/Special-Characters/variable.md) | no | [♥timeoutselenium](https://github.com/G1ANT-Robot/G1ANT.Manual/blob/master/G1ANT-Language/Variables/Special-Variables.md) | specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed |
-|`errorjump` | [label](https://github.com/G1ANT-Robot/G1ANT.Manual/blob/master/G1ANT-Language/Structures/label.md) | no | | name of the label to jump to if given `timeout` expires |
-|`errormessage`| [string](https://github.com/G1ANT-Robot/G1ANT.Manual/blob/master/G1ANT-Language/Structures/string.md) | no |  | message that will be shown in case error occurs and no `errorjump` argument is specified |
+|`url`| [text](G1ANT.Language/G1ANT.Language/Structures/TextStructure.md) | no|  | Webpage address to load |
+|`nowait` | [bool](G1ANT.Language/G1ANT.Language/Structures/BooleanStructure.md) | no | false | By default, waits until the webpage fully loads |
+| `if`           | [bool](G1ANT.Language/G1ANT.Language/Structures/BooleanStructure.md) | no       | true                                                        | Executes the command only if a specified condition is true   |
+| `timeout`      | [timespan](G1ANT.Language/G1ANT.Language/Structures/TimeSpanStructure.md) | no       | [♥timeoutselenium](G1ANT.Language/G1ANT.Addon.Core/Variables/TimeoutSeleniumVariable.md) | Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed |
+| `errorcall`    | [procedure](G1ANT.Language/G1ANT.Language/Structures/ProcedureStructure.md) | no       |                                                             | Name of a procedure to call when the command throws an exception or when a given `timeout` expires |
+| `errorjump`    | [label](G1ANT.Language/G1ANT.Language/Structures/LabelStructure.md) | no       |                                                             | Name of the label to jump to when the command throws an exception or when a given `timeout` expires |
+| `errormessage` | [text](G1ANT.Language/G1ANT.Language/Structures/TextStructure.md) | no       |                                                             | A message that will be shown in case the command throws an exception or when a given `timeout` expires, and no `errorjump` argument is specified |
+| `errorresult`  | [variable](G1ANT.Language/G1ANT.Language/Structures/VariableStructure.md) | no       |                                                             | Name of a variable that will store the returned exception. The variable will be of [error](G1ANT.Language/G1ANT.Language/Structures/ErrorStructure.md) structure  |
 
-For more information about `if`, `timeout`, `errorjump` and `errormessage` arguments, please visit [Common Arguments](https://github.com/G1ANT-Robot/G1ANT.Manual/blob/master/G1ANT-Language/Common-Arguments.md)  manual page.
+For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
-This command is contained in **G1ANT.Addon.Selenium.dll**.
-See: [https://github.com/G1ANT-Robot/G1ANT.Addon.Selenium](https://github.com/G1ANT-Robot/G1ANT.Addon.Selenium)
+## Example
 
-**Example 1:**
-
-In order to check how this command works, we should open the browser first, then open a few new tabs using  `selenium.newtab` command.
-
-```G1ANT
-selenium.open type ‴firefox‴ url ‴wp.pl‴ result ♥wp
- selenium.newtab url ‴facebook.com‴
- selenium.newtab url ‴google.com‴
-```
-
-**Example 2:**
-
-In this example you can see that the browser initially waits until ‴http://www.bbc.com/news‴ loads (default value is false, so G1ANT.Robot waits until the webpage fully loads) and then G1ANT.Robot opens ‴https://www.theguardian.com/international‴ without waiting for ‴amazon.com‴ to fully load.
+In the following example the browser waits until the first webpage, BBC, is loaded, but then the robot opens Amazon and immediately starts loading The Guardian, because of the `nowait true` argument:
 
 ```G1ANT
-selenium.open type ‴firefox‴ url ‴http://www.bbc.com/news‴
-selenium.newtab url ‴amazon.com‴ nowait true
-selenium.newtab url ‴https://www.theguardian.com/international‴
-selenium.activatetab search ‴bbc‴ by ‴url‴
+selenium.open chrome url http://www.bbc.com/news
+selenium.newtab amazon.com nowait true
+selenium.newtab https://www.theguardian.com/international
 ```
