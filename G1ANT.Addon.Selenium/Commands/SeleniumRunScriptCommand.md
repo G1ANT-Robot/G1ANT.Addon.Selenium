@@ -34,4 +34,4 @@ selenium.runscript ‴return document.querySelector("body").tagName‴
 dialog ♥result
 ```
 
-> **Note:** It is crucial to use `return` keyword before Javascript code.
+> **Note:** It is crucial to use `return` keyword before Javascript code if this code is designed to return something.
