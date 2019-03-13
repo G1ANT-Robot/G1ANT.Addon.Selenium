@@ -24,7 +24,7 @@ For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormess
 
 ## Example
 
-In the following example, the robot opens Chrome, runs a Java script, which brings up a confirmation message and after a 2-second delay, confirms this message (equivalent of clicking OK):
+In the following example, the robot opens Chrome, runs a Javascript, which brings up a confirmation message and after a 2-second delay, confirms this message (equivalent of clicking OK):
 
 ```G1ANT
 selenium.open chrome
