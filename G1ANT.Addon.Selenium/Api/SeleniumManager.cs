@@ -137,9 +137,16 @@ namespace G1ANT.Addon.Selenium
             RemoveWrapper(wrapper);
         }
 
+        public static void RemoveWrapper(int id)
+        {
+            var toRemove = wrappers.Where(x => x.Id == id).FirstOrDefault();
+            RemoveWrapper(toRemove);
+        }
+
         public static void RemoveWrapper(SeleniumWrapper wrapper)
         {
             wrappers.Remove(wrapper);
+            wrapper = null;
         }
 
         public static void DisposeAllOpenedDrivers()

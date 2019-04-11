@@ -50,10 +50,12 @@ namespace G1ANT.Addon.Selenium
                         arguments.NoWait.Value,
                         Scripter.Log,
                         Scripter.Settings.UserDocsAddonFolder.FullName);
+                int actionID = wrapper.Id;
                 OnScriptEnd = () =>
                 {
                     SeleniumManager.DisposeAllOpenedDrivers();
-                    SeleniumManager.RemoveWrapper(wrapper);
+                    SeleniumManager.RemoveWrapper(actionID);
+                    SeleniumManager.CleanUp();
                 };
                 Scripter.Variables.SetVariableValue(arguments.Result.Value, new IntegerStructure(wrapper.Id));
             }
@@ -61,7 +63,6 @@ namespace G1ANT.Addon.Selenium
             {
                 throw new ApplicationException($"Error occured while opening new selenium instance. Url '{arguments.Url.Value}'. Message: {ex.Message}", ex);
             }
-            OnScriptEnd = SeleniumManager.CleanUp;
         }
     }
 }
