@@ -50,11 +50,11 @@ namespace G1ANT.Addon.Selenium
                         arguments.NoWait.Value,
                         Scripter.Log,
                         Scripter.Settings.UserDocsAddonFolder.FullName);
-                int actionID = wrapper.Id;
+                int wrapperId = wrapper.Id;
                 OnScriptEnd = () =>
                 {
                     SeleniumManager.DisposeAllOpenedDrivers();
-                    SeleniumManager.RemoveWrapper(actionID);
+                    SeleniumManager.RemoveWrapper(wrapperId);
                     SeleniumManager.CleanUp();
                 };
                 Scripter.Variables.SetVariableValue(arguments.Result.Value, new IntegerStructure(wrapper.Id));
