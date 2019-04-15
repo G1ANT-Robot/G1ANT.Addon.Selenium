@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -13,7 +13,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.runscript", Tooltip = "Runs javascript code inside web browser.")]
+    [Command(Name = "selenium.runscript", Tooltip = "This command runs Javascript code inside the web browser.")]
     public class SeleniumRunScriptCommandCommand : Command
     {
         public class Arguments : CommandArguments
@@ -21,10 +21,10 @@ namespace G1ANT.Addon.Selenium
             [Argument(Required = true, Tooltip = "Script which will be used inside web browser")]
             public TextStructure Script { get; set; }
 
-            [Argument(Tooltip = "True if command should wait for new window to appear after click the element.")]
+            [Argument(Tooltip = "If set to `true`, the command should wait for a new window to appear after the script execution")]
             public BooleanStructure WaitForNewWindow { get; set; } = new BooleanStructure(false);
 
-            [Argument(DefaultVariable = "timeoutselenium")]
+            [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
             public override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
             [Argument]

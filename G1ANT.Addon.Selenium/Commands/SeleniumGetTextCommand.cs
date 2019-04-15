@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -12,16 +12,16 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.gettext", Tooltip = "Gets text of specified element.")]
+    [Command(Name = "selenium.gettext", Tooltip = "This command gets text (a value) of a specified element.")]
 
     public class SeleniumGetTextCommand : Command
     {
         public class Arguments : SeleniumCommandArguments
         {
-            [Argument(DefaultVariable = "timeoutselenium")]
+            [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
             public override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
-            [Argument(Tooltip = "Name of variable where value of specified attribute will be stored")]
+            [Argument(Tooltip = "Name of a variable where the value of a specified attribute will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public SeleniumGetTextCommand(AbstractScripter scripter) : base(scripter)

@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.refresh", Tooltip = "Refreshes current web browser.")]
+    [Command(Name = "selenium.refresh", Tooltip = "This command refreshes the current tab content in the web browser.")]
     public class SeleniumRefreshCommand : Command
     {
         public class Arguments : CommandArguments

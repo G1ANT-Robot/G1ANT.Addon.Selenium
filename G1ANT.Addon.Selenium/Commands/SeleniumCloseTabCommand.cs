@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -12,12 +12,12 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.closetab", Tooltip = "Close current tab in current browser.")]
+    [Command(Name = "selenium.closetab", Tooltip = "This command closes the current tab in the current browser.")]
     public class SeleniumCloseTabCommand : Command
     {
         public class Arguments : CommandArguments
         {
-            [Argument(DefaultVariable = "timeoutselenium")]
+            [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
             public override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
         }
         public SeleniumCloseTabCommand(AbstractScripter scripter) : base(scripter)

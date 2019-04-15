@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -14,7 +14,7 @@ using G1ANT.Language;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.callfunction", Tooltip = "Calls function on specified element.")]
+    [Command(Name = "selenium.callfunction", Tooltip = "This command calls a function on a specified element.")]
     public class SeleniumCallFunctionCommand : Command
     {
         public class Arguments : SeleniumCommandArguments
@@ -25,10 +25,10 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "Parameters to be passed to the function")]
             public ListStructure Parameters { get; set; }
 
-            [Argument(Required = true, Tooltip = "Function call type, either 'javascript' or 'jquery'")]
+            [Argument(Required = true, Tooltip = "Function call type: `javascript` or `jquery`")]
             public TextStructure Type { get; set; } = new TextStructure("javascript");
 
-            [Argument(DefaultVariable = "timeoutselenium")]
+            [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout); 
         }
         public SeleniumCallFunctionCommand(AbstractScripter scripter) : base(scripter)

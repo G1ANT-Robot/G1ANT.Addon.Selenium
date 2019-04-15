@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.waitforvalue", Tooltip = "Waits for javascript code to return specified value.")]
+    [Command(Name = "selenium.waitforvalue", Tooltip = "This command waits for a Javascript code to return a specified value.")]
     public class SeleniumWaitForValueCommand : Command
     {
         public class Arguments : CommandArguments
@@ -25,10 +25,10 @@ namespace G1ANT.Addon.Selenium
             [Argument(Required = true, Tooltip = "Pass the full script as string to get it evaluated in browser")]
             public TextStructure Script { get; set; }
 
-            [Argument(Required = true, Tooltip = "Value what we expect that script will return")]
+            [Argument(Required = true, Tooltip = "Expected value that will be returned by the script")]
             public TextStructure ExpectedValue { get; set; }
 
-            [Argument(DefaultVariable = "timeoutie", Tooltip = "Specifies maximum number of milliseconds to wait for browser to get expected value")]
+            [Argument(DefaultVariable = "timeoutie", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
         }
         public SeleniumWaitForValueCommand(AbstractScripter scripter) : base(scripter)

@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -12,7 +12,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.seturl", Tooltip = "Navigates currently active selenium instance to specified url.")]
+    [Command(Name = "selenium.seturl", Tooltip = "This command navigates the currently active selenium instance or tab to a specified URL address.")]
     public class SeleniumSetUrlCommand : Command
     {
         public class Arguments : CommandArguments
@@ -21,10 +21,10 @@ namespace G1ANT.Addon.Selenium
             [Argument(Required = true, Tooltip = "New webpage address")]
             public TextStructure Url { get; set; } = new TextStructure(string.Empty);
 
-            [Argument(DefaultVariable = "timeoutselenium")]
+            [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
-            [Argument(Tooltip = "Does not wait for a webpage to fully load")]
+            [Argument(Tooltip = "By default, waits until the webpage fully loads")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
             
         }

@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -12,13 +12,13 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.gettitle", Tooltip = "Gets title of currently active web browser instance.")]
+    [Command(Name = "selenium.gettitle", Tooltip = "This command gets the title of the currently active web browser instance.")]
     public class SeleniumGetTitleCommand : Command
     {
         public class Arguments : CommandArguments
         {
 
-            [Argument(Tooltip = "Name of variable where title of currently attached web browser instance will be stored")]
+            [Argument(Tooltip = "name of variable where title of currently attached web browser instance will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public SeleniumGetTitleCommand(AbstractScripter scripter) : base(scripter)

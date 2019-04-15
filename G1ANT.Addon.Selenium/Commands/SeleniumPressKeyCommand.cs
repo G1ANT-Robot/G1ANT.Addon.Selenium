@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -12,15 +12,15 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.presskey", Tooltip = "Types text into element.")]
+    [Command(Name = "selenium.presskey", Tooltip = "This command sends a keystroke into a specified element.")]
     public class SeleniumPressKeyCommand : Command
     {
         public class Arguments : SeleniumCommandArguments
         {
-            [Argument(Required = true, Tooltip = "Key to press")]
+            [Argument(Required = true, Tooltip = "Key to be pressed")]
             public TextStructure Key { get; set; }
 
-            [Argument(DefaultVariable = "timeoutselenium")]
+            [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
         }

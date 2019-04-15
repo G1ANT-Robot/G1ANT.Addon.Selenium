@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.open", Tooltip = "Opens new instance of chosen web browser and optionally navigate to specified url address.")]
+    [Command(Name = "selenium.open", Tooltip = "This command opens a new instance of a chosen web browser and optionally navigates to a specified URL address.")]
     public class SeleniumOpenCommand : Command
     {
         public class Arguments : CommandArguments
@@ -27,10 +27,10 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "Webpage address to load")]
             public TextStructure Url { get; set; } = new TextStructure(string.Empty);
 
-            [Argument(DefaultVariable = "timeoutselenium")]
+            [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
-            [Argument(Tooltip = "Does not wait for a webpage to fully load")]
+            [Argument(Tooltip = "By default, waits until the webpage fully loads")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
 
             [Argument]

@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -16,12 +16,12 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.switch", Tooltip = "Changes current active web browser instance.")]
+    [Command(Name = "selenium.switch", Tooltip = "This command changes the currently active web browser instance.")]
     public class SeleniumSwitchCommand : Command
     {
         public class Arguments : CommandArguments
         {
-            [Argument(Required = true, Tooltip = "Id of web browser")]
+            [Argument(Required = true, Tooltip = "ID of the web browser instance")]
             public IntegerStructure Id { get; set; }
         }
         public SeleniumSwitchCommand(AbstractScripter scripter) : base(scripter)

@@ -1,4 +1,4 @@
-﻿/**
+/**
 *    Copyright(C) G1ANT Ltd, All rights reserved
 *    Solution G1ANT.Addon, Project G1ANT.Addon.Selenium
 *    www.g1ant.com
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.close", Tooltip = "Closes web browser.")]
+    [Command(Name = "selenium.close", Tooltip = "This command closes a web browser.")]
     public class SeleniumCloseCommand : Command
     {
         public class Arguments : CommandArguments
