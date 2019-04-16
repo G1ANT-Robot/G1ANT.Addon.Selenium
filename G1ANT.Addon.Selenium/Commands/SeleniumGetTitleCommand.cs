@@ -18,7 +18,7 @@ namespace G1ANT.Addon.Selenium
         public class Arguments : CommandArguments
         {
 
-            [Argument(Tooltip = "name of variable where title of currently attached web browser instance will be stored")]
+            [Argument(Tooltip = "Name of variable where title of currently attached web browser instance will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public SeleniumGetTitleCommand(AbstractScripter scripter) : base(scripter)
