@@ -22,7 +22,7 @@ namespace G1ANT.Addon.Selenium
     {
         public class Arguments : CommandArguments
         {
-            [Argument(Required = true, Tooltip = "Pass the full script as string to get it evaluated in browser")]
+            [Argument(Required = true, Tooltip = "The full Javascript code to be evaluated in the browser")]
             public TextStructure Script { get; set; }
 
             [Argument(Required = true, Tooltip = "Expected value that will be returned by the script")]

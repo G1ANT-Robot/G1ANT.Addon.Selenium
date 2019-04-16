@@ -18,7 +18,7 @@ namespace G1ANT.Addon.Selenium
         public class Arguments : CommandArguments
         {
 
-            [Argument(Required = true, Tooltip = "New webpage address")]
+            [Argument(Required = true, Tooltip = "Webpage address to be loaded")]
             public TextStructure Url { get; set; } = new TextStructure(string.Empty);
 
             [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]

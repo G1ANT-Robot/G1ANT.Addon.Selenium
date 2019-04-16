@@ -24,7 +24,7 @@ namespace G1ANT.Addon.Selenium
             [Argument(Required = true, Tooltip = "Defines which web browser we use")]
             public TextStructure Type { get; set; }
 
-            [Argument(Tooltip = "Webpage address to load")]
+            [Argument(Tooltip = "URL address of a webpage to be loaded")]
             public TextStructure Url { get; set; } = new TextStructure(string.Empty);
 
             [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]

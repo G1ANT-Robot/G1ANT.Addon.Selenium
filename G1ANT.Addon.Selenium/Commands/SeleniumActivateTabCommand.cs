@@ -12,7 +12,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.activatetab", Tooltip = "Activates browser's tab.")]
+    [Command(Name = "selenium.activatetab", Tooltip = "This command activates a browser tab specified by a part of its title or URL address.")]
     public class SeleniumActivateTabCommand : Command
     {
         public class Arguments : CommandArguments

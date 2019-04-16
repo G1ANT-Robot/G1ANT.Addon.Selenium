@@ -19,7 +19,7 @@ namespace G1ANT.Addon.Selenium
     {
         public class Arguments : SeleniumCommandArguments
         {
-            [Argument(Required = true, Tooltip = "Name of function to call")]
+            [Argument(Required = true, Tooltip = "Name of a function to call")]
             public TextStructure FunctionName { get; set; }
 
             [Argument(Tooltip = "Parameters to be passed to the function")]

@@ -18,7 +18,7 @@ namespace G1ANT.Addon.Selenium
     {
         public class Arguments : SeleniumCommandArguments
         {
-            [Argument(Required = true, Tooltip = "Name of attribute to obtain value of")]
+            [Argument(Required = true, Tooltip = "Name of an attribute to obtain a value of")]
             public TextStructure Name { get; set; }
 
             [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]

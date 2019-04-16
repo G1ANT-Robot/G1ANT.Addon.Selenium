@@ -18,7 +18,7 @@ namespace G1ANT.Addon.Selenium
     {
         public class Arguments : CommandArguments
         {
-            [Argument(Required = true, Tooltip = "Script which will be used inside web browser")]
+            [Argument(Required = true, Tooltip = "Script to be executed in the web browser")]
             public TextStructure Script { get; set; }
 
             [Argument(Tooltip = "If set to `true`, the command should wait for a new window to appear after the script execution")]
