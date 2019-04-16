@@ -12,7 +12,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.newtab", Tooltip = "This command adds a new tab to the current browser.")]
+    [Command(Name = "selenium.newtab", Tooltip = "This command adds a new tab to the current browser")]
     public class SeleniumNewTabCommand : Command
     {
         public class Arguments : CommandArguments

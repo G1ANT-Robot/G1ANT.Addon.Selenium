@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.open", Tooltip = "This command opens a new instance of a chosen web browser and optionally navigates to a specified URL address.")]
+    [Command(Name = "selenium.open", Tooltip = "This command opens a new instance of a chosen web browser and optionally navigates to a specified URL address")]
     public class SeleniumOpenCommand : Command
     {
         public class Arguments : CommandArguments

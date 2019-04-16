@@ -13,7 +13,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.click", Tooltip = "This command clicks a specified element on an active webpage.")]
+    [Command(Name = "selenium.click", Tooltip = "This command clicks a specified element on an active webpage")]
     public class SeleniumClickCommand : Command
     {
         public class Arguments : SeleniumCommandArguments

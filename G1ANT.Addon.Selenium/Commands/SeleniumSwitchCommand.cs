@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.switch", Tooltip = "This command changes the currently active web browser instance.")]
+    [Command(Name = "selenium.switch", Tooltip = "This command changes the currently active web browser instance")]
     public class SeleniumSwitchCommand : Command
     {
         public class Arguments : CommandArguments

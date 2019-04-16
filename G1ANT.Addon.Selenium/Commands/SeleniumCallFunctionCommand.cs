@@ -14,7 +14,7 @@ using G1ANT.Language;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.callfunction", Tooltip = "This command calls a function on a specified element.")]
+    [Command(Name = "selenium.callfunction", Tooltip = "This command calls a function on a specified element")]
     public class SeleniumCallFunctionCommand : Command
     {
         public class Arguments : SeleniumCommandArguments

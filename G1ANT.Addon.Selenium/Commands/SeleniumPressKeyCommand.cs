@@ -12,7 +12,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.presskey", Tooltip = "This command sends a keystroke into a specified element.")]
+    [Command(Name = "selenium.presskey", Tooltip = "This command sends a keystroke into a specified element")]
     public class SeleniumPressKeyCommand : Command
     {
         public class Arguments : SeleniumCommandArguments

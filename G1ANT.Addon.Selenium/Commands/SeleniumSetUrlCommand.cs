@@ -12,7 +12,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.seturl", Tooltip = "This command navigates the currently active selenium instance or tab to a specified URL address.")]
+    [Command(Name = "selenium.seturl", Tooltip = "This command navigates the currently active selenium instance or tab to a specified URL address")]
     public class SeleniumSetUrlCommand : Command
     {
         public class Arguments : CommandArguments

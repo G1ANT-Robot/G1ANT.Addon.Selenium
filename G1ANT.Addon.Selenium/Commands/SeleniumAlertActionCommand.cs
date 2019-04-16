@@ -13,7 +13,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.alertaction", Tooltip = "Waits for an alert and performs a specified action.")]
+    [Command(Name = "selenium.alertaction", Tooltip = "Waits for an alert and performs a specified action")]
     public class SeleniumAlertActionCommand : Command
     {
         public class Arguments : CommandArguments

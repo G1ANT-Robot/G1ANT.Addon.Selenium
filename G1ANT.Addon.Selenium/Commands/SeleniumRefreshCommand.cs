@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.refresh", Tooltip = "This command refreshes the current tab content in the web browser.")]
+    [Command(Name = "selenium.refresh", Tooltip = "This command refreshes the current tab content in the web browser")]
     public class SeleniumRefreshCommand : Command
     {
         public class Arguments : CommandArguments

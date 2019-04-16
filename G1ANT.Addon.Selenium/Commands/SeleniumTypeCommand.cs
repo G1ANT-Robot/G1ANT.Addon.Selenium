@@ -12,7 +12,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.type", Tooltip = "This command types text into a specified element.")]
+    [Command(Name = "selenium.type", Tooltip = "This command types text into a specified element")]
     public class SeleniumTypeCommand : Command
     {
         public class Arguments : SeleniumCommandArguments

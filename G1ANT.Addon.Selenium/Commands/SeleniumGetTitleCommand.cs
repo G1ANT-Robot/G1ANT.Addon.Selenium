@@ -12,7 +12,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.gettitle", Tooltip = "This command gets the title of the currently active web browser instance.")]
+    [Command(Name = "selenium.gettitle", Tooltip = "This command gets the title of the currently active web browser instance")]
     public class SeleniumGetTitleCommand : Command
     {
         public class Arguments : CommandArguments

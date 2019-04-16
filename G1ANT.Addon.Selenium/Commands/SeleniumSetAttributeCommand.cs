@@ -12,7 +12,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.setattribute", Tooltip = "This command sets a specified attribute of a specified element.")]
+    [Command(Name = "selenium.setattribute", Tooltip = "This command sets a specified attribute of a specified element")]
 
     public class SeleniumSetAttributeCommand : Command
     {

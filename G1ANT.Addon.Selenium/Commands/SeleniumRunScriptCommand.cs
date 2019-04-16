@@ -13,7 +13,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.runscript", Tooltip = "This command runs Javascript code inside the web browser.")]
+    [Command(Name = "selenium.runscript", Tooltip = "This command runs Javascript code inside the web browser")]
     public class SeleniumRunScriptCommandCommand : Command
     {
         public class Arguments : CommandArguments

@@ -12,7 +12,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.gettext", Tooltip = "This command gets text (a value) of a specified element.")]
+    [Command(Name = "selenium.gettext", Tooltip = "This command gets text (a value) of a specified element")]
 
     public class SeleniumGetTextCommand : Command
     {

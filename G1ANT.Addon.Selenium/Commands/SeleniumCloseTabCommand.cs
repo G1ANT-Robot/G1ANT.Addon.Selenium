@@ -12,7 +12,7 @@ using System;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.closetab", Tooltip = "This command closes the current tab in the current browser.")]
+    [Command(Name = "selenium.closetab", Tooltip = "This command closes the current tab in the current browser")]
     public class SeleniumCloseTabCommand : Command
     {
         public class Arguments : CommandArguments

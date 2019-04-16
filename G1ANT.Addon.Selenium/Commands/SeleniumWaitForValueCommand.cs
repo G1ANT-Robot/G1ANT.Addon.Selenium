@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.waitforvalue", Tooltip = "This command waits for a Javascript code to return a specified value.")]
+    [Command(Name = "selenium.waitforvalue", Tooltip = "This command waits for a Javascript code to return a specified value")]
     public class SeleniumWaitForValueCommand : Command
     {
         public class Arguments : CommandArguments

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.close", Tooltip = "This command closes a web browser.")]
+    [Command(Name = "selenium.close", Tooltip = "This command closes a web browser")]
     public class SeleniumCloseCommand : Command
     {
         public class Arguments : CommandArguments
