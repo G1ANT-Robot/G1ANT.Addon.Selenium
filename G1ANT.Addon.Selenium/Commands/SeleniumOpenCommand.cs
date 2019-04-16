@@ -21,7 +21,7 @@ namespace G1ANT.Addon.Selenium
     {
         public class Arguments : CommandArguments
         {
-            [Argument(Required = true, Tooltip = "Defines which web browser we use")]
+            [Argument(Required = true, Tooltip = "Name of a web browser")]
             public TextStructure Type { get; set; }
 
             [Argument(Tooltip = "URL address of a webpage to be loaded")]
