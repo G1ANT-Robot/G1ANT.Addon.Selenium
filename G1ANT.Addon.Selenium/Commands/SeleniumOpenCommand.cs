@@ -33,7 +33,7 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "By default, waits until the webpage fully loads")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
 
-            [Argument]
+            [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
         public SeleniumOpenCommand(AbstractScripter scripter) : base(scripter)
