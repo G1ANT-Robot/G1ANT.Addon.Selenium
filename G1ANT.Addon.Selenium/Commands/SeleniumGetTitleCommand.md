@@ -22,6 +22,8 @@ This command gets the title of the currently active web browser instance.
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first, and they refer to the browser’s first tab by default. If you have more tabs opened and want to use the `selenium.` commands on a tab other than the first one, use the `selenium.activatetab` command to change the active tab.
+
 ## Example
 
 The simple script below opens G1ANT website in Chrome, stores its title in the `♥tab1` variable, then opens Facebook in a new tab and stores its title in the `♥tab2` variable. Finally, it displays both titles in dialog boxes and closes the browser:

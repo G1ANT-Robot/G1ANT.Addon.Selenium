@@ -23,6 +23,8 @@ This command adds a new tab to the current browser.
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first.
+
 ## Example
 
 In the following example the browser waits until the first webpage, BBC, is loaded, but then the robot opens Amazon and immediately starts loading The Guardian, because of the `nowait true` argument:

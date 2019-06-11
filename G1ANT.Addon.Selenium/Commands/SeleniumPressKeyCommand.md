@@ -26,6 +26,8 @@ This command sends a keystroke into a specified element.
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first, and they refer to the browser’s first tab by default. If you have more tabs opened and want to use the `selenium.` commands on a tab other than the first one, use the `selenium.activatetab` command to change the active tab.
+
 ## Example
 
 The script below opens DuckDuckGo search engine in Chrome, then enters “*whale sharks*” search phrase into the search box (an element found by its ID named `search_form_input_homepage`). After a 2-second delay the robot simulates pressing **Enter** key on the search button (ID: `search_button_homepage`):

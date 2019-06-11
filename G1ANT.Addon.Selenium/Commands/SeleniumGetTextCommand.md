@@ -26,6 +26,8 @@ This command gets text (a value) of a specified element.
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first, and they refer to the browser’s first tab by default. If you have more tabs opened and want to use the `selenium.` commands on a tab other than the first one, use the `selenium.activatetab` command to change the active tab.
+
 ## Example
 
 In this example the robot opens Google Finance in Chrome, then searches for an element specified by its XPath and returns the value of this element. Here, the current USD/EUR quote will be displayed in a dialog box:

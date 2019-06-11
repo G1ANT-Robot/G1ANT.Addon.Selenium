@@ -21,6 +21,8 @@ This command refreshes the current tab content in the web browser.
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first, and they refer to the browser’s first tab by default. If you have more tabs opened and want to use the `selenium.` commands on a tab other than the first one, use the `selenium.activatetab` command to change the active tab.
+
 ## Example
 
 The following script opens three websites in Chrome and refreshes the content of the currently active tab (the one that was opened last):

@@ -22,6 +22,8 @@ Waits for an alert and performs a specified action.
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first, and they refer to the browser’s first tab by default. If you have more tabs opened and want to use the `selenium.` commands on a tab other than the first one, use the `selenium.activatetab` command to change the active tab.
+
 ## Example
 
 In the following example, the robot opens Chrome, runs a Javascript, which brings up a confirmation message and after a 2-second delay, confirms this message (equivalent of clicking OK):

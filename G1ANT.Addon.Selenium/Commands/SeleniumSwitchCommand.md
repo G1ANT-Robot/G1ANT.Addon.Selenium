@@ -22,6 +22,8 @@ This command changes the currently active web browser instance.
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first.
+
 ## Example
 
 In the following script the robot opens Firefox and Chrome browsers and each has its own ID stored in a variable specified by the `result` argument. Them, using the `selenium.switch` command, the robot switches to the browser specified by its ID:

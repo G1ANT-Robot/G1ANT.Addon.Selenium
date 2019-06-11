@@ -23,6 +23,8 @@ This command waits for a Javascript code to return a specified value.
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first, and they refer to the browser’s first tab by default. If you have more tabs opened and want to use the `selenium.` commands on a tab other than the first one, use the `selenium.activatetab` command to change the active tab.
+
 ## Example
 
 With the `selenium.waitforvalue` command you can check if an element on the webpage is fully loaded, so that the robot can perform further actions. It is useful when you want to make sure that a certain element is ready for typing inside of it.

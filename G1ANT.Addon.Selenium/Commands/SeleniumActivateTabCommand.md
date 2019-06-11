@@ -23,6 +23,8 @@ This command activates a browser tab specified by a part of its title or URL add
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first.
+
 ## Example
 
 In the following example, G1ANT website is opened in Firefox, then two tabs are added. Finally, the robot activates the first tab again using a part of its URL address as a search phrase:

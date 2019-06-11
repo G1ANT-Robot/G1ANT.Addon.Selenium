@@ -26,6 +26,8 @@ This command clicks a specified element on an active webpage.
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first, and they refer to the browser’s first tab by default. If you have more tabs opened and want to use the `selenium.` commands on a tab other than the first one, use the `selenium.activatetab` command to change the active tab.
+
 ## Example
 
 This example shows how to click an element on a website: the robot opens Chrome, maximizes its window, then the `selenium.click` command searches for a class called `btn-print` and clicks this element (a printer icon). A printer-friendly version of the page appears and the two `keyboard` commands start printing of the document:

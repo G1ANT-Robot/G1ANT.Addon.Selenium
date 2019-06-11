@@ -21,6 +21,8 @@ This command closes a web browser.
 
 For more information about `if`, `timeout`, `errorcall`, `errorjump`, `errormessage` and `errorresult` arguments, see [Common Arguments](G1ANT.Manual/appendices/common-arguments.md) page.
 
+> **Note:** the `selenium.` commands require opening a browser with the `selenium.open` command first.
+
 ## Example
 
 In the following script the robot opens Facebook in Firefox, and after 3 seconds the browser is closed.
