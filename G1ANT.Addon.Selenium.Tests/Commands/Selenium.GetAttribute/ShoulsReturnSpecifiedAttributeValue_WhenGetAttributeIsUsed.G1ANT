@@ -1,0 +1,9 @@
+addon selenium version 2.205.17304.1000
+
+selenium.open chrome url https://currentmillis.com/
+selenium.getattribute name value search ‴//*[@id="startMillis"]‴ by xpath result ♥timeStampPriorRefresh
+selenium.refresh
+selenium.getattribute name value search ‴//*[@id="startMillis"]‴ by xpath result ♥timeStampAfterRefresh
+selenium.close
+
+test ⊂long.Parse(♥timeStampPriorRefresh) < long.Parse(♥timeStampAfterRefresh)⊃

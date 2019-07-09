@@ -1,0 +1,9 @@
+addon selenium version 2.205.17304.1000
+
+♥expectedText = ‴Gmail‴
+
+selenium.open chrome url google.com
+selenium.gettext search ‴//div/div/div[1]/div[1]/a‴ by xpath
+selenium.close
+
+test ⊂♥result == ♥expectedText⊃

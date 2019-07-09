@@ -1,0 +1,13 @@
+addon selenium version 2.205.17304.1000
+
+selenium.open chrome url google.com result ♥chromeWithGoogleInstance
+selenium.gettitle ♥chromeTitle
+selenium.open chrome url bing.com result ♥chromeWithBingInstance
+selenium.gettitle ♥bingTitle
+selenium.switch ♥chromeWithGoogleInstance
+selenium.gettitle ♥lastTitle
+selenium.close
+selenium.switch ♥chromeWithBingInstance
+selenium.close
+
+test ⊂♥chromeTitle == ♥lastTitle⊃

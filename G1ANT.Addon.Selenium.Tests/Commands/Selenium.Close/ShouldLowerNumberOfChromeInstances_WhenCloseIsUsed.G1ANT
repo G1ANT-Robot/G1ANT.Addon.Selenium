@@ -1,0 +1,8 @@
+addon selenium version 2.205.17304.1000
+
+selenium.open chrome url google.com
+window title ‴google*‴
+selenium.close 
+♥numberOfChromeInstances = ⊂System.Diagnostics.Process.GetProcessesByName("chrome").Length⊃
+
+test ⊂♥numberOfChromeInstances == 0⊃

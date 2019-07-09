@@ -1,0 +1,13 @@
+addon selenium version 2.205.17304.1000
+
+♥firstUrl = ‴google.com‴
+♥secondUrl = ‴sjp.pl‴
+
+selenium.open chrome url ♥firstUrl 
+selenium.newtab ♥secondUrl 
+selenium.gettitle ♥secondTitle
+selenium.activatetab ♥firstUrl by url
+selenium.gettitle ♥firstTitle
+selenium.close
+
+test ⊂♥firstTitle != ♥secondTitle⊃

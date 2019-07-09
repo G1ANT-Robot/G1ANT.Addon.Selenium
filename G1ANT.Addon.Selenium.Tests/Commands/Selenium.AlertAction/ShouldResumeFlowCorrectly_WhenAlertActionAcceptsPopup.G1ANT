@@ -1,0 +1,8 @@
+addon selenium version 2.205.17304.1000
+
+selenium.open chrome
+selenium.runscript javascript:confirm()
+selenium.alertaction accept
+selenium.close
+
+-this test verifies flow only
