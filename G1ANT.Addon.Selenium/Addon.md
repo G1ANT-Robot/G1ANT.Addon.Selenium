@@ -24,3 +24,9 @@
 | [selenium.switch](https://manual.g1ant.com/link/G1ANT.Addon.Selenium/G1ANT.Addon.Selenium/Commands/SeleniumSwitchCommand.md) | This command changes the currently active web browser instance |
 | [selenium.type](https://manual.g1ant.com/link/G1ANT.Addon.Selenium/G1ANT.Addon.Selenium/Commands/SeleniumTypeCommand.md) | This command types text into a specified element |
 | [selenium.waitforvalue](https://manual.g1ant.com/link/G1ANT.Addon.Selenium/G1ANT.Addon.Selenium/Commands/SeleniumWaitForValueCommand.md) | This command waits for a Javascript code to return a specified value |
+
+ All Variables
+
+| Name | Description |
+| ---- | ----------- |
+| [timeoutselenium](https://manual.g1ant.com/link/G1ANT.Addon.Selenium/G1ANT.Addon.Selenium/Variables/TimeoutSeleniumVariable.md) | Determines the timeout value (in ms) for several `selenium.` commands; the default value is 10000 (10 seconds) |
