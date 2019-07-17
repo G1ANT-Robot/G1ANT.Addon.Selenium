@@ -107,6 +107,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SeleniumAddon.cs" />
+    <Compile Include="Variables\TimeoutSeleniumVariable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
