@@ -89,6 +89,7 @@
     <Compile Include="Commands\SeleniumGetAttributeCommand.cs" />
     <Compile Include="Commands\SeleniumCallFunctionCommand.cs" />
     <Compile Include="Commands\SeleniumPressKeyCommand.cs" />
+    <Compile Include="Commands\SeleniumGetUrlCommand.cs" />
     <Compile Include="Commands\SeleniumTypeCommand.cs" />
     <Compile Include="Commands\SeleniumNewTabCommand.cs" />
     <Compile Include="Commands\SeleniumClickCommand.cs" />

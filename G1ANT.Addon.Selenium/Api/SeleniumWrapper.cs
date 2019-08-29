@@ -27,6 +27,8 @@ namespace G1ANT.Addon.Selenium
         {
             protected IWebDriver webDriver = null;
             protected int initialWindowHandlesCount = 0;
+            public string GetCurrentUrl => webDriver.Url;
+
             public NewPopupWindowHandler(IWebDriver driver)
             {
                 webDriver = driver;
