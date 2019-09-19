@@ -22,11 +22,13 @@ namespace G1ANT.Addon.Selenium
         private IWebDriver webDriver = null;
         private readonly int scriptSeconds = 4;
         AbstractLogger logger = null;
+        public string GetCurrentUrl => webDriver.Url;
 
         public class NewPopupWindowHandler
         {
             protected IWebDriver webDriver = null;
             protected int initialWindowHandlesCount = 0;
+
             public NewPopupWindowHandler(IWebDriver driver)
             {
                 webDriver = driver;
