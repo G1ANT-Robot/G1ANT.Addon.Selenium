@@ -84,7 +84,7 @@
     <Compile Include="Api\SeleniumWrapper.cs" />
     <Compile Include="Commands\SeleniumAlertActionCommand.cs" />
     <Compile Include="Commands\SeleniumCloseTabCommand.cs" />
-    <Compile Include="Commands\SeleniumGetIHtml.cs" />
+    <Compile Include="Commands\SeleniumGetHtml.cs" />
     <Compile Include="Commands\SeleniumGetOuterHtml.cs" />
     <Compile Include="Commands\SeleniumGetInnerHtml.cs" />
     <Compile Include="Commands\SeleniumGetTextCommand.cs" />
