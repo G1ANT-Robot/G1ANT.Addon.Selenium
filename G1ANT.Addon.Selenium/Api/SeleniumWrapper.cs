@@ -364,7 +364,7 @@ namespace G1ANT.Addon.Selenium
             return res;
         }
 
-        public string GetHtml(SeleniumCommandArguments search, TimeSpan timeout)
+        public string GetHtml(SeleniumIFrameArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
             if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))

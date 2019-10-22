@@ -16,14 +16,8 @@ namespace G1ANT.Addon.Selenium
 
     public class SeleniumGetHtmlCommand : Command
     {
-        public class Arguments : CommandArguments
+        public class Arguments : SeleniumIFrameArguments
         {
-            [Argument(Tooltip = "Phrase to find an iframe by")]
-            public TextStructure IFrameSearch { get; set; }
-
-            [Argument(Tooltip = "Specifies an iframe selector: 'id', 'class', 'cssselector', 'tag', 'xpath', 'name', 'query', 'jquery'")]
-            public TextStructure IFrameBy { get; set; } = new TextStructure(ElementSearchBy.Id.ToString().ToLower());
-
             [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
             public override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
