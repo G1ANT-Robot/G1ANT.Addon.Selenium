@@ -83,6 +83,9 @@
     <Compile Include="Api\SeleniumWrapper.cs" />
     <Compile Include="Commands\SeleniumAlertActionCommand.cs" />
     <Compile Include="Commands\SeleniumCloseTabCommand.cs" />
+    <Compile Include="Commands\SeleniumGetIHtml.cs" />
+    <Compile Include="Commands\SeleniumGetIOuterHtml.cs" />
+    <Compile Include="Commands\SeleniumGetInnerHtml.cs" />
     <Compile Include="Commands\SeleniumGetTextCommand.cs" />
     <Compile Include="Commands\SeleniumSetAttributeCommand.cs" />
     <Compile Include="Commands\SeleniumActivateTabCommand.cs" />
@@ -163,6 +166,23 @@
   <Import Project="..\packages\Selenium.Firefox.WebDriver.0.23.0\build\Selenium.Firefox.WebDriver.targets" Condition="Exists('..\packages\Selenium.Firefox.WebDriver.0.23.0\build\Selenium.Firefox.WebDriver.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.45.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.45.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.IEDriver.3.141.5\build\Selenium.WebDriver.IEDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.IEDriver.3.141.5\build\Selenium.WebDriver.IEDriver.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>@ECHO OFF
+IF $(ConfigurationName) EQU Release (
+       ECHO Copying file into $(registry:HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders@Personal)\G1ANT.Robot\Add-On\$(TargetFileName)
+      REM ( TYPE nul &amp;gt;&amp;gt; "$(registry:HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders@Personal)\G1ANT.Robot\Add-On\$(TargetFileName)" ) 2&amp;gt;nul || GOTO :error
+       XCOPY "$(TargetPath)" "$(registry:HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders@Personal)\G1ANT.Robot\Add-On" /y /Q
+       IF %2525errorlevel%2525 NEQ 0 GOTO error
+    ) ELSE (
+       ECHO If you want to see your Addon in the G1ANT.Studio, you should
+       ECHO Copy file '$(TargetPath)'
+       ECHO Into '$(registry:HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders@Personal)\G1ANT.Robot\Add-On\$(TargetFileName)'
+       ECHO or build in release environment
+    )
+GOTO :eof
+:error
+ECHO Please close G1ANT.Robot.exe before build</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -364,6 +364,42 @@ namespace G1ANT.Addon.Selenium
             return res;
         }
 
+        public string GetHtml(SeleniumCommandArguments search, TimeSpan timeout)
+        {
+            PreCheckCurrentWindowHandle();
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            var element = FindElement("//html", "xpath", timeout);
+            var res = element?.GetAttribute("outerHTML") ?? string.Empty;
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
+                webDriver.SwitchTo().DefaultContent();
+            return res;
+        }
+
+        public string GetInnerHtml(SeleniumCommandArguments search, TimeSpan timeout)
+        {
+            PreCheckCurrentWindowHandle();
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            var element = FindElement(search.Search.Value, search.By.Value, timeout);
+            var res = element?.GetAttribute("innerHTML") ?? string.Empty;
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
+                webDriver.SwitchTo().DefaultContent();
+            return res;
+        }
+
+        public string GetOuterHtml(SeleniumCommandArguments search, TimeSpan timeout)
+        {
+            PreCheckCurrentWindowHandle();
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            var element = FindElement(search.Search.Value, search.By.Value, timeout);
+            var res = element?.GetAttribute("outerHTML") ?? string.Empty;
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
+                webDriver.SwitchTo().DefaultContent();
+            return res;
+        }
+
         public string GetTextValue(SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
