@@ -37,7 +37,7 @@ namespace G1ANT.Addon.Selenium
                 arguments,
                 arguments.Timeout.Value);
 
-                Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(attributeValue));
+                Scripter.Variables.SetVariableValue(arguments.Result.Value, new HtmlStructure(attributeValue));
             }
             catch (Exception ex)
             {
