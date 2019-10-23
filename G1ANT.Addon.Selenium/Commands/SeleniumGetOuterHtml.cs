@@ -34,8 +34,7 @@ namespace G1ANT.Addon.Selenium
             try
             {
                 var attributeValue = SeleniumManager.CurrentWrapper.GetOuterHtml(
-                arguments,
-                arguments.Timeout.Value);
+                arguments);
 
                 Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(attributeValue));
             }
