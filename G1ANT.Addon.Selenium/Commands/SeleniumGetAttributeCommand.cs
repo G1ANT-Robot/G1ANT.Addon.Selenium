@@ -36,9 +36,10 @@ namespace G1ANT.Addon.Selenium
             {
                 string attributeValue = SeleniumManager.CurrentWrapper.GetAttributeValue(
                 arguments.Name.Value,
-                arguments);
+                arguments,
+                arguments.Timeout.Value);
 
-               Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(attributeValue));
+                Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(attributeValue));
             }
             catch (Exception ex)
             {

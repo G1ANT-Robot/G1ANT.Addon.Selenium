@@ -33,7 +33,8 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                var attributeValue = SeleniumManager.CurrentWrapper.GetInnerHtml(arguments);
+                var attributeValue = SeleniumManager.CurrentWrapper.GetInnerHtml(arguments,
+                arguments.Timeout.Value);
 
                 Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(attributeValue));
             }
