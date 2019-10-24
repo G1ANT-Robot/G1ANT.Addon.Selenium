@@ -76,6 +76,7 @@
     <Compile Include="Api\CustomExpectedConditions.cs" />
     <Compile Include="Api\Enums\BrowserType.cs" />
     <Compile Include="Api\Enums\ElementSearchBy.cs" />
+    <Compile Include="Api\SeleniumIFrameArguments.cs" />
     <Compile Include="Api\SeleniumCommandArguments.cs" />
     <Compile Include="Api\SeleniumExtensions.cs" />
     <Compile Include="Api\SeleniumManager.cs" />
@@ -83,6 +84,9 @@
     <Compile Include="Api\SeleniumWrapper.cs" />
     <Compile Include="Commands\SeleniumAlertActionCommand.cs" />
     <Compile Include="Commands\SeleniumCloseTabCommand.cs" />
+    <Compile Include="Commands\SeleniumGetHtml.cs" />
+    <Compile Include="Commands\SeleniumGetOuterHtml.cs" />
+    <Compile Include="Commands\SeleniumGetInnerHtml.cs" />
     <Compile Include="Commands\SeleniumGetTextCommand.cs" />
     <Compile Include="Commands\SeleniumSetAttributeCommand.cs" />
     <Compile Include="Commands\SeleniumActivateTabCommand.cs" />
@@ -163,6 +167,10 @@
   <Import Project="..\packages\Selenium.Firefox.WebDriver.0.23.0\build\Selenium.Firefox.WebDriver.targets" Condition="Exists('..\packages\Selenium.Firefox.WebDriver.0.23.0\build\Selenium.Firefox.WebDriver.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.45.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.45.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.IEDriver.3.141.5\build\Selenium.WebDriver.IEDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.IEDriver.3.141.5\build\Selenium.WebDriver.IEDriver.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

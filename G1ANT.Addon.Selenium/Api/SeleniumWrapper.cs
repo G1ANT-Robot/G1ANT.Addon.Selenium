@@ -352,16 +352,43 @@ namespace G1ANT.Addon.Selenium
             popupHandler.Finish();
         }
 
-        public string GetAttributeValue(string attributeName, SeleniumCommandArguments search, TimeSpan timeout)
+        public string GetAttributeValue(string attributeName, SeleniumCommandArguments search)
         {
             PreCheckCurrentWindowHandle();
             if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
-            IWebElement element = FindElement(search.Search.Value, search.By.Value, timeout);
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, search.Timeout.Value));
+            IWebElement element = FindElement(search.Search.Value, search.By.Value, search.Timeout.Value);
             string res = element?.GetAttribute(attributeName) ?? string.Empty;
             if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
                 webDriver.SwitchTo().DefaultContent();
             return res;
+        }
+
+        public string GetAttributeValue(string attributeName, string elementXPath, SeleniumIFrameArguments search)
+        {
+            PreCheckCurrentWindowHandle();
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, search.Timeout.Value));
+            var element = FindElement(elementXPath, "xpath", search.Timeout.Value);
+            var res = element?.GetAttribute(attributeName) ?? string.Empty;
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
+                webDriver.SwitchTo().DefaultContent();
+            return res;
+        }
+
+        public string GetHtml(SeleniumIFrameArguments search)
+        {
+            return GetAttributeValue("outerHTML", "//html", search);
+        }
+
+        public string GetInnerHtml(SeleniumCommandArguments search)
+        {
+            return GetAttributeValue("innerHTML", search);
+        }
+
+        public string GetOuterHtml(SeleniumCommandArguments search)
+        {
+            return GetAttributeValue("outerHTML", search);
         }
 
         public string GetTextValue(SeleniumCommandArguments search, TimeSpan timeout)
