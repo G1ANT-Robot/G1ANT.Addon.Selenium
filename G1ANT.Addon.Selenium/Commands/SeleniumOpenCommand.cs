@@ -8,11 +8,8 @@
 *
 */
 using G1ANT.Language;
+using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -58,6 +55,10 @@ namespace G1ANT.Addon.Selenium
                     SeleniumManager.CleanUp();
                 };
                 Scripter.Variables.SetVariableValue(arguments.Result.Value, new IntegerStructure(wrapper.Id));
+            }
+            catch(DriverServiceNotFoundException ex)
+            {
+                throw new ApplicationException("MicrosoftWebDriver is missing. To install run the following in an command prompt with admin privilages:\nDISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0" ,ex);
             }
             catch (Exception ex)
             {
