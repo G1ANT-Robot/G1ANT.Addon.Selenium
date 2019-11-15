@@ -88,8 +88,8 @@ namespace G1ANT.Addon.Selenium
             {
                 throw new ApplicationException("Using multiple Edge instances at once is not supported.");
             }
-            IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle, driversDirectory);
-            SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type,scr)
+            IWebDriver driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory);
+            SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type, scr)
             {
                 Id = wrappers.Count > 0 ? wrappers.Max(x => x.Id) + 1 : 0
             };
@@ -129,7 +129,7 @@ namespace G1ANT.Addon.Selenium
                 }
 
             }
-            
+
         }
         public static void Quit(SeleniumWrapper wrapper)
         {
@@ -216,12 +216,12 @@ namespace G1ANT.Addon.Selenium
                     break;
 
                 case BrowserType.Edge:
-                        var edgeService = Edge.EdgeDriverService.CreateDefaultService();
-                        edgeService.HideCommandPromptWindow = true;
-                        var edgeOptions = new Edge.EdgeOptions();
-                        edgeOptions.PageLoadStrategy = PageLoadStrategy.Eager;
-                        iWebDriver = new Edge.EdgeDriver(edgeService, edgeOptions);
-                        newProcessFilter = "edge";
+                    var edgeService = Edge.EdgeDriverService.CreateDefaultService();
+                    edgeService.HideCommandPromptWindow = true;
+                    var edgeOptions = new Edge.EdgeOptions();
+                    edgeOptions.PageLoadStrategy = PageLoadStrategy.Eager;
+                    iWebDriver = new Edge.EdgeDriver(edgeService, edgeOptions);
+                    newProcessFilter = "edge";
                     break;
                 default:
                     throw new ArgumentException($"Could not launch specified browser '{webBrowserName}'");

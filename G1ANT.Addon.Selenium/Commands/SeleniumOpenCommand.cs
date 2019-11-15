@@ -25,7 +25,7 @@ namespace G1ANT.Addon.Selenium
             public TextStructure Url { get; set; } = new TextStructure(string.Empty);
 
             [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
-            public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
+            public override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
             [Argument(Tooltip = "By default, waits until the webpage fully loads")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
@@ -56,9 +56,9 @@ namespace G1ANT.Addon.Selenium
                 };
                 Scripter.Variables.SetVariableValue(arguments.Result.Value, new IntegerStructure(wrapper.Id));
             }
-            catch(DriverServiceNotFoundException ex)
+            catch (DriverServiceNotFoundException ex)
             {
-                throw new ApplicationException("MicrosoftWebDriver is missing. To install run the following in an command prompt with admin privilages:\nDISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0" ,ex);
+                throw new ApplicationException("MicrosoftWebDriver is missing. To install run the following in an command prompt with admin privilages:\nDISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0", ex);
             }
             catch (Exception ex)
             {
