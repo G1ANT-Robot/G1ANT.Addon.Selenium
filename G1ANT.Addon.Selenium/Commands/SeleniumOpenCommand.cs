@@ -41,12 +41,12 @@ namespace G1ANT.Addon.Selenium
             try
             {
                 SeleniumWrapper wrapper = SeleniumManager.CreateWrapper(
-                        arguments.Type.Value,
-                        arguments.Url?.Value,
-                        arguments.Timeout.Value,
-                        arguments.NoWait.Value,
-                        Scripter.Log,
-                        Scripter.Settings.UserDocsAddonFolder.FullName);
+                    arguments.Type.Value,
+                    arguments.Url?.Value,
+                    arguments.Timeout.Value,
+                    arguments.NoWait.Value,
+                    Scripter.Log,
+                    Scripter.Settings.UserDocsAddonFolder.FullName);
                 int wrapperId = wrapper.Id;
                 OnScriptEnd = () =>
                 {
@@ -58,7 +58,7 @@ namespace G1ANT.Addon.Selenium
             }
             catch (DriverServiceNotFoundException ex)
             {
-                throw new ApplicationException("MicrosoftWebDriver is missing. To install run the following in an command prompt with admin privilages:\nDISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0", ex);
+                throw new ApplicationException("Driver not found", ex);
             }
             catch (Exception ex)
             {
