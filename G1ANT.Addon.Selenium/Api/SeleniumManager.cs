@@ -186,17 +186,17 @@ namespace G1ANT.Addon.Selenium
                     break;
 
                 case BrowserType.Firefox:
-                    CreateFireFoxDriver(driversDirectory);
+                    iWebDriver = CreateFireFoxDriver(driversDirectory);
                     newProcessFilter = "firefox";
                     break;
 
                 case BrowserType.InternetExplorer:
-                    CreateIEDriver(driversDirectory);
+                    iWebDriver = CreateIEDriver(driversDirectory);
                     newProcessFilter = "iexplore";
                     break;
 
                 case BrowserType.Edge:
-                    CreateEdgeWebDriver();
+                    iWebDriver = CreateEdgeWebDriver();
                     newProcessFilter = "edge";
                     break;
                 default:
