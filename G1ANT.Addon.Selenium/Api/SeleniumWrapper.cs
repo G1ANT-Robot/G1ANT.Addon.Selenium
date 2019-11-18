@@ -241,15 +241,17 @@ namespace G1ANT.Addon.Selenium
             switch (BrowserType)
             {
                 case BrowserType.Edge:
+                    throw new ApplicationException("The selenium.newtab command is not supported by the Edge selenium driver.");
                 case BrowserType.InternetExplorer:
-                    throw new ApplicationException("NewTab command is not supported by Edge and Internet Explorer selenium driver.");
+                    RunScript(string.Format($"window.open('{url}','_blank');"));
+                    break;
                 case BrowserType.Firefox:
                 case BrowserType.Chrome:
                     RunScript(string.Format($"window.open('','_blank');"));
                     break;
             }
             webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
-            if (!string.IsNullOrEmpty(url))
+            if (!string.IsNullOrEmpty(url) && BrowserType != BrowserType.InternetExplorer)
             {
                 Navigate(url, timeout, noWait);
             }
