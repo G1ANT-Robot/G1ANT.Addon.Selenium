@@ -211,8 +211,10 @@ namespace G1ANT.Addon.Selenium
         {
             var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
             chromeService.HideCommandPromptWindow = true;
-            var chromeOptions = new Chrome.ChromeOptions();
-            chromeOptions.PageLoadStrategy = PageLoadStrategy.None;
+            var chromeOptions = new Chrome.ChromeOptions
+            {
+                PageLoadStrategy = PageLoadStrategy.None
+            };
             chromeOptions.AddArgument("disable-infobars");
             chromeOptions.AddArgument("--disable-bundled-ppapi-flash");
             chromeOptions.AddArgument("--log-level=3");
