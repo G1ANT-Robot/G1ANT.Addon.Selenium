@@ -12,6 +12,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Support.Extensions;
 using System;
 using System.Linq;
 
@@ -401,6 +402,51 @@ namespace G1ANT.Addon.Selenium
             if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
                 webDriver.SwitchTo().DefaultContent();
             return res;
+        }
+
+        public string[][] GetTableElement(SeleniumCommandArguments search, TimeSpan timeout)
+        {
+            PreCheckCurrentWindowHandle();
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            var element = FindElement(search.Search.Value, search.By.Value, timeout);
+
+            if (element.TagName != "table")
+            {
+                try
+                {
+                    element = webDriver.ExecuteJavaScript<IWebElement>("arguments[0].getElementsByTagName(\"table\")[0]", element);
+                }
+                catch (Exception)
+                {
+                    throw new Exception("There are no tables found within the element specified. Try to change the search phrase");
+                }
+            }
+
+            var i = 0;
+            var rowsNumber = GetNumberOfTagNameElements("tr", element);
+            var table = new string[rowsNumber][];
+
+            while (i < rowsNumber)
+            {
+                int j = 0;
+
+                webDriver.ExecuteJavaScript<IWebElement>($"console.log(arguments[0])", element);
+                foreach (var tdElement in webDriver.ExecuteJavaScript<IWebElement>($"return arguments[0].getElementsByTagName(\"tr\")[{i}]", element).FindElements(By.TagName("td")))
+                {
+                    table[i][j] = tdElement.Text;
+                    j++;
+                }
+
+                i++;
+            }
+
+            return table;
+        }
+
+        private int GetNumberOfTagNameElements(string tagName, IWebElement element)
+        {
+            return element.FindElements(By.TagName(tagName)).Count;
         }
 
         public void SetAttributeValue(string attributeName, string attributeValue, SeleniumCommandArguments search, TimeSpan timeout)
