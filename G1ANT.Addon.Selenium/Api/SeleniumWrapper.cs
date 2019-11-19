@@ -415,7 +415,7 @@ namespace G1ANT.Addon.Selenium
             {
                 try
                 {
-                    element = webDriver.ExecuteJavaScript<IWebElement>("arguments[0].getElementsByTagName(\"table\")[0]", element);
+                    element = element.FindElement(By.TagName("table"));
                 }
                 catch (Exception)
                 {
@@ -427,17 +427,16 @@ namespace G1ANT.Addon.Selenium
             var rowsNumber = GetNumberOfTagNameElements("tr", element);
             var table = new string[rowsNumber][];
 
-            while (i < rowsNumber)
+            foreach (var trElement in element.FindElements(By.TagName("tr")))
             {
-                int j = 0;
-
-                webDriver.ExecuteJavaScript<IWebElement>($"console.log(arguments[0])", element);
-                foreach (var tdElement in webDriver.ExecuteJavaScript<IWebElement>($"return arguments[0].getElementsByTagName(\"tr\")[{i}]", element).FindElements(By.TagName("td")))
+                var j = 0;
+                var columnsNumber = GetNumberOfTagNameElements("td", trElement);
+                table[i] = new string[columnsNumber];
+                foreach (var tdElement in trElement.FindElements(By.TagName("td")))
                 {
                     table[i][j] = tdElement.Text;
                     j++;
                 }
-
                 i++;
             }
 
