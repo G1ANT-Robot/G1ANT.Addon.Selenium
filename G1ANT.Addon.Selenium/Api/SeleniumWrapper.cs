@@ -411,9 +411,9 @@ namespace G1ANT.Addon.Selenium
                 webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
             var element = FindElement(search.Search.Value, search.By.Value, timeout);
 
-            if (element.TagName != "table")
+            if (element == null || element.TagName != "table")
             {
-                throw new Exception("The found element is not an HTML table element. Try to change the search phrase so that the correct element is found");
+                throw new Exception("Cannot found the HTML table element. Try to change the search phrase so that the correct element is found");
             }
 
             var dataTable = new DataTable();
