@@ -416,26 +416,16 @@ namespace G1ANT.Addon.Selenium
                 throw new Exception("The found element is not an HTML table element. Try to change the search phrase so that the correct element is found");
             }
 
-            var i = 0;
             var dataTable = new DataTable();
             var trElements = element.FindElements(By.TagName("tr"));
 
             foreach (var trElement in trElements)
             {
-                while (dataTable.Rows.Count < trElements.Count)
-                    dataTable.Rows.Add();
-
-                var j = 0;
                 var tdElements = trElement.FindElements(By.TagName("td"));
-                foreach (var tdElement in tdElements)
-                {
-                    while (dataTable.Columns.Count < tdElements.Count)
-                        dataTable.Columns.Add();
+                while (dataTable.Columns.Count < tdElements.Count)
+                    dataTable.Columns.Add();
 
-                    dataTable.Rows[i][j] = tdElement.Text;
-                    j++;
-                }
-                i++;
+                dataTable.Rows.Add(tdElements.Select(td => td.Text).ToArray());
             }
 
             return dataTable;
