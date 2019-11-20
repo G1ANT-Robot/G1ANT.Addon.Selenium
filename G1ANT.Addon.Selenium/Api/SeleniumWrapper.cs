@@ -449,11 +449,6 @@ namespace G1ANT.Addon.Selenium
             return dataTable;
         }
 
-        private int GetNumberOfTagNameElements(string tagName, IWebElement element)
-        {
-            return element.FindElements(By.TagName(tagName)).Count;
-        }
-
         public void SetAttributeValue(string attributeName, string attributeValue, SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
