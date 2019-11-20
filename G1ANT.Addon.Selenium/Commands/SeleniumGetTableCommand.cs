@@ -8,8 +8,6 @@
 *
 */
 using G1ANT.Language;
-using System;
-using System.Data;
 
 namespace G1ANT.Addon.Selenium
 {
