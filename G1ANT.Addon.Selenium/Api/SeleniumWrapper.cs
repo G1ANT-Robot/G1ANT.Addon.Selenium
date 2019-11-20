@@ -413,14 +413,7 @@ namespace G1ANT.Addon.Selenium
 
             if (element.TagName != "table")
             {
-                try
-                {
-                    element = element.FindElement(By.TagName("table"));
-                }
-                catch (Exception)
-                {
-                    throw new Exception("There are no tables found within the element specified. Try to change the search phrase");
-                }
+                throw new Exception("There are no tables found within the element specified. Try to change the search phrase");
             }
 
             var i = 0;
