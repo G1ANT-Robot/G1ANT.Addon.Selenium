@@ -9,15 +9,16 @@
 */
 using G1ANT.Language;
 using System;
+using System.Data;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.gettable", Tooltip = "This command gets table content from a website and assigns it to a variable of datatable structure")]
+    [Command(Name = "selenium.gettable", Tooltip = "This command gets table from a website and assigns its content to a variable of datatable structure")]
     public class SeleniumGetTableCommand : Command
     {
         public class Arguments : SeleniumCommandArguments
         {
-            [Argument(Tooltip = "Name of a variable where the value of a specified attribute will be stored")]
+            [Argument(Tooltip = "Name of a datatable variable where the table content from a website will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
 
@@ -27,8 +28,22 @@ namespace G1ANT.Addon.Selenium
 
         public void Execute(Arguments arguments)
         {
-            SeleniumManager.CurrentWrapper.GetTableElement(arguments, arguments.Timeout.Value);
-            Scripter.Variables.SetVariableValue(arguments.Result.Value, new DataTableStructure(""));
+            var table = SeleniumManager.CurrentWrapper.GetTableElement(arguments, arguments.Timeout.Value);
+            var dataTable = new DataTable();
+
+            foreach (var row in table)
+            {
+                var i = dataTable.Columns.Count;
+                while (i < row.Length)
+                {
+                    dataTable.Columns.Add();
+                    i++;
+                }
+
+                dataTable.Rows.Add(row);
+            }
+
+            Scripter.Variables.SetVariableValue(arguments.Result.Value, new DataTableStructure(dataTable));
         }
     }
 }
