@@ -413,7 +413,7 @@ namespace G1ANT.Addon.Selenium
 
             if (element == null || element.TagName != "table")
             {
-                throw new Exception("Cannot found the HTML table element. Try to change the search phrase so that the correct element is found");
+                throw new Exception("Cannot find the HTML table element. Try to change the search phrase so that the correct element is found");
             }
 
             var dataTable = new DataTable();
