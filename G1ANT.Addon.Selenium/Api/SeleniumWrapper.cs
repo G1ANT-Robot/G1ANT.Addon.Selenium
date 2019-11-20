@@ -362,7 +362,6 @@ namespace G1ANT.Addon.Selenium
                 IFrameBy = search.IFrameBy,
                 IFrameSearch = search.IFrameSearch,
                 Search = new TextStructure(elementXPath),
-
             }, search.Timeout.Value);
             var res = element?.GetAttribute(attributeName) ?? string.Empty;
             if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
