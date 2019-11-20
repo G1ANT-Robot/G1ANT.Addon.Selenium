@@ -28,22 +28,7 @@ namespace G1ANT.Addon.Selenium
 
         public void Execute(Arguments arguments)
         {
-            var table = SeleniumManager.CurrentWrapper.GetTableElement(arguments, arguments.Timeout.Value);
-            var dataTable = new DataTable();
-
-            foreach (var row in table)
-            {
-                var i = dataTable.Columns.Count;
-                while (i < row.Length)
-                {
-                    dataTable.Columns.Add();
-                    i++;
-                }
-
-                dataTable.Rows.Add(row);
-            }
-
-            Scripter.Variables.SetVariableValue(arguments.Result.Value, new DataTableStructure(dataTable));
+            Scripter.Variables.SetVariableValue(arguments.Result.Value, new DataTableStructure(SeleniumManager.CurrentWrapper.GetTableElement(arguments, arguments.Timeout.Value)));
         }
     }
 }

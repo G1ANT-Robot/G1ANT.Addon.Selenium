@@ -405,7 +405,7 @@ namespace G1ANT.Addon.Selenium
             return res;
         }
 
-        public string[][] GetTableElement(SeleniumCommandArguments search, TimeSpan timeout)
+        public DataTable GetTableElement(SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
             if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
@@ -425,23 +425,28 @@ namespace G1ANT.Addon.Selenium
             }
 
             var i = 0;
-            var rowsNumber = GetNumberOfTagNameElements("tr", element);
-            var table = new string[rowsNumber][];
+            var dataTable = new DataTable();
+            var trElements = element.FindElements(By.TagName("tr"));
 
-            foreach (var trElement in element.FindElements(By.TagName("tr")))
+            foreach (var trElement in trElements)
             {
+                while (dataTable.Rows.Count < trElements.Count)
+                    dataTable.Rows.Add();
+
                 var j = 0;
-                var columnsNumber = GetNumberOfTagNameElements("td", trElement);
-                table[i] = new string[columnsNumber];
-                foreach (var tdElement in trElement.FindElements(By.TagName("td")))
+                var tdElements = trElement.FindElements(By.TagName("td"));
+                foreach (var tdElement in tdElements)
                 {
-                    table[i][j] = tdElement.Text;
+                    while (dataTable.Columns.Count < tdElements.Count)
+                        dataTable.Columns.Add();
+
+                    dataTable.Rows[i][j] = tdElement.Text;
                     j++;
                 }
                 i++;
             }
 
-            return table;
+            return dataTable;
         }
 
         private int GetNumberOfTagNameElements(string tagName, IWebElement element)
