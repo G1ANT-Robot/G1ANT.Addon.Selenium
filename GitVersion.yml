@@ -1,0 +1,25 @@
+assembly-versioning-scheme: MajorMinorPatch
+mode: ContinuousDeployment
+branches:
+  develop:
+    mode: ContinuousDeployment
+    tag: alpha
+  feature:
+    mode: ContinuousDeployment
+    tag: alpha.feature
+  hotfix:
+    mode: ContinuousDelivery
+    tag: hotfix
+  master:
+    mode: ContinuousDelivery
+  pull-request:
+    mode: ContinuousDelivery
+    tag: PullRequest
+  release:
+    tag: beta
+  support:
+    mode: ContinuousDelivery
+    tag: support
+ignore:
+  sha: []
+merge-message-formats: {}
