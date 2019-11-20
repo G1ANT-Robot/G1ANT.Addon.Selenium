@@ -1,0 +1,7 @@
+addon selenium version 2.205.17304.1000
+
+selenium.open chrome url https://www.exchangerates.org.uk/
+window ‴Exchange Rates UK - Compare Live Foreign Currency Exchange Rates - Google Chrome‴ timeout 100000
+selenium.gettable search currenciesHP by id
+selenium.close
+test ♥result⟦count⟧==11

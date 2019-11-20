@@ -103,6 +103,7 @@
     <Folder Include="Commands\Selenium.CloseTab\" />
     <Folder Include="Commands\Selenium.Close\" />
     <Folder Include="Commands\Selenium.GetAttribute\" />
+    <Folder Include="Commands\Selenium.GetTable\" />
     <Folder Include="Commands\Selenium.GetText\" />
     <Folder Include="Commands\Selenium.GetTitle\" />
     <Folder Include="Commands\Selenium.NewTab\" />
