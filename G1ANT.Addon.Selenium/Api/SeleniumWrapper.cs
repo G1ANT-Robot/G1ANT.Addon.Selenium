@@ -405,19 +405,30 @@ namespace G1ANT.Addon.Selenium
 
             var dataTable = new DataTable();
             var trElements = element.FindElements(By.TagName("tr"));
-
-            foreach (var thElement in trElements[0].FindElements(By.TagName("th")))
-                dataTable.Columns.Add(thElement.Text);
+            dataTable = AddColumnNamesFromThElements(dataTable, trElements[0].FindElements(By.TagName("th")));
 
             foreach (var trElement in trElements)
             {
                 var tdElements = trElement.FindElements(By.TagName("td"));
-                while (dataTable.Columns.Count < tdElements.Count)
-                    dataTable.Columns.Add();
+                dataTable = AddColumnsIfThereAreMoreTdElements(dataTable, tdElements.Count);
 
                 dataTable.Rows.Add(tdElements.Select(td => td.Text).ToArray());
             }
 
+            return dataTable;
+        }
+
+        private static DataTable AddColumnNamesFromThElements(DataTable dataTable, System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> thElements)
+        {
+            foreach (var thElement in thElements)
+                dataTable.Columns.Add(thElement.Text);
+            return dataTable;
+        }
+
+        private static DataTable AddColumnsIfThereAreMoreTdElements(DataTable dataTable, int tdElementsNumber)
+        {
+            while (dataTable.Columns.Count < tdElementsNumber)
+                dataTable.Columns.Add();
             return dataTable;
         }
 
