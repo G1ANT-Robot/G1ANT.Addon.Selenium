@@ -406,6 +406,9 @@ namespace G1ANT.Addon.Selenium
             var dataTable = new DataTable();
             var trElements = element.FindElements(By.TagName("tr"));
 
+            foreach (var thElement in trElements[0].FindElements(By.TagName("th")))
+                dataTable.Columns.Add(thElement.Text);
+
             foreach (var trElement in trElements)
             {
                 var tdElements = trElement.FindElements(By.TagName("td"));
