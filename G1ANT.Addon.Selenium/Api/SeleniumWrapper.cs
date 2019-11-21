@@ -398,10 +398,10 @@ namespace G1ANT.Addon.Selenium
         {
             var element = GetElementInFrame(search, timeout);
 
-            if (element == null || element.TagName != "table")
-            {
-                throw new Exception("Cannot find the HTML table element. Try to change the search phrase so that the correct element is found");
-            }
+            if (element == null)
+                throw new Exception("Cannot find the HTML element. Try to change the search phrase or \"by\" argument value so that the correct element is found");
+            else if (element.TagName != "table")
+                throw new Exception($"The element found has the \"{element.TagName}\" tag name. Try to change the search phrase so that the \"table\" element is found instead");
 
             var dataTable = new DataTable();
             var trElements = element.FindElements(By.TagName("tr"));
