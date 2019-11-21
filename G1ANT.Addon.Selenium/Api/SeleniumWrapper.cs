@@ -421,6 +421,14 @@ namespace G1ANT.Addon.Selenium
             return dataTable;
         }
 
+        public void SetAttributeValue(string attributeName, string attributeValue, SeleniumCommandArguments search, TimeSpan timeout)
+        {
+            var element = GetElementInFrame(search, timeout);
+            element?.SetAttribute(attributeName, attributeValue);
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().DefaultContent();
+        }
+
         private IWebElement GetElementInFrame(SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
@@ -428,14 +436,6 @@ namespace G1ANT.Addon.Selenium
                 webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
             var element = FindElement(search.Search.Value, search.By.Value, timeout);
             return element;
-        }
-
-        public void SetAttributeValue(string attributeName, string attributeValue, SeleniumCommandArguments search, TimeSpan timeout)
-        {
-            var element = GetElementInFrame(search, timeout);
-            element?.SetAttribute(attributeName, attributeValue);
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().DefaultContent();
         }
 
         public void CallFunction(string functionName, object[] arguments, string type, SeleniumCommandArguments search, TimeSpan timeout)
