@@ -13,6 +13,7 @@ using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Data;
 using System.Linq;
 
 namespace G1ANT.Addon.Selenium
@@ -312,10 +313,7 @@ namespace G1ANT.Addon.Selenium
         public void Click(SeleniumCommandArguments search, TimeSpan timeout, bool waitForNewWindow = false)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
-            PreCheckCurrentWindowHandle();
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
-            IWebElement elem = FindElement(search.Search.Value, search.By.Value, timeout);
+            var elem = GetElementInFrame(search, timeout);
             Actions actions = new Actions(webDriver);
             actions.MoveToElement(elem).Click().Build().Perform();
             if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
@@ -325,10 +323,7 @@ namespace G1ANT.Addon.Selenium
 
         public void TypeText(string text, SeleniumCommandArguments search, TimeSpan timeout)
         {
-            PreCheckCurrentWindowHandle();
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
-            IWebElement elem = FindElement(search.Search.Value, search.By.Value, timeout);
+            var elem = GetElementInFrame(search, timeout);
             elem.SendKeys(text);
             if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
                 webDriver.SwitchTo().DefaultContent();
@@ -337,10 +332,7 @@ namespace G1ANT.Addon.Selenium
         public void PressKey(string keyText, SeleniumCommandArguments search, TimeSpan timeout)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
-            PreCheckCurrentWindowHandle();
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
-            IWebElement elem = FindElement(search.Search.Value, search.By.Value, timeout);
+            var elem = GetElementInFrame(search, timeout);
             string convertedText = typeof(Keys).GetFields().Where(x => x.Name.ToLower() == keyText.ToLower()).FirstOrDefault()?.GetValue(null) as string;
             if (convertedText == null)
             {
@@ -354,10 +346,8 @@ namespace G1ANT.Addon.Selenium
 
         public string GetAttributeValue(string attributeName, SeleniumCommandArguments search)
         {
-            PreCheckCurrentWindowHandle();
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, search.Timeout.Value));
-            IWebElement element = FindElement(search.Search.Value, search.By.Value, search.Timeout.Value);
+            var element = GetElementInFrame(search, search.Timeout.Value);
+
             string res = element?.GetAttribute(attributeName) ?? string.Empty;
             if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
                 webDriver.SwitchTo().DefaultContent();
@@ -366,10 +356,13 @@ namespace G1ANT.Addon.Selenium
 
         public string GetAttributeValue(string attributeName, string elementXPath, SeleniumIFrameArguments search)
         {
-            PreCheckCurrentWindowHandle();
-            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, search.Timeout.Value));
-            var element = FindElement(elementXPath, "xpath", search.Timeout.Value);
+            var element = GetElementInFrame(new SeleniumCommandArguments()
+            {
+                By = new TextStructure("xpath"),
+                IFrameBy = search.IFrameBy,
+                IFrameSearch = search.IFrameSearch,
+                Search = new TextStructure(elementXPath),
+            }, search.Timeout.Value);
             var res = element?.GetAttribute(attributeName) ?? string.Empty;
             if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
                 webDriver.SwitchTo().DefaultContent();
@@ -393,25 +386,82 @@ namespace G1ANT.Addon.Selenium
 
         public string GetTextValue(SeleniumCommandArguments search, TimeSpan timeout)
         {
-            PreCheckCurrentWindowHandle();
-            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
-            var element = FindElement(search.Search.Value, search.By.Value, timeout);
+            var element = GetElementInFrame(search, timeout);
+
             var res = element?.Text ?? string.Empty;
             if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
                 webDriver.SwitchTo().DefaultContent();
             return res;
         }
 
+        public DataTable GetTableElement(SeleniumCommandArguments search, TimeSpan timeout)
+        {
+            var element = GetElementInFrame(search, timeout);
+
+            if (element == null)
+                throw new Exception("Cannot find the HTML element. Try to change the search phrase or \"by\" argument value so that the correct element is found");
+            else if (element.TagName != "table")
+                throw new Exception($"The element found has the \"{element.TagName}\" tag name. Try to change the search phrase so that the \"table\" element is found instead");
+
+            var dataTable = new DataTable();
+            var trElements = element.FindElements(By.TagName("tr"));
+            dataTable = AddColumnNamesFromThElements(dataTable, trElements[0].FindElements(By.TagName("th")));
+
+            foreach (var trElement in trElements)
+            {
+                var tdElements = trElement.FindElements(By.TagName("td"));
+                dataTable = AddColumnsIfThereAreMoreTdElements(dataTable, tdElements.Count);
+                dataTable = AddRowToDataTable(dataTable, tdElements);
+            }
+
+            return dataTable;
+        }
+
+        private static DataTable AddColumnNamesFromThElements(DataTable dataTable, System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> thElements)
+        {
+            foreach (var thElement in thElements)
+                dataTable.Columns.Add(thElement.Text);
+            return dataTable;
+        }
+
+        private static DataTable AddColumnsIfThereAreMoreTdElements(DataTable dataTable, int tdElementsNumber)
+        {
+            while (dataTable.Columns.Count < tdElementsNumber)
+                dataTable.Columns.Add();
+            return dataTable;
+        }
+
+        private static DataTable AddRowToDataTable(DataTable dataTable, System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> tdElements)
+        {
+            var cellValues = new string[tdElements.Count];
+            var i = 0;
+            foreach (var tdElement in tdElements)
+            {
+                if (tdElement.GetAttribute("colspan") != null || tdElement.GetAttribute("rowspan") != null)
+                    throw new Exception("This table contains merged cells which is unsupported. Make sure to choose a table that does not have any \"colspan\" or \"rowspan\" properties");
+                cellValues[i] = tdElement.Text;
+                i++;
+            }
+            dataTable.Rows.Add(cellValues);
+
+            return dataTable;
+        }
+
         public void SetAttributeValue(string attributeName, string attributeValue, SeleniumCommandArguments search, TimeSpan timeout)
         {
-            PreCheckCurrentWindowHandle();
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
-            IWebElement element = FindElement(search.Search.Value, search.By.Value, timeout);
+            var element = GetElementInFrame(search, timeout);
             element?.SetAttribute(attributeName, attributeValue);
             if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
                 webDriver.SwitchTo().DefaultContent();
+        }
+
+        private IWebElement GetElementInFrame(SeleniumCommandArguments search, TimeSpan timeout)
+        {
+            PreCheckCurrentWindowHandle();
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            var element = FindElement(search.Search.Value, search.By.Value, timeout);
+            return element;
         }
 
         public void CallFunction(string functionName, object[] arguments, string type, SeleniumCommandArguments search, TimeSpan timeout)
