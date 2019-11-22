@@ -411,8 +411,7 @@ namespace G1ANT.Addon.Selenium
             {
                 var tdElements = trElement.FindElements(By.TagName("td"));
                 dataTable = AddColumnsIfThereAreMoreTdElements(dataTable, tdElements.Count);
-
-                dataTable.Rows.Add(tdElements.Select(td => td.Text).ToArray());
+                dataTable = AddRowToDataTable(dataTable, tdElements);
             }
 
             return dataTable;
@@ -429,6 +428,22 @@ namespace G1ANT.Addon.Selenium
         {
             while (dataTable.Columns.Count < tdElementsNumber)
                 dataTable.Columns.Add();
+            return dataTable;
+        }
+
+        private static DataTable AddRowToDataTable(DataTable dataTable, System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> tdElements)
+        {
+            var cellValues = new string[tdElements.Count];
+            var i = 0;
+            foreach (var tdElement in tdElements)
+            {
+                if (tdElement.GetAttribute("colspan") != null || tdElement.GetAttribute("rowspan") != null)
+                    throw new Exception("This table contains merged cells which is unsupported. Make sure to choose a table that does not have any \"colspan\" or \"rowspan\" properties");
+                cellValues[i] = tdElement.Text;
+                i++;
+            }
+            dataTable.Rows.Add(cellValues);
+
             return dataTable;
         }
 
