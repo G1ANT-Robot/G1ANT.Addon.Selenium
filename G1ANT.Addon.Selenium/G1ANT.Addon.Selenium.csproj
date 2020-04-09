@@ -79,19 +79,25 @@
     <Compile Include="Api\CustomExpectedConditions.cs" />
     <Compile Include="Api\Enums\BrowserType.cs" />
     <Compile Include="Api\Enums\ElementSearchBy.cs" />
+    <Compile Include="Api\SeleniumIFrameArguments.cs" />
     <Compile Include="Api\SeleniumCommandArguments.cs" />
     <Compile Include="Api\SeleniumExtensions.cs" />
     <Compile Include="Api\SeleniumManager.cs" />
     <Compile Include="Api\SeleniumSettings.cs" />
     <Compile Include="Api\SeleniumWrapper.cs" />
+    <Compile Include="Commands\SeleniumGetTableCommand.cs" />
     <Compile Include="Commands\SeleniumAlertActionCommand.cs" />
     <Compile Include="Commands\SeleniumCloseTabCommand.cs" />
+    <Compile Include="Commands\SeleniumGetHtml.cs" />
+    <Compile Include="Commands\SeleniumGetOuterHtml.cs" />
+    <Compile Include="Commands\SeleniumGetInnerHtml.cs" />
     <Compile Include="Commands\SeleniumGetTextCommand.cs" />
     <Compile Include="Commands\SeleniumSetAttributeCommand.cs" />
     <Compile Include="Commands\SeleniumActivateTabCommand.cs" />
     <Compile Include="Commands\SeleniumGetAttributeCommand.cs" />
     <Compile Include="Commands\SeleniumCallFunctionCommand.cs" />
     <Compile Include="Commands\SeleniumPressKeyCommand.cs" />
+    <Compile Include="Commands\SeleniumGetUrlCommand.cs" />
     <Compile Include="Commands\SeleniumTypeCommand.cs" />
     <Compile Include="Commands\SeleniumNewTabCommand.cs" />
     <Compile Include="Commands\SeleniumClickCommand.cs" />
@@ -110,6 +116,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SeleniumAddon.cs" />
+    <Compile Include="Variables\TimeoutSeleniumVariable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -124,7 +131,6 @@
     <EmbeddedResource Include="Resources\chromedriver.exe" />
     <EmbeddedResource Include="Resources\geckodriver.exe" />
     <EmbeddedResource Include="Resources\IEDriverServer.exe" />
-    <EmbeddedResource Include="Resources\MicrosoftWebDriver.exe" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\packages\*\lib\net45\WebDriver.dll">
@@ -155,16 +161,18 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Selenium.WebDriver.MicrosoftWebDriver.10.0.17134\build\Selenium.WebDriver.MicrosoftWebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.MicrosoftWebDriver.10.0.17134\build\Selenium.WebDriver.MicrosoftWebDriver.targets'))" />
     <Error Condition="!Exists('..\packages\Selenium.Firefox.WebDriver.0.26.0\build\Selenium.Firefox.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.Firefox.WebDriver.0.26.0\build\Selenium.Firefox.WebDriver.targets'))" />
     <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.80.0.3987.10600\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.80.0.3987.10600\build\Selenium.WebDriver.ChromeDriver.targets'))" />
     <Error Condition="!Exists('..\packages\Selenium.WebDriver.IEDriver.3.150.1\build\Selenium.WebDriver.IEDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.IEDriver.3.150.1\build\Selenium.WebDriver.IEDriver.targets'))" />
   </Target>
-  <Import Project="..\packages\Selenium.WebDriver.MicrosoftWebDriver.10.0.17134\build\Selenium.WebDriver.MicrosoftWebDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.MicrosoftWebDriver.10.0.17134\build\Selenium.WebDriver.MicrosoftWebDriver.targets')" />
 
   <Import Project="..\packages\Selenium.Firefox.WebDriver.0.26.0\build\Selenium.Firefox.WebDriver.targets" Condition="Exists('..\packages\Selenium.Firefox.WebDriver.0.26.0\build\Selenium.Firefox.WebDriver.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.80.0.3987.10600\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.80.0.3987.10600\build\Selenium.WebDriver.ChromeDriver.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.IEDriver.3.150.1\build\Selenium.WebDriver.IEDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.IEDriver.3.150.1\build\Selenium.WebDriver.IEDriver.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

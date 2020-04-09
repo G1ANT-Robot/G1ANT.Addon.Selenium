@@ -8,11 +8,8 @@
 *
 */
 using G1ANT.Language;
+using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -28,7 +25,7 @@ namespace G1ANT.Addon.Selenium
             public TextStructure Url { get; set; } = new TextStructure(string.Empty);
 
             [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
-            public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
+            public override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
             [Argument(Tooltip = "By default, waits until the webpage fully loads")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
@@ -44,12 +41,12 @@ namespace G1ANT.Addon.Selenium
             try
             {
                 SeleniumWrapper wrapper = SeleniumManager.CreateWrapper(
-                        arguments.Type.Value,
-                        arguments.Url?.Value,
-                        arguments.Timeout.Value,
-                        arguments.NoWait.Value,
-                        Scripter.Log,
-                        Scripter.Settings.UserDocsAddonFolder.FullName);
+                    arguments.Type.Value,
+                    arguments.Url?.Value,
+                    arguments.Timeout.Value,
+                    arguments.NoWait.Value,
+                    Scripter.Log,
+                    Scripter.Settings.UserDocsAddonFolder.FullName);
                 int wrapperId = wrapper.Id;
                 OnScriptEnd = () =>
                 {
@@ -58,6 +55,10 @@ namespace G1ANT.Addon.Selenium
                     SeleniumManager.CleanUp();
                 };
                 Scripter.Variables.SetVariableValue(arguments.Result.Value, new IntegerStructure(wrapper.Id));
+            }
+            catch (DriverServiceNotFoundException ex)
+            {
+                throw new ApplicationException("Driver not found", ex);
             }
             catch (Exception ex)
             {

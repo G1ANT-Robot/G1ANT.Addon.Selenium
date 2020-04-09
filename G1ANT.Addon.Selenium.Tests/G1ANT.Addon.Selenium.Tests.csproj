@@ -41,14 +41,10 @@
       <HintPath>..\packages\BouncyCastle.1.8.4\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="G1ANT.Engine">
-      <HintPath>bin\debug\G1ANT.Engine.dll</HintPath>
+      <HintPath>..\..\G1ANT.Robot.CI\G1ANT.Engine\bin\Debug\G1ANT.Engine.dll</HintPath>
     </Reference>
     <Reference Include="G1ANT.Language, Version=4.106.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\G1ANT.Language.4.106.1\lib\net452\G1ANT.Language.dll</HintPath>
-    </Reference>
-    <Reference Include="G1ANT.Tests, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\debug\G1ANT.Tests.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.6.11.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.6.11\lib\Net45\HtmlAgilityPack.dll</HintPath>
@@ -92,6 +88,25 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Commands\Selenium.ActivateTab\ShouldActivateTabCorrectly_WhenActivateTabIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.AlertAction\ShouldResumeFlowCorrectly_WhenAlertActionAcceptsPopup.G1ANT" />
+    <None Include="Commands\Selenium.Click\ShouldActivateCorrectElement_WhenClickIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.CloseTab\ShouldCloseTabCorrectly_WhenCloseTabIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.Close\ShouldLowerNumberOfChromeInstances_WhenCloseIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.GetAttribute\ShoulsReturnSpecifiedAttributeValue_WhenGetAttributeIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.GetTable\ShouldReturnCorrectRowsNumber_WhenGetTableIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.GetText\ShouldReturnCorrectText_WhenGetTextIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.GetTitle\ShouldReturnCorrectTitle_WhenGetTitleIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.NewTab\ShouldOpenCorrectNewTab_WhenNewTabIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.Open\ShouldGetCorrectTitleFromEachSupportedBrowser_WhenOpenIsUsedWithURLArgument.G1ANT" />
+    <None Include="Commands\Selenium.Open\ShouldOpenCorrectWindow_WhenOpenIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.PressKey\ShouldSendCorrectInputToControl_WhenPressKeyIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.Refresh\ShouldRefreshPageCorrectly_WhenRefreshIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.RunScript\ShouldReturnCorrectValue_WhenRunScriptIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.SetAttribute\ShouldSetValueCorrectly_WhenSetAttributeIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.SetUrl\ShouldChangeUrl_WhenSetUrlisUsed.G1ANT" />
+    <None Include="Commands\Selenium.Switch\ShouldSwitchToCorrectSeleniumInstance_WhenSwitchIsUsed.G1ANT" />
+    <None Include="Commands\Selenium.Type\ShouldPutCorrectValueInInputElement_WhenTypeIsUsed.G1ANT" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -103,24 +118,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\Selenium.ActivateTab\" />
-    <Folder Include="Commands\Selenium.AlertAction\" />
     <Folder Include="Commands\Selenium.CallFunction\" />
-    <Folder Include="Commands\Selenium.Click\" />
-    <Folder Include="Commands\Selenium.CloseTab\" />
-    <Folder Include="Commands\Selenium.Close\" />
-    <Folder Include="Commands\Selenium.GetAttribute\" />
-    <Folder Include="Commands\Selenium.GetText\" />
-    <Folder Include="Commands\Selenium.GetTitle\" />
-    <Folder Include="Commands\Selenium.NewTab\" />
-    <Folder Include="Commands\Selenium.Open\" />
-    <Folder Include="Commands\Selenium.PressKey\" />
-    <Folder Include="Commands\Selenium.Refresh\" />
-    <Folder Include="Commands\Selenium.RunScript\" />
-    <Folder Include="Commands\Selenium.SetAttribute\" />
-    <Folder Include="Commands\Selenium.SetUrl\" />
-    <Folder Include="Commands\Selenium.Switch\" />
-    <Folder Include="Commands\Selenium.Type\" />
     <Folder Include="Commands\Selenium.WaitForValue\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

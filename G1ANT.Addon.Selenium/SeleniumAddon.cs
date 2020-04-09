@@ -39,8 +39,7 @@ namespace G1ANT.Addon.Selenium
             {
                 { "chromedriver.exe", Resources.chromedriver },
                 { "geckodriver.exe", Resources.geckodriver },
-                { "IEDriverServer.exe", Resources.IEDriverServer },
-                { "MicrosoftWebDriver.exe", Resources.MicrosoftWebDriver }
+                { "IEDriverServer.exe", Resources.IEDriverServer }
             };
             foreach (var embededResource in embeddedResourceDictionary.Where(e => !DoesFileExist(unpackFolder, e.Key) || !AreFilesOfTheSameLength(e.Value.Length, unpackFolder, e.Key)))
             {
