@@ -7,6 +7,7 @@
 *    See License.txt file in the project root for full license information.
 *
 */
+using G1ANT.Addon.Selenium.Api.Enums;
 using G1ANT.Language;
 using OpenQA.Selenium;
 using OpenQA.Selenium.IE;
@@ -344,14 +345,36 @@ namespace G1ANT.Addon.Selenium
             popupHandler.Finish();
         }
 
+        public void SetAttributeValue(string attributeName, string attributeValue, AttributeOperationType setAttributeType, SeleniumCommandArguments search, TimeSpan timeout)
+        {
+            var element = GetElementInFrame(search, timeout);
+            if (element != null)
+            {
+                if (IsAttributeOprtationType(element, attributeName, setAttributeType))
+                    element.SetAttribute(attributeName, attributeValue);
+                else
+                    element.SetProperty(attributeName, attributeValue);
+            }
+            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().DefaultContent();
+        }
+
+        private bool IsAttributeOprtationType(IWebElement element, string attributeName, AttributeOperationType setAttributeType)
+        {
+            return setAttributeType == AttributeOperationType.ForceAttribute
+                || (setAttributeType == AttributeOperationType.PreferAttribute && element.IsAttribute(attributeName));
+        }
+
         public string GetAttributeValue(string attributeName, SeleniumCommandArguments search)
         {
             var element = GetElementInFrame(search, search.Timeout.Value);
 
-            string res = element?.GetAttribute(attributeName) ?? string.Empty;
+            var result = element?.GetAttribute(attributeName);
+
             if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
                 webDriver.SwitchTo().DefaultContent();
-            return res;
+
+            return result ?? string.Empty;
         }
 
         public string GetAttributeValue(string attributeName, string elementXPath, SeleniumIFrameArguments search)
@@ -445,14 +468,6 @@ namespace G1ANT.Addon.Selenium
             dataTable.Rows.Add(cellValues);
 
             return dataTable;
-        }
-
-        public void SetAttributeValue(string attributeName, string attributeValue, SeleniumCommandArguments search, TimeSpan timeout)
-        {
-            var element = GetElementInFrame(search, timeout);
-            element?.SetAttribute(attributeName, attributeValue);
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().DefaultContent();
         }
 
         private IWebElement GetElementInFrame(SeleniumCommandArguments search, TimeSpan timeout)
