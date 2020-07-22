@@ -27,6 +27,7 @@ using OpenQA.Selenium.Remote;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using G1ANT.Language;
+using System.Reflection;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -243,11 +244,83 @@ namespace G1ANT.Addon.Selenium
             return new IE.InternetExplorerDriver(ieService, options);
         }
 
+        public static string GetCurrentDirectory()
+        {
+            Assembly executingAssembly = typeof(SeleniumManager).Assembly;
+            string location = null;
+
+            // Make sure not to call Path.GetDirectoryName if assembly location is null or empty
+            if (!string.IsNullOrEmpty(executingAssembly.Location))
+            {
+                location = Path.GetDirectoryName(executingAssembly.Location);
+            }
+
+            if (string.IsNullOrEmpty(location))
+            {
+                // If there is no location information from the executing
+                // assembly, we will bail by using the current directory.
+                // Note this is inaccurate, because the working directory
+                // may not actually be the directory of the current assembly,
+                // especially if the WebDriver assembly was embedded as a
+                // resource.
+                location = Directory.GetCurrentDirectory();
+            }
+
+            string currentDirectory = location;
+
+            // If we're shadow copying, get the directory from the codebase instead
+            if (AppDomain.CurrentDomain.ShadowCopyFiles)
+            {
+                Uri uri = new Uri(executingAssembly.CodeBase);
+                currentDirectory = Path.GetDirectoryName(uri.LocalPath);
+            }
+
+            return currentDirectory;
+        }
+
+        private static string FindFile(string fileName)
+        {
+            // Look first in the same directory as the executing assembly
+            string currentDirectory = GetCurrentDirectory();
+            if (File.Exists(Path.Combine(currentDirectory, fileName)))
+            {
+                return currentDirectory;
+            }
+
+            // If it's not in the same directory as the executing assembly,
+            // try looking in the system path.
+            string systemPath = Environment.GetEnvironmentVariable("PATH");
+            if (!string.IsNullOrEmpty(systemPath))
+            {
+                string expandedPath = Environment.ExpandEnvironmentVariables(systemPath);
+                string[] directories = expandedPath.Split(Path.PathSeparator);
+                foreach (string directory in directories)
+                {
+                    // N.B., if the directory in the path contains an invalid character,
+                    // we will skip that directory, meaning no error will be thrown. This
+                    // may be confusing to the user, so we might want to revisit this.
+                    if (directory.IndexOfAny(Path.GetInvalidPathChars()) < 0)
+                    {
+                        if (File.Exists(Path.Combine(directory, fileName)))
+                        {
+                            currentDirectory = directory;
+                            return currentDirectory;
+                        }
+                    }
+                }
+            }
+
+            // Note that if it wasn't found on the system path, currentDirectory is still
+            // set to the same directory as the executing assembly.
+            return string.Empty;
+        }
+
         private static IWebDriver CreateEdgeWebDriver()
         {
             try
             {
-                var edgeService = Edge.EdgeDriverService.CreateDefaultService();
+                var driverLocation = FindFile("MicrosoftWebDriver.exe");
+                var edgeService = Edge.EdgeDriverService.CreateDefaultService(driverLocation);
                 edgeService.HideCommandPromptWindow = true;
                 var edgeOptions = new Edge.EdgeOptions
                 {
