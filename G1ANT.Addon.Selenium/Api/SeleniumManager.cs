@@ -244,44 +244,44 @@ namespace G1ANT.Addon.Selenium
             return new IE.InternetExplorerDriver(ieService, options);
         }
 
-        private static string FindDriver(string driverName)
+        private static bool FindFileInAddonFolder(string fileName, out string folder)
         {
-            // Look first in the add-on folder
-            string addonDirectory = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
-            if (File.Exists(Path.Combine(addonDirectory, driverName)))
-            {
-                return addonDirectory;
-            }
+            folder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
+            return File.Exists(Path.Combine(folder, fileName));
+        }
 
-            // then try looking in the system path.
+        private static List<string> GetEnvironmentPathDirectories()
+        {
             string systemPath = Environment.GetEnvironmentVariable("PATH");
             if (!string.IsNullOrEmpty(systemPath))
             {
                 string expandedPath = Environment.ExpandEnvironmentVariables(systemPath);
                 string[] directories = expandedPath.Split(Path.PathSeparator);
-                foreach (string directory in directories)
-                {
-                    // N.B., if the directory in the path contains an invalid character,
-                    // we will skip that directory, meaning no error will be thrown. This
-                    // may be confusing to the user, so we might want to revisit this.
-                    if (directory.IndexOfAny(Path.GetInvalidPathChars()) < 0)
-                    {
-                        if (File.Exists(Path.Combine(directory, driverName)))
-                        {
-                            return directory;
-                        }
-                    }
-                }
+                return directories.Where(x => x.IndexOfAny(Path.GetInvalidPathChars()) < 0).ToList();
             }
-            return string.Empty;
+            return new List<string>();
+        }
+
+        private static bool FindFileInSystemEnvironmentPath(string fileName, out string folder)
+        {
+            var searchDirectories = GetEnvironmentPathDirectories();
+            folder = searchDirectories.FirstOrDefault(x => File.Exists(Path.Combine(x, fileName)));
+            return !string.IsNullOrEmpty(folder);
+        }
+
+        private static bool FindDriver(string driverName, out string folder)
+        {
+            return 
+                FindFileInAddonFolder(driverName, out folder) || 
+                FindFileInSystemEnvironmentPath(driverName, out folder);
         }
 
         private static IWebDriver CreateEdgeWebDriver()
         {
             try
             {
-                var driverLocation = FindDriver("MicrosoftWebDriver.exe");
-                if (string.IsNullOrEmpty(driverLocation))
+                string driverLocation;
+                if (!FindDriver("MicrosoftWebDriver.exe", out driverLocation))
                     throw new DriverServiceNotFoundException();
 
                 var edgeService = Edge.EdgeDriverService.CreateDefaultService(driverLocation);
