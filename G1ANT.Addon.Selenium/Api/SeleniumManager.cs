@@ -27,6 +27,7 @@ using OpenQA.Selenium.Remote;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using G1ANT.Language;
+using System.Reflection;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -243,11 +244,47 @@ namespace G1ANT.Addon.Selenium
             return new IE.InternetExplorerDriver(ieService, options);
         }
 
+        private static bool FindFileInAddonFolder(string fileName, out string folder)
+        {
+            folder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
+            return File.Exists(Path.Combine(folder, fileName));
+        }
+
+        private static List<string> GetEnvironmentPathDirectories()
+        {
+            string systemPath = Environment.GetEnvironmentVariable("PATH");
+            if (!string.IsNullOrEmpty(systemPath))
+            {
+                string expandedPath = Environment.ExpandEnvironmentVariables(systemPath);
+                string[] directories = expandedPath.Split(Path.PathSeparator);
+                return directories.Where(x => x.IndexOfAny(Path.GetInvalidPathChars()) < 0).ToList();
+            }
+            return new List<string>();
+        }
+
+        private static bool FindFileInSystemEnvironmentPath(string fileName, out string folder)
+        {
+            var searchDirectories = GetEnvironmentPathDirectories();
+            folder = searchDirectories.FirstOrDefault(x => File.Exists(Path.Combine(x, fileName)));
+            return !string.IsNullOrEmpty(folder);
+        }
+
+        private static bool FindDriver(string driverName, out string folder)
+        {
+            return 
+                FindFileInAddonFolder(driverName, out folder) || 
+                FindFileInSystemEnvironmentPath(driverName, out folder);
+        }
+
         private static IWebDriver CreateEdgeWebDriver()
         {
             try
             {
-                var edgeService = Edge.EdgeDriverService.CreateDefaultService();
+                string driverLocation;
+                if (!FindDriver("MicrosoftWebDriver.exe", out driverLocation))
+                    throw new DriverServiceNotFoundException();
+
+                var edgeService = Edge.EdgeDriverService.CreateDefaultService(driverLocation);
                 edgeService.HideCommandPromptWindow = true;
                 var edgeOptions = new Edge.EdgeOptions
                 {
