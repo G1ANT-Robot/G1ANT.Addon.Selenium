@@ -30,6 +30,9 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "By default, waits until the webpage fully loads")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
 
+            [Argument(Tooltip = "Run selenium in silent mode")]
+            public BooleanStructure SilentMode { get; set; } = new BooleanStructure(false);
+
             [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
@@ -45,6 +48,7 @@ namespace G1ANT.Addon.Selenium
                     arguments.Url?.Value,
                     arguments.Timeout.Value,
                     arguments.NoWait.Value,
+                    arguments.SilentMode.Value,
                     Scripter.Log,
                     Scripter.Settings.UserDocsAddonFolder.FullName);
                 int wrapperId = wrapper.Id;
