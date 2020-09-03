@@ -27,6 +27,8 @@ using OpenQA.Selenium.Remote;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using G1ANT.Language;
+using System.Reflection;
+using OpenQA.Selenium.Chromium;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -80,7 +82,8 @@ namespace G1ANT.Addon.Selenium
             return (BrowserType)type;
         }
 
-        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory)
+        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, 
+            bool silentMode, AbstractLogger scr, string driversDirectory)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
             BrowserType type = GetBrowserType(webBrowserName);
@@ -88,7 +91,7 @@ namespace G1ANT.Addon.Selenium
             {
                 throw new ApplicationException("Using multiple Edge instances at once is not supported.");
             }
-            var driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory);
+            var driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode);
             var wrapper = new SeleniumWrapper(driver, mainWindowHandle, type, scr)
             {
                 Id = wrappers.Count > 0 ? wrappers.Max(x => x.Id) + 1 : 0
@@ -172,7 +175,7 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
-        private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory)
+        private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory, bool silentMode)
         {
             webBrowserName = webBrowserName.ToLower();
             IWebDriver iWebDriver = null;
@@ -181,7 +184,7 @@ namespace G1ANT.Addon.Selenium
             switch (type)
             {
                 case BrowserType.Chrome:
-                    iWebDriver = CreateChromeDriver(driversDirectory);
+                    iWebDriver = CreateChromeDriver(driversDirectory, silentMode);
                     newProcessFilter = "chrome";
                     break;
 
@@ -196,7 +199,7 @@ namespace G1ANT.Addon.Selenium
                     break;
 
                 case BrowserType.Edge:
-                    iWebDriver = CreateEdgeWebDriver();
+                    iWebDriver = CreateEdgeWebDriver(silentMode);
                     newProcessFilter = "edge";
                     break;
                 default:
@@ -207,7 +210,20 @@ namespace G1ANT.Addon.Selenium
             return iWebDriver;
         }
 
-        private static IWebDriver CreateChromeDriver(string driversDirectory)
+        private static void SetupChromiumOptions(ChromiumOptions options, bool silentMode)
+        {
+            options.AddArgument("disable-infobars");
+            options.AddArgument("--disable-bundled-ppapi-flash");
+            options.AddArgument("--log-level=3");
+            options.AddArgument("--silent");
+            if (silentMode)
+                options.AddArgument("--headless");
+            options.AddUserProfilePreference("credentials_enable_service", false);
+            options.AddUserProfilePreference("profile.password_manager_enabled", false);
+            options.AddUserProfilePreference("auto-open-devtools-for-tabs", false);
+        }
+
+        private static IWebDriver CreateChromeDriver(string driversDirectory, bool silentMode)
         {
             var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
             chromeService.HideCommandPromptWindow = true;
@@ -215,13 +231,7 @@ namespace G1ANT.Addon.Selenium
             {
                 PageLoadStrategy = PageLoadStrategy.None
             };
-            chromeOptions.AddArgument("disable-infobars");
-            chromeOptions.AddArgument("--disable-bundled-ppapi-flash");
-            chromeOptions.AddArgument("--log-level=3");
-            chromeOptions.AddArgument("--silent");
-            chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
-            chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
-            chromeOptions.AddUserProfilePreference("auto-open-devtools-for-tabs", false);
+            SetupChromiumOptions(chromeOptions, silentMode);
             return new Chrome.ChromeDriver(chromeService, chromeOptions);
         }
 
@@ -243,7 +253,7 @@ namespace G1ANT.Addon.Selenium
             return new IE.InternetExplorerDriver(ieService, options);
         }
 
-        private static IWebDriver CreateEdgeWebDriver()
+        private static IWebDriver CreateEdgeWebDriver(bool silentMode)
         {
             try
             {
@@ -251,7 +261,7 @@ namespace G1ANT.Addon.Selenium
                 edgeService.HideCommandPromptWindow = true;
                 var edgeOptions = new Edge.EdgeOptions
                 {
-                    PageLoadStrategy = PageLoadStrategy.Eager
+                    PageLoadStrategy = PageLoadStrategy.Eager,
                 };
                 return new Edge.EdgeDriver(edgeService, edgeOptions);
             }
