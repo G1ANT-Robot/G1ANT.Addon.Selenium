@@ -13,6 +13,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
 using System.Data;
 using System.Linq;
@@ -109,22 +110,26 @@ namespace G1ANT.Addon.Selenium
                         throw new ArgumentException("Value for argument 'By' was not recognized");
                     case ElementSearchBy.Id:
                         search = search.StartsWith("#") ? search.TrimStart(new char[] { '#' }) : search;
-                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Id(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(ExpectedConditions.ElementExists(By.Id(search)));
                         break;
                     case ElementSearchBy.Class:
-                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.ClassName(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(
+                            ExpectedConditions.ElementExists(
+                                search.Contains(" ") ? By.XPath($"//*[@class='{search}']") : By.ClassName(search)
+                            )
+                        );
                         break;
                     case ElementSearchBy.CssSelector:
-                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.CssSelector(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(ExpectedConditions.ElementExists(By.CssSelector(search)));
                         break;
                     case ElementSearchBy.Tag:
-                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.TagName(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(ExpectedConditions.ElementExists(By.TagName(search)));
                         break;
                     case ElementSearchBy.Xpath:
-                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(ExpectedConditions.ElementExists(By.XPath(search)));
                         break;
                     case ElementSearchBy.Name:
-                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Name(search)));
+                        element = new WebDriverWait(webDriver, timeout).Until(ExpectedConditions.ElementExists(By.Name(search)));
                         break;
                     case ElementSearchBy.Query:
                         element = new WebDriverWait(webDriver, timeout).Until(CustomExpectedConditions.ElementExistsByJavaScript(search));
@@ -296,7 +301,7 @@ namespace G1ANT.Addon.Selenium
         public void AlertPerformAction(string action, TimeSpan timeout)
         {
             WebDriverWait wait = new WebDriverWait(webDriver, timeout);
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
+            wait.Until(ExpectedConditions.AlertIsPresent());
             var alert = webDriver.SwitchTo().Alert();
             switch (action)
             {
@@ -496,7 +501,7 @@ namespace G1ANT.Addon.Selenium
         {
             if (MainWindowHandle != IntPtr.Zero)
             {
-                Language.RobotWin32.SetForegroundWindow(MainWindowHandle);
+                RobotWin32.SetForegroundWindow(MainWindowHandle);
             }
         }
     }
