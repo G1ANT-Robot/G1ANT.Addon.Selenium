@@ -112,7 +112,10 @@ namespace G1ANT.Addon.Selenium
                         element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Id(search)));
                         break;
                     case ElementSearchBy.Class:
-                        element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.ClassName(search)));
+                        if (search.Contains(" "))
+                            element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.XPath($"//*[@class='{search}']")));
+                        else
+                            element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.ClassName(search)));
                         break;
                     case ElementSearchBy.CssSelector:
                         element = new WebDriverWait(webDriver, timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.CssSelector(search)));
