@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using G1ANT.Language;
 using G1ANT.Addon.Selenium.Properties;
 using System.IO;
+using System.Diagnostics;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -45,12 +46,31 @@ namespace G1ANT.Addon.Selenium
             {
                 try
                 {
+                    KillWorkingProcess(Path.GetFileNameWithoutExtension(embededResource.Key));
                     using (FileStream stream = File.Create(Path.Combine(unpackFolder, embededResource.Key)))
                     {
                         stream.Write(embededResource.Value, 0, embededResource.Value.Length);
                     }
                 }
-                catch (Exception ex) { RobotMessageBox.Show(ex.Message); }
+                catch (Exception ex) 
+                { 
+                    RobotMessageBox.Show(ex.Message); 
+                }
+            }
+        }
+
+        private void KillWorkingProcess(string processName)
+        {
+            foreach (Process proc in Process.GetProcessesByName(processName))
+            {
+                try
+                {
+                    proc.Kill();
+                }
+                catch
+                {
+
+                }
             }
         }
 
