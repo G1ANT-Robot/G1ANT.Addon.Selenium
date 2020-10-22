@@ -321,9 +321,22 @@ namespace G1ANT.Addon.Selenium
             var popupHandler = new NewPopupWindowHandler(webDriver);
             var element = GetElementInFrame(search, timeout);
 
-            Actions actions = new Actions(webDriver);
-            ((IJavaScriptExecutor)webDriver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
-            actions.MoveToElement(element).Click().Build().Perform();
+            var actions = new Actions(webDriver);
+            void click() => actions.MoveToElement(element).Click().Build().Perform();
+            try
+            {
+                click();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("out of bounds"))
+                {
+                    ((IJavaScriptExecutor)webDriver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
+                    click();
+                }
+                else
+                    throw;
+            }
 
             if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
                 webDriver.SwitchTo().DefaultContent();
