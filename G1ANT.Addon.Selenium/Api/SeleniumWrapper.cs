@@ -318,11 +318,14 @@ namespace G1ANT.Addon.Selenium
 
         public void Click(SeleniumCommandArguments search, TimeSpan timeout, bool waitForNewWindow = false)
         {
-            NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
-            var elem = GetElementInFrame(search, timeout);
+            var popupHandler = new NewPopupWindowHandler(webDriver);
+            var element = GetElementInFrame(search, timeout);
+
             Actions actions = new Actions(webDriver);
-            actions.MoveToElement(elem).Click().Build().Perform();
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+            ((IJavaScriptExecutor)webDriver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
+            actions.MoveToElement(element).Click().Build().Perform();
+
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
                 webDriver.SwitchTo().DefaultContent();
             popupHandler.Finish(waitForNewWindow, timeout);
         }
@@ -500,9 +503,7 @@ namespace G1ANT.Addon.Selenium
         public void BringWindowToForeground()
         {
             if (MainWindowHandle != IntPtr.Zero)
-            {
                 RobotWin32.SetForegroundWindow(MainWindowHandle);
-            }
         }
     }
 }
