@@ -29,6 +29,9 @@ namespace G1ANT.Addon.Selenium
 
             [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
+
+            [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
+            public BooleanStructure ResultAsStructure { get; set; } = new BooleanStructure(false);
         }
 
         public SeleniumRunScriptCommandCommand(AbstractScripter scripter) : base(scripter)
@@ -39,7 +42,21 @@ namespace G1ANT.Addon.Selenium
             try
             {
                 var result = SeleniumManager.CurrentWrapper.RunScript(arguments.Script.Value, arguments.Timeout.Value, arguments.WaitForNewWindow.Value);
-                Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(result));
+                Structure resultStruct;
+                if (arguments.ResultAsStructure.Value)
+                {
+                    try
+                    {
+                        resultStruct = Scripter.Structures.CreateStructure(result, "", result?.GetType());
+                    }
+                    catch
+                    {
+                        resultStruct = Scripter.Structures.CreateStructure(result, "");
+                    }
+                }
+                else
+                    resultStruct = new TextStructure(result!=null ? result.ToString() : string.Empty, "", Scripter);
+                Scripter.Variables.SetVariableValue(arguments.Result.Value, resultStruct);
             }
             catch (Exception ex)
             {

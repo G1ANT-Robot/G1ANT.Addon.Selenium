@@ -48,7 +48,7 @@ namespace G1ANT.Addon.Selenium
                 {
                     try
                     {
-                        result = seleniumWrapper.RunScript(arguments.Script.Value);
+                        result = seleniumWrapper.RunScript(arguments.Script.Value).ToString();
                     }
                     catch
                     {
