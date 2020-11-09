@@ -216,14 +216,14 @@ namespace G1ANT.Addon.Selenium
             webDriver.Dispose();
         }
 
-        public string RunScript(string script, TimeSpan timeout = new TimeSpan(), bool waitForNewWindow = false)
+        public object RunScript(string script, TimeSpan timeout = new TimeSpan(), bool waitForNewWindow = false)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
             script += "; return null;";
             object result = webDriver.JavaScriptExecutor().ExecuteScript(script);
             popupHandler.Finish(waitForNewWindow, timeout);
-            return result?.ToString() ?? string.Empty;
+            return result;
         }
 
         public void CloseTab(TimeSpan timeout)
