@@ -221,12 +221,7 @@ namespace G1ANT.Addon.Selenium
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
             script += "; return null;";
-
-            var prevTimeout = webDriver.Manage().Timeouts().AsynchronousJavaScript;
-            webDriver.Manage().Timeouts().AsynchronousJavaScript = timeout;
             object result = webDriver.JavaScriptExecutor().ExecuteScript(script);
-            webDriver.Manage().Timeouts().AsynchronousJavaScript = prevTimeout;
-
             popupHandler.Finish(waitForNewWindow, timeout);
             return result;
         }
