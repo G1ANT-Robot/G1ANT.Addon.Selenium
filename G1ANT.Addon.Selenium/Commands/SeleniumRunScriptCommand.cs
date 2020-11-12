@@ -43,6 +43,7 @@ namespace G1ANT.Addon.Selenium
             {
                 var result = SeleniumManager.CurrentWrapper.RunScript(arguments.Script.Value, arguments.Timeout.Value, arguments.WaitForNewWindow.Value);
                 Structure resultStruct;
+
                 if (arguments.ResultAsStructure.Value)
                 {
                     try
