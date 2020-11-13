@@ -1,6 +1,0 @@
-assembly-versioning-scheme: MajorMinorPatchTag
-assembly-file-versioning-scheme: MajorMinorPatchTag
-branches: {}
-ignore:
-  sha: []
-merge-message-formats: {}
