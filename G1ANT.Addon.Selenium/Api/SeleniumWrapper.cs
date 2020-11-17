@@ -229,16 +229,7 @@ namespace G1ANT.Addon.Selenium
         public void CloseTab(TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
-            switch (BrowserType)
-            {
-                case BrowserType.Edge:
-                case BrowserType.InternetExplorer:
-                    throw new ApplicationException("CloseTab command is not supported by Edge and Internet Explorer selenium driver.");
-                case BrowserType.Firefox:
-                case BrowserType.Chrome:
-                    RunScript(string.Format($"window.close();"));
-                    break;
-            }
+            webDriver.Close();
             webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
         }
 
