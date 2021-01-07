@@ -186,27 +186,8 @@ namespace G1ANT.Addon.Selenium
                 case BrowserType.Chrome:
                     var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
                     chromeService.HideCommandPromptWindow = true;
-                    var chromeOptions = new Chrome.ChromeOptions();
-                    if (chromePort != 0)
-                    {
-                        chromeOptions.DebuggerAddress = $"localhost:{chromePort}";
-                    }
-                    else
-                    {
-                        chromeOptions.PageLoadStrategy = PageLoadStrategy.None;
-                        chromeOptions.AddArgument("disable-infobars");
-                        chromeOptions.AddArgument("--disable-bundled-ppapi-flash");
-                        chromeOptions.AddArgument("--log-level=3");
-                        chromeOptions.AddArgument("--silent");
-                        chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
-                        chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
-                        chromeOptions.AddUserProfilePreference("auto-open-devtools-for-tabs", false);
-                        if (arguments != null)
-                            foreach (var argument in arguments)
-                                chromeOptions.AddArgument(argument?.ToString());
-                    }
                     //chromeOptions.AddAdditionalCapability("pageLoadStrategy", "none", true);
-                    iWebDriver = CreateChromeDriver(driversDirectory, silentMode, chromeOptions);
+                    iWebDriver = CreateChromeDriver(driversDirectory, silentMode);
                     newProcessFilter = "chrome";
                     break;
 
@@ -232,20 +213,30 @@ namespace G1ANT.Addon.Selenium
             return iWebDriver;
         }
 
-        private static void SetupChromiumOptions(ChromiumOptions options, bool silentMode)
+        private static void SetupChromiumOptions(ChromiumOptions options, bool silentMode, List<object> arguments = null, int chromePort = 0)
         {
-            options.AddArgument("disable-infobars");
-            options.AddArgument("--disable-bundled-ppapi-flash");
-            options.AddArgument("--log-level=3");
-            options.AddArgument("--silent");
-            if (silentMode)
-                options.AddArgument("--headless");
-            options.AddUserProfilePreference("credentials_enable_service", false);
-            options.AddUserProfilePreference("profile.password_manager_enabled", false);
-            options.AddUserProfilePreference("auto-open-devtools-for-tabs", false);
+            if (chromePort != 0)
+            {
+                options.DebuggerAddress = $"localhost:{chromePort}";
+            }
+            else
+            {
+                options.AddArgument("disable-infobars");
+                options.AddArgument("--disable-bundled-ppapi-flash");
+                options.AddArgument("--log-level=3");
+                options.AddArgument("--silent");
+                if (silentMode)
+                    options.AddArgument("--headless");
+                options.AddUserProfilePreference("credentials_enable_service", false);
+                options.AddUserProfilePreference("profile.password_manager_enabled", false);
+                options.AddUserProfilePreference("auto-open-devtools-for-tabs", false);
+            }
+            if (arguments != null)
+                foreach (var argument in arguments)
+                    options.AddArgument(argument?.ToString());
         }
 
-        private static IWebDriver CreateChromeDriver(string driversDirectory, bool silentMode)
+        private static IWebDriver CreateChromeDriver(string driversDirectory, bool silentMode, List<object> arguments = null, int chromePort = 0)
         {
             var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
             chromeService.HideCommandPromptWindow = true;
@@ -253,7 +244,7 @@ namespace G1ANT.Addon.Selenium
             {
                 PageLoadStrategy = PageLoadStrategy.None
             };
-            SetupChromiumOptions(chromeOptions, silentMode);
+            SetupChromiumOptions(chromeOptions, silentMode, arguments, chromePort);
             return new Chrome.ChromeDriver(chromeService, chromeOptions);
         }
 
