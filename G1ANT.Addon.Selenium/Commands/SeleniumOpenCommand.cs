@@ -56,7 +56,7 @@ namespace G1ANT.Addon.Selenium
                         Scripter.Log,
                         Scripter.Settings.UserDocsAddonFolder.FullName,
                         arguments.SilentMode.Value,
-                        arguments.ChromeSwitches.Value);
+                        arguments.ChromeSwitches?.Value);
                 int wrapperId = wrapper.Id;
                 OnScriptEnd = () =>
                 {

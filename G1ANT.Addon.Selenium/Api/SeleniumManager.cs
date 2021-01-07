@@ -187,7 +187,7 @@ namespace G1ANT.Addon.Selenium
                     var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
                     chromeService.HideCommandPromptWindow = true;
                     //chromeOptions.AddAdditionalCapability("pageLoadStrategy", "none", true);
-                    iWebDriver = CreateChromeDriver(driversDirectory, silentMode);
+                    iWebDriver = CreateChromeDriver(driversDirectory, silentMode, arguments, chromePort);
                     newProcessFilter = "chrome";
                     break;
 
