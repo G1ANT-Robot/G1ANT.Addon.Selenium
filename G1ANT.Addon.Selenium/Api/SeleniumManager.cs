@@ -184,9 +184,7 @@ namespace G1ANT.Addon.Selenium
             switch (type)
             {
                 case BrowserType.Chrome:
-                    var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
-                    chromeService.HideCommandPromptWindow = true;
-                    //chromeOptions.AddAdditionalCapability("pageLoadStrategy", "none", true);
+                    Chrome.ChromeDriverService.CreateDefaultService(driversDirectory).HideCommandPromptWindow = true;
                     iWebDriver = CreateChromeDriver(driversDirectory, silentMode, arguments, chromePort);
                     newProcessFilter = "chrome";
                     break;
@@ -233,7 +231,8 @@ namespace G1ANT.Addon.Selenium
             }
             if (arguments != null)
                 foreach (var argument in arguments)
-                    options.AddArgument(argument?.ToString());
+                    if (argument != null)
+                        options.AddArgument(argument?.ToString());
         }
 
         private static IWebDriver CreateChromeDriver(string driversDirectory, bool silentMode, List<object> arguments = null, int chromePort = 0)
