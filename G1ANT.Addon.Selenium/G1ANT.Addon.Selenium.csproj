@@ -88,6 +88,7 @@
     <Compile Include="Commands\SeleniumGetOuterHtml.cs" />
     <Compile Include="Commands\SeleniumGetInnerHtml.cs" />
     <Compile Include="Commands\SeleniumGetTextCommand.cs" />
+    <Compile Include="Commands\SeleniumOpenExistingChromeCommand.cs" />
     <Compile Include="Commands\SeleniumSetAttributeCommand.cs" />
     <Compile Include="Commands\SeleniumActivateTabCommand.cs" />
     <Compile Include="Commands\SeleniumGetAttributeCommand.cs" />

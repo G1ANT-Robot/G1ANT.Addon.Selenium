@@ -80,7 +80,8 @@ namespace G1ANT.Addon.Selenium
             return (BrowserType)type;
         }
 
-        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory)
+        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory, 
+            List<object> chromeSwitches = null, int chromePort = 0)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
             BrowserType type = GetBrowserType(webBrowserName);
@@ -88,8 +89,8 @@ namespace G1ANT.Addon.Selenium
             {
                 throw new ApplicationException("Using multiple Edge instances at once is not supported.");
             }
-            IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle, driversDirectory);
-            SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type,scr)
+            IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle, driversDirectory, chromeSwitches, chromePort);
+            SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type, scr)
             {
                 Id = wrappers.Count > 0 ? wrappers.Max(x => x.Id) + 1 : 0
             };
@@ -172,7 +173,7 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
-        private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory)
+        private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory, List<object> arguments = null, int chromePort = 0)
         {
             webBrowserName = webBrowserName.ToLower();
             IWebDriver iWebDriver = null;
@@ -184,14 +185,24 @@ namespace G1ANT.Addon.Selenium
                     var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
                     chromeService.HideCommandPromptWindow = true;
                     var chromeOptions = new Chrome.ChromeOptions();
-                    chromeOptions.PageLoadStrategy = PageLoadStrategy.None;
-                    chromeOptions.AddArgument("disable-infobars");
-                    chromeOptions.AddArgument("--disable-bundled-ppapi-flash");
-                    chromeOptions.AddArgument("--log-level=3");
-                    chromeOptions.AddArgument("--silent");
-                    chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
-                    chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
-                    chromeOptions.AddUserProfilePreference("auto-open-devtools-for-tabs", false);
+                    if (chromePort != 0)
+                    {
+                        chromeOptions.DebuggerAddress = $"localhost:{chromePort}";
+                    }
+                    else
+                    {
+                        chromeOptions.PageLoadStrategy = PageLoadStrategy.None;
+                        chromeOptions.AddArgument("disable-infobars");
+                        chromeOptions.AddArgument("--disable-bundled-ppapi-flash");
+                        chromeOptions.AddArgument("--log-level=3");
+                        chromeOptions.AddArgument("--silent");
+                        chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
+                        chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
+                        chromeOptions.AddUserProfilePreference("auto-open-devtools-for-tabs", false);
+                        if (arguments != null)
+                            foreach (var argument in arguments)
+                                chromeOptions.AddArgument(argument?.ToString());
+                    }
                     //chromeOptions.AddAdditionalCapability("pageLoadStrategy", "none", true);
                     iWebDriver = new Chrome.ChromeDriver(chromeService, chromeOptions);
                     newProcessFilter = "chrome";

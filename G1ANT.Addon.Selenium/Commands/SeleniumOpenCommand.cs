@@ -33,12 +33,17 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "By default, waits until the webpage fully loads")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
 
+            [Argument(Tooltip = "Additional switches for Chrome driver ")]
+            public ListStructure ChromeSwitches { get; set; }
+
             [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
+
         public SeleniumOpenCommand(AbstractScripter scripter) : base(scripter)
         {
         }
+
         public void Execute(Arguments arguments)
         {
             try
@@ -49,7 +54,8 @@ namespace G1ANT.Addon.Selenium
                         arguments.Timeout.Value,
                         arguments.NoWait.Value,
                         Scripter.Log,
-                        Scripter.Settings.UserDocsAddonFolder.FullName);
+                        Scripter.Settings.UserDocsAddonFolder.FullName,
+                        arguments.ChromeSwitches.Value);
                 int wrapperId = wrapper.Id;
                 OnScriptEnd = () =>
                 {
