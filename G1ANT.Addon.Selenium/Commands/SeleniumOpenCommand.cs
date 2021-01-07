@@ -8,11 +8,8 @@
 *
 */
 using G1ANT.Language;
+using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -28,13 +25,16 @@ namespace G1ANT.Addon.Selenium
             public TextStructure Url { get; set; } = new TextStructure(string.Empty);
 
             [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
-            public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
+            public override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
 
             [Argument(Tooltip = "By default, waits until the webpage fully loads")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
 
             [Argument(Tooltip = "Additional switches for Chrome driver ")]
             public ListStructure ChromeSwitches { get; set; }
+
+            [Argument(Tooltip = "Run selenium in silent mode")]
+            public BooleanStructure SilentMode { get; set; } = new BooleanStructure(false);
 
             [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
@@ -53,6 +53,7 @@ namespace G1ANT.Addon.Selenium
                         arguments.Url?.Value,
                         arguments.Timeout.Value,
                         arguments.NoWait.Value,
+                        arguments.SilentMode.Value,
                         Scripter.Log,
                         Scripter.Settings.UserDocsAddonFolder.FullName,
                         arguments.ChromeSwitches.Value);
@@ -64,6 +65,10 @@ namespace G1ANT.Addon.Selenium
                     SeleniumManager.CleanUp();
                 };
                 Scripter.Variables.SetVariableValue(arguments.Result.Value, new IntegerStructure(wrapper.Id));
+            }
+            catch (DriverServiceNotFoundException ex)
+            {
+                throw new ApplicationException("Driver not found", ex);
             }
             catch (Exception ex)
             {

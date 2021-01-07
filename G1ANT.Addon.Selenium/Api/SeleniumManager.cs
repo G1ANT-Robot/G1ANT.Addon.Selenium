@@ -27,6 +27,8 @@ using OpenQA.Selenium.Remote;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using G1ANT.Language;
+using System.Reflection;
+using OpenQA.Selenium.Chromium;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -80,7 +82,7 @@ namespace G1ANT.Addon.Selenium
             return (BrowserType)type;
         }
 
-        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory, 
+        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory, bool silentMode, 
             List<object> chromeSwitches = null, int chromePort = 0)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
@@ -89,7 +91,7 @@ namespace G1ANT.Addon.Selenium
             {
                 throw new ApplicationException("Using multiple Edge instances at once is not supported.");
             }
-            IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle, driversDirectory, chromeSwitches, chromePort);
+            IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromePort);
             SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type, scr)
             {
                 Id = wrappers.Count > 0 ? wrappers.Max(x => x.Id) + 1 : 0
@@ -130,7 +132,7 @@ namespace G1ANT.Addon.Selenium
                 }
 
             }
-            
+
         }
         public static void Quit(SeleniumWrapper wrapper)
         {
@@ -173,7 +175,7 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
-        private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory, List<object> arguments = null, int chromePort = 0)
+        private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory, bool silentMode, List<object> arguments = null, int chromePort = 0)
         {
             webBrowserName = webBrowserName.ToLower();
             IWebDriver iWebDriver = null;
@@ -204,43 +206,91 @@ namespace G1ANT.Addon.Selenium
                                 chromeOptions.AddArgument(argument?.ToString());
                     }
                     //chromeOptions.AddAdditionalCapability("pageLoadStrategy", "none", true);
-                    iWebDriver = new Chrome.ChromeDriver(chromeService, chromeOptions);
+                    iWebDriver = CreateChromeDriver(driversDirectory, silentMode, chromeOptions);
                     newProcessFilter = "chrome";
                     break;
 
                 case BrowserType.Firefox:
-                    var firefoxService = Firefox.FirefoxDriverService.CreateDefaultService(driversDirectory);
-                    firefoxService.HideCommandPromptWindow = true;
-                    iWebDriver = new Firefox.FirefoxDriver(firefoxService);
+                    iWebDriver = CreateFireFoxDriver(driversDirectory);
                     newProcessFilter = "firefox";
                     break;
 
                 case BrowserType.InternetExplorer:
-                    IE.InternetExplorerDriverService ieService = IE.InternetExplorerDriverService.CreateDefaultService(driversDirectory);
-                    ieService.HideCommandPromptWindow = true;
-                    IE.InternetExplorerOptions options = new IE.InternetExplorerOptions()
-                    {
-                        IgnoreZoomLevel = true
-                    };
-                    iWebDriver = new IE.InternetExplorerDriver(ieService, options);
+                    iWebDriver = CreateIEDriver(driversDirectory);
                     newProcessFilter = "iexplore";
                     break;
 
                 case BrowserType.Edge:
-                    var edgeService = Edge.EdgeDriverService.CreateDefaultService(driversDirectory);
-                    edgeService.HideCommandPromptWindow = true;
-                    var edgeOptions = new Edge.EdgeOptions();
-                    edgeOptions.PageLoadStrategy = PageLoadStrategy.Eager;
-                    iWebDriver = new Edge.EdgeDriver(edgeService, edgeOptions);
+                    iWebDriver = CreateEdgeWebDriver(silentMode);
                     newProcessFilter = "edge";
                     break;
-
                 default:
                     throw new ArgumentException($"Could not launch specified browser '{webBrowserName}'");
             }
             var newProcess = GetNewlyCreatedProcesses(newProcessFilter, processesBeforeLaunch);
             mainWindowHandle = (newProcess != null) ? newProcess.MainWindowHandle : IntPtr.Zero;
             return iWebDriver;
+        }
+
+        private static void SetupChromiumOptions(ChromiumOptions options, bool silentMode)
+        {
+            options.AddArgument("disable-infobars");
+            options.AddArgument("--disable-bundled-ppapi-flash");
+            options.AddArgument("--log-level=3");
+            options.AddArgument("--silent");
+            if (silentMode)
+                options.AddArgument("--headless");
+            options.AddUserProfilePreference("credentials_enable_service", false);
+            options.AddUserProfilePreference("profile.password_manager_enabled", false);
+            options.AddUserProfilePreference("auto-open-devtools-for-tabs", false);
+        }
+
+        private static IWebDriver CreateChromeDriver(string driversDirectory, bool silentMode)
+        {
+            var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
+            chromeService.HideCommandPromptWindow = true;
+            var chromeOptions = new Chrome.ChromeOptions
+            {
+                PageLoadStrategy = PageLoadStrategy.None
+            };
+            SetupChromiumOptions(chromeOptions, silentMode);
+            return new Chrome.ChromeDriver(chromeService, chromeOptions);
+        }
+
+        private static IWebDriver CreateFireFoxDriver(string driversDirectory)
+        {
+            var firefoxService = Firefox.FirefoxDriverService.CreateDefaultService(driversDirectory);
+            firefoxService.HideCommandPromptWindow = true;
+            return new Firefox.FirefoxDriver(firefoxService);
+        }
+
+        private static IWebDriver CreateIEDriver(string driversDirectory)
+        {
+            IE.InternetExplorerDriverService ieService = IE.InternetExplorerDriverService.CreateDefaultService(driversDirectory);
+            ieService.HideCommandPromptWindow = true;
+            IE.InternetExplorerOptions options = new IE.InternetExplorerOptions()
+            {
+                IgnoreZoomLevel = true
+            };
+            return new IE.InternetExplorerDriver(ieService, options);
+        }
+
+        private static IWebDriver CreateEdgeWebDriver(bool silentMode)
+        {
+            try
+            {
+                var edgeService = Edge.EdgeDriverService.CreateDefaultService();
+                edgeService.HideCommandPromptWindow = true;
+                var edgeOptions = new Edge.EdgeOptions
+                {
+                    PageLoadStrategy = PageLoadStrategy.Eager,
+                };
+                return new Edge.EdgeDriver(edgeService, edgeOptions);
+            }
+            catch (DriverServiceNotFoundException ex)
+            {
+                throw new DriverServiceNotFoundException("To install run the following in an command prompt with admin privileges:\nDISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0", ex);
+            }
         }
 
         public static void Switch(int id)
