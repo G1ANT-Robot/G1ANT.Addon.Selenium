@@ -184,7 +184,6 @@ namespace G1ANT.Addon.Selenium
             switch (type)
             {
                 case BrowserType.Chrome:
-                    Chrome.ChromeDriverService.CreateDefaultService(driversDirectory).HideCommandPromptWindow = true;
                     iWebDriver = CreateChromeDriver(driversDirectory, silentMode, arguments, chromePort);
                     newProcessFilter = "chrome";
                     break;
