@@ -45,7 +45,8 @@ namespace G1ANT.Addon.Selenium
                         Scripter.Settings.UserDocsAddonFolder.FullName,
                         false,
                         null,
-                        arguments.Port.Value);
+                        arguments.Port.Value,
+                        true);
                 int wrapperId = wrapper.Id;
                 OnScriptEnd = () =>
                 {

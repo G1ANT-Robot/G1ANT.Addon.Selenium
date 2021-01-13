@@ -33,6 +33,9 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "Additional switches for Chrome driver ")]
             public ListStructure ChromeSwitches { get; set; }
 
+            [Argument(Tooltip = "Chrome port, which enable to connect by selenium.openexistingchrome. Default 9222.")]
+            public IntegerStructure ChromePort { get; set; } = new IntegerStructure(9222);
+
             [Argument(Tooltip = "Run selenium in silent mode")]
             public BooleanStructure SilentMode { get; set; } = new BooleanStructure(false);
 
@@ -48,6 +51,9 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
+                int chromePort = 0;
+                if (arguments.ChromePort != null)
+                    chromePort = arguments.ChromePort.Value;
                 SeleniumWrapper wrapper = SeleniumManager.CreateWrapper(
                         arguments.Type.Value,
                         arguments.Url?.Value,
@@ -56,7 +62,9 @@ namespace G1ANT.Addon.Selenium
                         Scripter.Log,
                         Scripter.Settings.UserDocsAddonFolder.FullName,
                         arguments.SilentMode.Value,
-                        arguments.ChromeSwitches?.Value);
+                        arguments.ChromeSwitches?.Value,
+                        chromePort,
+                        false);
                 int wrapperId = wrapper.Id;
                 OnScriptEnd = () =>
                 {
