@@ -59,7 +59,7 @@ namespace G1ANT.Addon.Selenium
                 var chromeProfiles = new Dictionary<string, bool>();
                 if (arguments.ChromeProfiles != null)
                     foreach (var pair in arguments.ChromeProfiles.Value)
-                        chromeProfiles.Add(pair.Key, (bool)pair.Value);
+                        chromeProfiles.Add(pair.Key, Convert.ToBoolean(pair.Value));
                 if (arguments.ChromePort != null)
                     chromePort = arguments.ChromePort.Value;
                 SeleniumWrapper wrapper = SeleniumManager.CreateWrapper(
