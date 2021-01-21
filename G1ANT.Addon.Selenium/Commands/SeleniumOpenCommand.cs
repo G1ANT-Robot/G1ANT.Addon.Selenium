@@ -10,6 +10,7 @@
 using G1ANT.Language;
 using OpenQA.Selenium;
 using System;
+using System.Collections.Generic;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -33,6 +34,9 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "Additional switches for Chrome driver ")]
             public ListStructure ChromeSwitches { get; set; }
 
+            [Argument(Tooltip = "Additional profiles for Chrome driver ")]
+            public DictionaryStructure ChromeProfiles { get; set; }
+
             [Argument(Tooltip = "Chrome port, which enable to attach by selenium.chromeattach. Example 9222.")]
             public IntegerStructure ChromePort { get; set; } = new IntegerStructure(0);
 
@@ -52,6 +56,10 @@ namespace G1ANT.Addon.Selenium
             try
             {
                 int chromePort = 0;
+                var chromeProfiles = new Dictionary<string, bool>();
+                if (arguments.ChromeProfiles != null)
+                    foreach (var pair in arguments.ChromeProfiles.Value)
+                        chromeProfiles.Add(pair.Key, Convert.ToBoolean(pair.Value));
                 if (arguments.ChromePort != null)
                     chromePort = arguments.ChromePort.Value;
                 SeleniumWrapper wrapper = SeleniumManager.CreateWrapper(
@@ -63,6 +71,7 @@ namespace G1ANT.Addon.Selenium
                         Scripter.Settings.UserDocsAddonFolder.FullName,
                         arguments.SilentMode.Value,
                         arguments.ChromeSwitches?.Value,
+                        chromeProfiles,
                         chromePort,
                         false);
                 int wrapperId = wrapper.Id;
