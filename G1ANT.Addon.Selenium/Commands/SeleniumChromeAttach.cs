@@ -16,19 +16,19 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.openexistingchrome", Tooltip = "This command connect to the existing chrome browser executed with enabled debuggging mode")]
-    public class SeleniumOpenExistingChromeCommand : Command
+    [Command(Name = "selenium.chromeattach", Tooltip = "This command connect to the existing chrome browser executed with enabled debuggging mode")]
+    public class SeleniumChromeAttachCommand : Command
     {
         public class Arguments : CommandArguments
         {
-            [Argument(Required = true, Tooltip = "port number of the web browser, default: 9222")]
-            public IntegerStructure Port { get; set; } = new IntegerStructure(9222);
+            [Argument(Required = true, Tooltip = "port number of the web browser, example: 9222")]
+            public IntegerStructure Port { get; set; }
 
             [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
 
-        public SeleniumOpenExistingChromeCommand(AbstractScripter scripter) : base(scripter)
+        public SeleniumChromeAttachCommand(AbstractScripter scripter) : base(scripter)
         {
         }
 
