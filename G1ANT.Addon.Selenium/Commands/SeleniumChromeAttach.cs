@@ -21,8 +21,8 @@ namespace G1ANT.Addon.Selenium
     {
         public class Arguments : CommandArguments
         {
-            [Argument(Required = true, Tooltip = "port number of the web browser, example: 9222")]
-            public IntegerStructure Port { get; set; }
+            [Argument(Required = true, Tooltip = "port number of the web browser, default: 9222")]
+            public IntegerStructure Port { get; set; } = new IntegerStructure(9222);
 
             [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");

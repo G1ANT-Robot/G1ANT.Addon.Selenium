@@ -33,8 +33,8 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "Additional switches for Chrome driver ")]
             public ListStructure ChromeSwitches { get; set; }
 
-            [Argument(Tooltip = "Chrome port, which enable to connect by selenium.openexistingchrome. Default 9222.")]
-            public IntegerStructure ChromePort { get; set; } = new IntegerStructure(9222);
+            [Argument(Tooltip = "Chrome port, which enable to attach by selenium.chromeattach. Example 9222.")]
+            public IntegerStructure ChromePort { get; set; } = new IntegerStructure(0);
 
             [Argument(Tooltip = "Run selenium in silent mode")]
             public BooleanStructure SilentMode { get; set; } = new BooleanStructure(false);
