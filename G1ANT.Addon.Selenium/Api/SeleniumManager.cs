@@ -83,7 +83,7 @@ namespace G1ANT.Addon.Selenium
         }
 
         public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory, bool silentMode, 
-            List<object> chromeSwitches = null, int chromePort = 0, bool chromeAttach = false)
+            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
             BrowserType type = GetBrowserType(webBrowserName);
@@ -91,7 +91,7 @@ namespace G1ANT.Addon.Selenium
             {
                 throw new ApplicationException("Using multiple Edge instances at once is not supported.");
             }
-            IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromePort, chromeAttach);
+            IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
             SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type, scr)
             {
                 Id = wrappers.Count > 0 ? wrappers.Max(x => x.Id) + 1 : 0
@@ -176,7 +176,7 @@ namespace G1ANT.Addon.Selenium
         }
 
         private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory, bool silentMode, 
-            List<object> arguments = null, int chromePort = 0, bool chromeAttach = false)
+            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
         {
             webBrowserName = webBrowserName.ToLower();
             IWebDriver iWebDriver = null;
@@ -185,7 +185,7 @@ namespace G1ANT.Addon.Selenium
             switch (type)
             {
                 case BrowserType.Chrome:
-                    iWebDriver = CreateChromeDriver(driversDirectory, silentMode, arguments, chromePort, chromeAttach);
+                    iWebDriver = CreateChromeDriver(driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
                     newProcessFilter = "chrome";
                     break;
 
@@ -211,7 +211,8 @@ namespace G1ANT.Addon.Selenium
             return iWebDriver;
         }
 
-        private static void SetupChromiumOptions(ChromiumOptions options, bool silentMode, List<object> arguments = null, int chromePort = 0, bool chromeAttach = false)
+        private static void SetupChromiumOptions(ChromiumOptions options, bool silentMode, 
+            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
         {
             if (chromeAttach)
             {
@@ -234,13 +235,16 @@ namespace G1ANT.Addon.Selenium
                 if (chromePort != 0)
                     options.AddArgument($"--remote-debugging-port={chromePort}");
             }
-            if (arguments != null)
-                foreach (var argument in arguments)
+            if (chromeSwitches != null)
+                foreach (var argument in chromeSwitches)
                     if (argument != null)
                         options.AddArgument(argument?.ToString());
+            if (chromeProfiles != null)
+                foreach (var profile in chromeProfiles)
+                    options.AddUserProfilePreference(profile.Key, profile.Value);
         }
 
-        private static IWebDriver CreateChromeDriver(string driversDirectory, bool silentMode, List<object> arguments = null, int chromePort = 0, bool chromeAttach = false)
+        private static IWebDriver CreateChromeDriver(string driversDirectory, bool silentMode, List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
         {
             var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
             chromeService.HideCommandPromptWindow = true;
@@ -248,7 +252,7 @@ namespace G1ANT.Addon.Selenium
             {
                 PageLoadStrategy = PageLoadStrategy.None
             };
-            SetupChromiumOptions(chromeOptions, silentMode, arguments, chromePort, chromeAttach);
+            SetupChromiumOptions(chromeOptions, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
             return new Chrome.ChromeDriver(chromeService, chromeOptions);
         }
 
