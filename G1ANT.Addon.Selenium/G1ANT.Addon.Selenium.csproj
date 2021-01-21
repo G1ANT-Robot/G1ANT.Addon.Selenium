@@ -105,7 +105,7 @@
     <Compile Include="Commands\SeleniumCloseCommand.cs" />
     <Compile Include="Commands\SeleniumGetTitleCommand.cs" />
     <Compile Include="Commands\SeleniumOpenCommand.cs" />
-    <Compile Include="Commands\SeleniumOpenExistingChromeCommand.cs" />
+    <Compile Include="Commands\SeleniumChromeAttach.cs" />
     <Compile Include="Commands\SeleniumRefreshCommand.cs" />
     <Compile Include="Commands\SeleniumWaitForValueCommand.cs" />
     <Compile Include="Commands\SeleniumRunScriptCommand.cs" />

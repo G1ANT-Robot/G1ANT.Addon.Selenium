@@ -16,8 +16,8 @@ using System.Threading.Tasks;
 
 namespace G1ANT.Addon.Selenium
 {
-    [Command(Name = "selenium.openexistingchrome", Tooltip = "This command connect to the existing chrome browser executed with enabled debuggging mode")]
-    public class SeleniumOpenExistingChromeCommand : Command
+    [Command(Name = "selenium.chromeattach", Tooltip = "This command connect to the existing chrome browser executed with enabled debuggging mode")]
+    public class SeleniumChromeAttachCommand : Command
     {
         public class Arguments : CommandArguments
         {
@@ -28,7 +28,7 @@ namespace G1ANT.Addon.Selenium
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
 
-        public SeleniumOpenExistingChromeCommand(AbstractScripter scripter) : base(scripter)
+        public SeleniumChromeAttachCommand(AbstractScripter scripter) : base(scripter)
         {
         }
 
