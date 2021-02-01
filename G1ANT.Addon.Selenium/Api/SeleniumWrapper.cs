@@ -216,29 +216,20 @@ namespace G1ANT.Addon.Selenium
             webDriver.Dispose();
         }
 
-        public string RunScript(string script, TimeSpan timeout = new TimeSpan(), bool waitForNewWindow = false)
+        public object RunScript(string script, TimeSpan timeout = new TimeSpan(), bool waitForNewWindow = false)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
             script += "; return null;";
             object result = webDriver.JavaScriptExecutor().ExecuteScript(script);
             popupHandler.Finish(waitForNewWindow, timeout);
-            return result?.ToString() ?? string.Empty;
+            return result;
         }
 
         public void CloseTab(TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
-            switch (BrowserType)
-            {
-                case BrowserType.Edge:
-                case BrowserType.InternetExplorer:
-                    throw new ApplicationException("CloseTab command is not supported by Edge and Internet Explorer selenium driver.");
-                case BrowserType.Firefox:
-                case BrowserType.Chrome:
-                    RunScript(string.Format($"window.close();"));
-                    break;
-            }
+            webDriver.Close();
             webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
         }
 
@@ -318,11 +309,27 @@ namespace G1ANT.Addon.Selenium
 
         public void Click(SeleniumCommandArguments search, TimeSpan timeout, bool waitForNewWindow = false)
         {
-            NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
-            var elem = GetElementInFrame(search, timeout);
-            Actions actions = new Actions(webDriver);
-            actions.MoveToElement(elem).Click().Build().Perform();
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
+            var popupHandler = new NewPopupWindowHandler(webDriver);
+            var element = GetElementInFrame(search, timeout);
+
+            var actions = new Actions(webDriver);
+            void click() => actions.MoveToElement(element).Click().Build().Perform();
+            try
+            {
+                click();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("out of bounds"))
+                {
+                    ((IJavaScriptExecutor)webDriver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
+                    click();
+                }
+                else
+                    throw;
+            }
+
+            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
                 webDriver.SwitchTo().DefaultContent();
             popupHandler.Finish(waitForNewWindow, timeout);
         }
@@ -500,9 +507,7 @@ namespace G1ANT.Addon.Selenium
         public void BringWindowToForeground()
         {
             if (MainWindowHandle != IntPtr.Zero)
-            {
                 RobotWin32.SetForegroundWindow(MainWindowHandle);
-            }
         }
     }
 }

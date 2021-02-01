@@ -10,6 +10,7 @@
 using G1ANT.Language;
 using OpenQA.Selenium;
 using System;
+using System.Collections.Generic;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -30,27 +31,49 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "By default, waits until the webpage fully loads")]
             public BooleanStructure NoWait { get; set; } = new BooleanStructure(false);
 
+            [Argument(Tooltip = "Additional switches for Chrome driver ")]
+            public ListStructure ChromeSwitches { get; set; }
+
+            [Argument(Tooltip = "Additional profiles for Chrome driver ")]
+            public DictionaryStructure ChromeProfiles { get; set; }
+
+            [Argument(Tooltip = "Chrome port, which enable to attach by selenium.chromeattach. Example 9222.")]
+            public IntegerStructure ChromePort { get; set; } = new IntegerStructure(0);
+
             [Argument(Tooltip = "Run selenium in silent mode")]
             public BooleanStructure SilentMode { get; set; } = new BooleanStructure(false);
 
             [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
+
         public SeleniumOpenCommand(AbstractScripter scripter) : base(scripter)
         {
         }
+
         public void Execute(Arguments arguments)
         {
             try
             {
+                int chromePort = 0;
+                var chromeProfiles = new Dictionary<string, bool>();
+                if (arguments.ChromeProfiles != null)
+                    foreach (var pair in arguments.ChromeProfiles.Value)
+                        chromeProfiles.Add(pair.Key, Convert.ToBoolean(pair.Value));
+                if (arguments.ChromePort != null)
+                    chromePort = arguments.ChromePort.Value;
                 SeleniumWrapper wrapper = SeleniumManager.CreateWrapper(
-                    arguments.Type.Value,
-                    arguments.Url?.Value,
-                    arguments.Timeout.Value,
-                    arguments.NoWait.Value,
-                    arguments.SilentMode.Value,
-                    Scripter.Log,
-                    Scripter.Settings.UserDocsAddonFolder.FullName);
+                        arguments.Type.Value,
+                        arguments.Url?.Value,
+                        arguments.Timeout.Value,
+                        arguments.NoWait.Value,
+                        Scripter.Log,
+                        Scripter.Settings.UserDocsAddonFolder.FullName,
+                        arguments.SilentMode.Value,
+                        arguments.ChromeSwitches?.Value,
+                        chromeProfiles,
+                        chromePort,
+                        false);
                 int wrapperId = wrapper.Id;
                 OnScriptEnd = () =>
                 {
