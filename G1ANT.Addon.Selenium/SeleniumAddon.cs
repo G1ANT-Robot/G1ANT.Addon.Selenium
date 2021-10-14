@@ -11,8 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using G1ANT.Language;
 using G1ANT.Addon.Selenium.Properties;
 using System.IO;
@@ -30,32 +28,53 @@ namespace G1ANT.Addon.Selenium
         public override void LoadDlls()
         {
             UnpackDrivers();
+            UnpackMSEdgeDriver();
             base.LoadDlls();
+        }
+
+        private string UnpackFolder { get => AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName; }
+        
+        private void UnpackMSEdgeDriver()
+        {
+            var filename = "msedgedriver.exe";
+            var driverData = Environment.Is64BitOperatingSystem ? Resources.msedgedriver_64 : Resources.msedgedriver_32;
+
+            if (DriverNeedsUpdate(filename, driverData))
+                UpdateDriverFromResource(filename, driverData);
         }
 
         private void UnpackDrivers()
         {
-            var unpackFolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
             var embeddedResourceDictionary = new Dictionary<string, byte[]>()
             {
                 { "chromedriver.exe", Resources.chromedriver },
                 { "geckodriver.exe", Resources.geckodriver },
                 { "IEDriverServer.exe", Resources.IEDriverServer }
             };
-            foreach (var embededResource in embeddedResourceDictionary.Where(e => !DoesFileExist(unpackFolder, e.Key) || !AreFilesOfTheSameLength(e.Value.Length, unpackFolder, e.Key)))
+            foreach (var embededResource in embeddedResourceDictionary.Where(e => DriverNeedsUpdate(e.Key, e.Value)))
             {
-                try
+                UpdateDriverFromResource(embededResource.Key, embededResource.Value);
+            }
+        }
+
+        private bool DriverNeedsUpdate(string filename, byte[] resourceData)
+        {
+            return !DoesFileExist(UnpackFolder, filename) || !AreFilesOfTheSameLength(resourceData.Length, UnpackFolder, filename);
+        }
+
+        private void UpdateDriverFromResource(string filename, byte[] resourceData)
+        {
+            try
+            {
+                KillWorkingProcess(Path.GetFileNameWithoutExtension(filename));
+                using (FileStream stream = File.Create(Path.Combine(UnpackFolder, filename)))
                 {
-                    KillWorkingProcess(Path.GetFileNameWithoutExtension(embededResource.Key));
-                    using (FileStream stream = File.Create(Path.Combine(unpackFolder, embededResource.Key)))
-                    {
-                        stream.Write(embededResource.Value, 0, embededResource.Value.Length);
-                    }
+                    stream.Write(resourceData, 0, resourceData.Length);
                 }
-                catch (Exception ex) 
-                { 
-                    RobotMessageBox.Show(ex.Message); 
-                }
+            }
+            catch (Exception ex)
+            {
+                RobotMessageBox.Show(ex.Message);
             }
         }
 
