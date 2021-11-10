@@ -121,8 +121,11 @@
   <data name="chromedriver" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\chromedriver.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="geckodriver" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\geckodriver.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="geckodriver_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\geckodriver-32.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="geckodriver_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\geckodriver-64.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="IEDriverServer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IEDriverServer.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
