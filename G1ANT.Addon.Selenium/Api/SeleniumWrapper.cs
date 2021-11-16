@@ -238,9 +238,9 @@ namespace G1ANT.Addon.Selenium
             url = ValidateUrl(url);
             switch (BrowserType)
             {
-                case BrowserType.Edge:
                 case BrowserType.InternetExplorer:
                     throw new ApplicationException("NewTab command is not supported by Edge and Internet Explorer selenium driver.");
+                case BrowserType.Edge:
                 case BrowserType.Firefox:
                 case BrowserType.Chrome:
                     RunScript(string.Format($"window.open('','_blank');"));
@@ -255,8 +255,7 @@ namespace G1ANT.Addon.Selenium
 
         public void ActivateTab(string phrase, string by)
         {
-            if (BrowserType == BrowserType.Edge ||
-                BrowserType == BrowserType.InternetExplorer)
+            if (BrowserType == BrowserType.InternetExplorer)
             {
                 throw new ApplicationException("Activating tabs in Edge and Internet Explorer is not supported.");
             }

@@ -73,9 +73,19 @@ namespace G1ANT.Addon.Selenium.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        public static byte[] geckodriver {
+        public static byte[] geckodriver_32 {
             get {
-                object obj = ResourceManager.GetObject("geckodriver", resourceCulture);
+                object obj = ResourceManager.GetObject("geckodriver_32", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] geckodriver_64 {
+            get {
+                object obj = ResourceManager.GetObject("geckodriver_64", resourceCulture);
                 return ((byte[])(obj));
             }
         }

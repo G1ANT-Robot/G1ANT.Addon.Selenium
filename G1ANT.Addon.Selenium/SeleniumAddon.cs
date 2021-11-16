@@ -10,11 +10,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using G1ANT.Language;
-using G1ANT.Addon.Selenium.Properties;
-using System.IO;
-using System.Diagnostics;
+using G1ANT.Addon.Selenium.Api;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -28,79 +25,32 @@ namespace G1ANT.Addon.Selenium
         public override void LoadDlls()
         {
             UnpackDrivers();
-            UnpackMSEdgeDriver();
             base.LoadDlls();
         }
 
         private string UnpackFolder { get => AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName; }
         
-        private void UnpackMSEdgeDriver()
-        {
-            var filename = "msedgedriver.exe";
-            var driverData = Environment.Is64BitOperatingSystem ? Resources.msedgedriver_64 : Resources.msedgedriver_32;
-
-            if (DriverNeedsUpdate(filename, driverData))
-                UpdateDriverFromResource(filename, driverData);
-        }
-
         private void UnpackDrivers()
         {
-            var embeddedResourceDictionary = new Dictionary<string, byte[]>()
-            {
-                { "chromedriver.exe", Resources.chromedriver },
-                { "geckodriver.exe", Resources.geckodriver },
-                { "IEDriverServer.exe", Resources.IEDriverServer }
+            var driverResources = new List<SeleniumDriverResourceDescription>()
+            { 
+                new SeleniumDriverResourceDescription("chromedriver.exe", "chromedriver"),
+                new SeleniumDriverResourceDescription("geckodriver.exe", "geckodriver_32", "geckodriver_64"),
+                new SeleniumDriverResourceDescription("IEDriverServer.exe", "IEDriverServer"),
+                new SeleniumDriverResourceDescription("msedgedriver.exe", "msedgedriver_32", "msedgedriver_64")
             };
-            foreach (var embededResource in embeddedResourceDictionary.Where(e => DriverNeedsUpdate(e.Key, e.Value)))
-            {
-                UpdateDriverFromResource(embededResource.Key, embededResource.Value);
-            }
-        }
 
-        private bool DriverNeedsUpdate(string filename, byte[] resourceData)
-        {
-            return !DoesFileExist(UnpackFolder, filename) || !AreFilesOfTheSameLength(resourceData.Length, UnpackFolder, filename);
-        }
-
-        private void UpdateDriverFromResource(string filename, byte[] resourceData)
-        {
-            try
-            {
-                KillWorkingProcess(Path.GetFileNameWithoutExtension(filename));
-                using (FileStream stream = File.Create(Path.Combine(UnpackFolder, filename)))
-                {
-                    stream.Write(resourceData, 0, resourceData.Length);
-                }
-            }
-            catch (Exception ex)
-            {
-                RobotMessageBox.Show(ex.Message);
-            }
-        }
-
-        private void KillWorkingProcess(string processName)
-        {
-            foreach (Process proc in Process.GetProcessesByName(processName))
+            foreach (var driver in driverResources)
             {
                 try
                 {
-                    proc.Kill();
+                    driver.UnpackIfNeeded(Assembly, UnpackFolder);
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    RobotMessageBox.Show(ex.Message);
                 }
             }
-        }
-
-        private bool DoesFileExist(string folder, string fileName)
-        {
-            return File.Exists(Path.Combine(folder, fileName));
-        }
-
-        private bool AreFilesOfTheSameLength(int length, string folder, string fileName)
-        {
-            return length == new FileInfo(Path.Combine(folder, fileName)).Length;
         }
     }
 }
