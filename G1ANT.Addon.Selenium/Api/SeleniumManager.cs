@@ -35,7 +35,7 @@ namespace G1ANT.Addon.Selenium
     public static class SeleniumManager
     {
         private static SeleniumWrapper currentWrapper = null;
-
+        
         public static SeleniumWrapper CurrentWrapper
         {
             get
@@ -82,7 +82,7 @@ namespace G1ANT.Addon.Selenium
             return (BrowserType)type;
         }
 
-        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory, bool silentMode, 
+        public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory, bool silentMode,
             List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
@@ -91,7 +91,7 @@ namespace G1ANT.Addon.Selenium
             {
                 throw new ApplicationException("Using multiple Edge instances at once is not supported.");
             }
-            IWebDriver driver = CreateNewWebDriver(webBrowserName, type,  out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
+            IWebDriver driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
             SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type, scr)
             {
                 Id = wrappers.Count > 0 ? wrappers.Max(x => x.Id) + 1 : 0
@@ -154,28 +154,25 @@ namespace G1ANT.Addon.Selenium
 
         public static void DisposeAllOpenedDrivers()
         {
-            List<Process> allDrivers = new List<Process>();
-            List<Process> firefoxDrivers = Process.GetProcessesByName("geckodriver").ToList();
-            List<Process> edgeDrivers = Process.GetProcessesByName("MicrosoftWebDriver").ToList();
-            List<Process> ieDrivers = Process.GetProcessesByName("IEDriverServer").ToList();
-            List<Process> chromeDrivers = Process.GetProcessesByName("chromedriver").ToList();
-
-            allDrivers.AddRange(firefoxDrivers);
-            allDrivers.AddRange(edgeDrivers);
-            allDrivers.AddRange(ieDrivers);
-            allDrivers.AddRange(chromeDrivers);
+            var driverFolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
+            string[] allDriverNames = { "geckodriver", "MicrosoftWebDriver", "IEDriverServer", "chromedriver" };
+            var allDrivers = new List<Process>();
+            foreach (var driverName in allDriverNames)
+                allDrivers.AddRange(Process.GetProcessesByName(driverName).ToList());
+            
 
             foreach (Process process in allDrivers)
             {
                 try
                 {
-                    process.Kill();
+                    if (process.MainModule.FileName.ToLower().Contains(driverFolder.ToLower()))
+                        process.Kill();
                 }
                 catch { }
             }
         }
 
-        private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory, bool silentMode, 
+        private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory, bool silentMode,
             List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
         {
             webBrowserName = webBrowserName.ToLower();
@@ -211,7 +208,7 @@ namespace G1ANT.Addon.Selenium
             return iWebDriver;
         }
 
-        private static void SetupChromiumOptions(ChromiumOptions options, bool silentMode, 
+        private static void SetupChromiumOptions(ChromiumOptions options, bool silentMode,
             List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
         {
             if (chromeAttach)
