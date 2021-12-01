@@ -35,7 +35,7 @@ namespace G1ANT.Addon.Selenium
     public static class SeleniumManager
     {
         private static SeleniumWrapper currentWrapper = null;
-        private static string driverFolder { get => AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName; }
+        
         public static SeleniumWrapper CurrentWrapper
         {
             get
@@ -154,8 +154,9 @@ namespace G1ANT.Addon.Selenium
 
         public static void DisposeAllOpenedDrivers()
         {
+            string driverFolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
             string[] allDriverNames = { "geckodriver", "MicrosoftWebDriver", "IEDriverServer", "chromedriver" };
-            List<Process> allDrivers = new List<Process>();
+            var allDrivers = new List<Process>();
             foreach (var driverName in allDriverNames)
                 allDrivers.AddRange(Process.GetProcessesByName(driverName).ToList());
             
@@ -164,8 +165,9 @@ namespace G1ANT.Addon.Selenium
             {
                 try
                 {
-                    if (process.MainModule.FileName.Contains(driverFolder))
+                    if (process.MainModule.FileName.ToLower().Contains(driverFolder.ToLower()))
                         process.Kill();
+                    //do not kill subprocess - if so, chrome browser will be closed on the script end
                 }
                 catch { }
             }
