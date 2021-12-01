@@ -154,7 +154,7 @@ namespace G1ANT.Addon.Selenium
 
         public static void DisposeAllOpenedDrivers()
         {
-            string driverFolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
+            var driverFolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
             string[] allDriverNames = { "geckodriver", "MicrosoftWebDriver", "IEDriverServer", "chromedriver" };
             var allDrivers = new List<Process>();
             foreach (var driverName in allDriverNames)
@@ -167,7 +167,6 @@ namespace G1ANT.Addon.Selenium
                 {
                     if (process.MainModule.FileName.ToLower().Contains(driverFolder.ToLower()))
                         process.Kill();
-                    //do not kill subprocess - if so, chrome browser will be closed on the script end
                 }
                 catch { }
             }
