@@ -49,11 +49,12 @@ namespace G1ANT.Addon.Selenium.Api
         {
             KillWorkingProcess(Path.GetFileNameWithoutExtension(filename), unpackFolder);
             var startTickCount = Environment.TickCount;
+            bool timeoutOccured = false;
             while (!CreateDriverFileFromResoure(filename, resourceData, unpackFolder)
-                && !TimeoutOccured(startTickCount, createFileTimeout))
-                ;
+                && !timeoutOccured)
+                timeoutOccured = TimeoutOccured(startTickCount, createFileTimeout);
 
-            if (TimeoutOccured(startTickCount, createFileTimeout))
+            if (timeoutOccured)
                 throw new Exception($"Unable to unpack driver {filename}. Driver is being used by another process.");
         }
 
@@ -78,9 +79,16 @@ namespace G1ANT.Addon.Selenium.Api
 
         private void KillWorkingProcess(string processName, string unpackFolder)
         {
-            foreach (Process proc in Process.GetProcessesByName(processName))
-                if (proc.MainModule.FileName.Contains(unpackFolder))
-                    KillProcessAndChildren(proc.Id);
+            foreach (Process process in Process.GetProcessesByName(processName))
+                try
+                {
+                    if (process.MainModule.FileName.ToLower().Contains(unpackFolder.ToLower()))
+                        KillProcessAndChildren(process.Id);
+                }
+                catch 
+                {
+                }
+
         }
 
         private bool DoesFileExist(string folder, string fileName)
