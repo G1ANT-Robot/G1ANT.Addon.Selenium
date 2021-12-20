@@ -216,14 +216,21 @@ namespace G1ANT.Addon.Selenium
             webDriver.Dispose();
         }
 
-        public object RunScript(string script, TimeSpan timeout = new TimeSpan(), bool waitForNewWindow = false)
+        public object RunScript(SeleniumIFrameArguments search, string script, TimeSpan timeout = new TimeSpan(), bool waitForNewWindow = false)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
+            SwitchFrameWhenNeeded(search, timeout);
             script += "; return null;";
             object result = webDriver.JavaScriptExecutor().ExecuteScript(script);
+            SwitchToDefaultFrame(search);
             popupHandler.Finish(waitForNewWindow, timeout);
             return result;
+        }
+
+        public object RunScript(string script, TimeSpan timeout = new TimeSpan(), bool waitForNewWindow = false)
+        {
+            return RunScript(null, script, timeout, waitForNewWindow);
         }
 
         public void CloseTab(TimeSpan timeout)
@@ -337,8 +344,7 @@ namespace G1ANT.Addon.Selenium
         {
             var elem = GetElementInFrame(search, timeout);
             elem.SendKeys(text);
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().DefaultContent();
+            SwitchToDefaultFrame(search);
         }
 
         public void PressKey(string keyText, SeleniumCommandArguments search, TimeSpan timeout)
@@ -351,8 +357,7 @@ namespace G1ANT.Addon.Selenium
                 throw new ArgumentException($"Wrong key argument '{keyText}' specified. Please use keys allowed by selenium library.");
             }
             elem.SendKeys(convertedText);
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().DefaultContent();
+            SwitchToDefaultFrame(search);
             popupHandler.Finish();
         }
 
@@ -366,8 +371,7 @@ namespace G1ANT.Addon.Selenium
                 else
                     element.SetProperty(attributeName, attributeValue);
             }
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().DefaultContent();
+            SwitchToDefaultFrame(search);
         }
 
         private bool IsAttributeOprtationType(IWebElement element, string attributeName, AttributeOperationType setAttributeType)
@@ -382,8 +386,7 @@ namespace G1ANT.Addon.Selenium
 
             var result = element?.GetAttribute(attributeName);
 
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().DefaultContent();
+            SwitchToDefaultFrame(search);
 
             return result ?? string.Empty;
         }
@@ -481,11 +484,22 @@ namespace G1ANT.Addon.Selenium
             return dataTable;
         }
 
+        private void SwitchFrameWhenNeeded(SeleniumIFrameArguments search, TimeSpan timeout)
+        {
+            if (!string.IsNullOrEmpty(search?.IFrameSearch?.Value))
+                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+        }
+
+        private void SwitchToDefaultFrame(SeleniumIFrameArguments search)
+        {
+            if (string.IsNullOrEmpty(search?.IFrameSearch?.Value) == false)
+                webDriver.SwitchTo().DefaultContent();
+        }
+
         private IWebElement GetElementInFrame(SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
-            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            SwitchFrameWhenNeeded(search, timeout);
             var element = FindElement(search.Search.Value, search.By.Value, timeout);
             return element;
         }
@@ -494,12 +508,10 @@ namespace G1ANT.Addon.Selenium
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            SwitchFrameWhenNeeded(search, timeout);
             IWebElement element = FindElement(search.Search.Value, search.By.Value, timeout);
             element?.CallFunction(functionName, arguments, type);
-            if (string.IsNullOrEmpty(search.IFrameSearch?.Value) == false)
-                webDriver.SwitchTo().DefaultContent();
+            SwitchToDefaultFrame(search);
             popupHandler.Finish();
         }
 
