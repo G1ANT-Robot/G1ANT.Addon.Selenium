@@ -20,7 +20,7 @@ namespace G1ANT.Addon.Selenium
     [Command(Name = "selenium.waitforvalue", Tooltip = "This command waits for a Javascript code to return a specified value")]
     public class SeleniumWaitForValueCommand : Command
     {
-        public class Arguments : CommandArguments
+        public class Arguments : SeleniumIFrameArguments
         {
             [Argument(Required = true, Tooltip = "The full Javascript code to be evaluated in the browser")]
             public TextStructure Script { get; set; }
@@ -48,7 +48,7 @@ namespace G1ANT.Addon.Selenium
                 {
                     try
                     {
-                        result = seleniumWrapper.RunScript(arguments.Script.Value).ToString();
+                        result = seleniumWrapper.RunScript(arguments, arguments.Script.Value).ToString();
                     }
                     catch
                     {

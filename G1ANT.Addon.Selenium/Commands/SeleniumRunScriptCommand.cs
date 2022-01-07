@@ -16,7 +16,7 @@ namespace G1ANT.Addon.Selenium
     [Command(Name = "selenium.runscript", Tooltip = "This command runs Javascript code inside the web browser")]
     public class SeleniumRunScriptCommandCommand : Command
     {
-        public class Arguments : CommandArguments
+        public class Arguments : SeleniumIFrameArguments
         {
             [Argument(Required = true, Tooltip = "Script to be executed in the web browser")]
             public TextStructure Script { get; set; }
@@ -41,7 +41,7 @@ namespace G1ANT.Addon.Selenium
         {
             try
             {
-                var result = SeleniumManager.CurrentWrapper.RunScript(arguments.Script.Value, arguments.Timeout.Value, arguments.WaitForNewWindow.Value);
+                var result = SeleniumManager.CurrentWrapper.RunScript(arguments, arguments.Script.Value, arguments.Timeout.Value, arguments.WaitForNewWindow.Value);
                 Structure resultStruct;
 
                 if (arguments.ResultAsStructure.Value)

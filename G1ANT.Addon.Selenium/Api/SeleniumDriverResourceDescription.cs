@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Management;
 using System.Reflection;
 using G1ANT.Language;
 
@@ -8,77 +9,118 @@ namespace G1ANT.Addon.Selenium.Api
 {
     public class SeleniumDriverResourceDescription
     {
-        private string DriverName;
-        private string ResourceName32;
-        private string ResourceName64;
+        private string driverName;
+        private string resourceName32;
+        private string resourceName64;
+        private const int killingProcessTimeout = 10000;
+        private const int createFileTimeout = 10000;
 
         public SeleniumDriverResourceDescription(string driverName, string resourceName)
         {
             Init(driverName, resourceName, resourceName);
         }
 
-        public SeleniumDriverResourceDescription(string driverName, string resourceName32, string resourceName64)
-        {
-            Init(driverName, resourceName32, resourceName64);
-        }
+        public SeleniumDriverResourceDescription(string driverName, string resourceName32, string resourceName64) 
+            => Init(driverName, resourceName32, resourceName64);
 
         public void UnpackIfNeeded(Assembly assembly, string unpackFolder)
         {
-            var resourceName = Environment.Is64BitOperatingSystem ? ResourceName64 : ResourceName32;
+            var resourceName = Environment.Is64BitOperatingSystem ? resourceName64 : resourceName32;
             var resourceBinary = assembly.GetResourceBytes(resourceName);
 
             if (resourceBinary == null)
                 throw new ApplicationException($"Driver '{resourceName}' is not embedded in the Addon.Selenium.");
-            if (DriverNeedsUpdate(DriverName, resourceBinary, unpackFolder))
-            {
-                UpdateDriverFromResource(DriverName, resourceBinary, unpackFolder);
-            }
+
+            if (DriverNeedsUpdate(driverName, resourceBinary, unpackFolder))
+                UpdateDriverFromResource(driverName, resourceBinary, unpackFolder);
         }
 
         private void Init(string driverName, string resourceName32, string resourceName64)
         {
-            DriverName = driverName;
-            ResourceName32 = resourceName32;
-            ResourceName64 = resourceName64;
+            this.driverName = driverName;
+            this.resourceName32 = resourceName32;
+            this.resourceName64 = resourceName64;
         }
 
-        private bool DriverNeedsUpdate(string filename, byte[] resourceData, string unpackFolder)
-        {
-            return !DoesFileExist(unpackFolder, filename) || !AreFilesOfTheSameLength(resourceData.Length, unpackFolder, filename);
-        }
+        private bool DriverNeedsUpdate(string filename, byte[] resourceData, string unpackFolder) 
+            => !DoesFileExist(unpackFolder, filename) || !AreFilesOfTheSameLength(resourceData.Length, unpackFolder, filename);
 
         private void UpdateDriverFromResource(string filename, byte[] resourceData, string unpackFolder)
         {
-            KillWorkingProcess(Path.GetFileNameWithoutExtension(filename));
-            using (FileStream stream = File.Create(Path.Combine(unpackFolder, filename)))
+            KillWorkingProcess(Path.GetFileNameWithoutExtension(filename), unpackFolder);
+            var startTickCount = Environment.TickCount;
+            bool timeoutOccured = false;
+            while (!CreateDriverFileFromResoure(filename, resourceData, unpackFolder)
+                && !timeoutOccured)
+                timeoutOccured = TimeoutOccured(startTickCount, createFileTimeout);
+
+            if (timeoutOccured)
+                throw new Exception($"Unable to unpack driver {filename}. Driver is being used by another process.");
+        }
+
+        private bool TimeoutOccured(int startTime, int timeout) 
+            => Environment.TickCount - startTime > timeout;
+
+        private bool CreateDriverFileFromResoure(string filename, byte[] resourceData, string unpackFolder)
+        {
+            try
             {
-                stream.Write(resourceData, 0, resourceData.Length);
+                using (FileStream stream = File.Create(Path.Combine(unpackFolder, filename)))
+                    stream.Write(resourceData, 0, resourceData.Length);
+
+                return true;
+            }
+            catch
+            {
+
+                return false;
             }
         }
 
-        private void KillWorkingProcess(string processName)
+        private void KillWorkingProcess(string processName, string unpackFolder)
         {
-            foreach (Process proc in Process.GetProcessesByName(processName))
-            {
+            foreach (Process process in Process.GetProcessesByName(processName))
                 try
                 {
-                    proc.Kill();
+                    if (process.MainModule.FileName.ToLower().Contains(unpackFolder.ToLower()))
+                        KillProcessAndChildren(process.Id);
                 }
-                catch
+                catch 
                 {
-
                 }
-            }
+
         }
 
         private bool DoesFileExist(string folder, string fileName)
-        {
-            return File.Exists(Path.Combine(folder, fileName));
-        }
+            => File.Exists(Path.Combine(folder, fileName));
+
 
         private bool AreFilesOfTheSameLength(int length, string folder, string fileName)
+            => length == new FileInfo(Path.Combine(folder, fileName)).Length;
+
+
+        private static void KillProcessAndChildren(int pid)
         {
-            return length == new FileInfo(Path.Combine(folder, fileName)).Length;
+            if (pid == 0)
+                return;
+
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                ("Select * From Win32_Process Where ParentProcessID=" + pid);
+
+            foreach (ManagementObject item in searcher.Get())
+                KillProcessAndChildren(Convert.ToInt32(item["ProcessID"]));
+
+            try
+            {
+                Process process = Process.GetProcessById(pid);
+                process.Kill();
+                if (!process.HasExited)
+                    process.WaitForExit(killingProcessTimeout);
+            }
+            catch
+            {
+
+            }
         }
     }
 }
