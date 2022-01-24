@@ -220,12 +220,17 @@ namespace G1ANT.Addon.Selenium
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
-            SwitchFrameWhenNeeded(search, timeout);
-            script += "; return null;";
-            object result = webDriver.JavaScriptExecutor().ExecuteScript(script);
-            SwitchToDefaultFrame(search);
-            popupHandler.Finish(waitForNewWindow, timeout);
-            return result;
+            try
+            {
+                SwitchFrameWhenNeeded(search, timeout);
+                script += "; return null;";
+                return webDriver.JavaScriptExecutor().ExecuteScript(script);
+            }
+            finally
+            {
+                SwitchToDefaultFrame(search);
+                popupHandler.Finish(waitForNewWindow, timeout);
+            }
         }
 
         public object RunScript(string script, TimeSpan timeout = new TimeSpan(), bool waitForNewWindow = false)
@@ -316,62 +321,83 @@ namespace G1ANT.Addon.Selenium
         public void Click(SeleniumCommandArguments search, TimeSpan timeout, bool waitForNewWindow = false)
         {
             var popupHandler = new NewPopupWindowHandler(webDriver);
-            var element = GetElementInFrame(search, timeout);
-
-            var actions = new Actions(webDriver);
-            void click() => actions.MoveToElement(element).Click().Build().Perform();
             try
             {
-                click();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("out of bounds"))
+                var element = FindElementInFrame(search, timeout);
+                var actions = new Actions(webDriver);
+                void click() => actions.MoveToElement(element).Click().Build().Perform();
+                try
                 {
-                    ((IJavaScriptExecutor)webDriver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
                     click();
                 }
-                else
-                    throw;
+                catch (Exception ex)
+                {
+                    if (ex.Message.Contains("out of bounds"))
+                    {
+                        ((IJavaScriptExecutor)webDriver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
+                        click();
+                    }
+                    else
+                        throw;
+                }
             }
-
-            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
-                webDriver.SwitchTo().DefaultContent();
-            popupHandler.Finish(waitForNewWindow, timeout);
+            finally
+            {
+                SwitchToDefaultFrame(search);
+                popupHandler.Finish(waitForNewWindow, timeout);
+            }
         }
 
         public void TypeText(string text, SeleniumCommandArguments search, TimeSpan timeout)
         {
-            var elem = GetElementInFrame(search, timeout);
-            elem.SendKeys(text);
-            SwitchToDefaultFrame(search);
+            try
+            {
+                var elem = FindElementInFrame(search, timeout);
+                elem.SendKeys(text);
+            }
+            finally
+            {
+                SwitchToDefaultFrame(search);
+            }
         }
 
         public void PressKey(string keyText, SeleniumCommandArguments search, TimeSpan timeout)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
-            var elem = GetElementInFrame(search, timeout);
-            string convertedText = typeof(Keys).GetFields().Where(x => x.Name.ToLower() == keyText.ToLower()).FirstOrDefault()?.GetValue(null) as string;
-            if (convertedText == null)
+            try
             {
-                throw new ArgumentException($"Wrong key argument '{keyText}' specified. Please use keys allowed by selenium library.");
+                var elem = FindElementInFrame(search, timeout);
+                string convertedText = typeof(Keys).GetFields().Where(x => x.Name.ToLower() == keyText.ToLower()).FirstOrDefault()?.GetValue(null) as string;
+                if (convertedText == null)
+                {
+                    throw new ArgumentException($"Wrong key argument '{keyText}' specified. Please use keys allowed by selenium library.");
+                }
+                elem.SendKeys(convertedText);
             }
-            elem.SendKeys(convertedText);
-            SwitchToDefaultFrame(search);
-            popupHandler.Finish();
+            finally
+            {
+                SwitchToDefaultFrame(search);
+                popupHandler.Finish();
+            }
         }
 
         public void SetAttributeValue(string attributeName, string attributeValue, AttributeOperationType setAttributeType, SeleniumCommandArguments search, TimeSpan timeout)
         {
-            var element = GetElementInFrame(search, timeout);
-            if (element != null)
+            try
             {
-                if (IsAttributeOprtationType(element, attributeName, setAttributeType))
-                    element.SetAttribute(attributeName, attributeValue);
-                else
-                    element.SetProperty(attributeName, attributeValue);
+                var element = FindElementInFrame(search, timeout);
+                if (element != null)
+                {
+                    if (IsAttributeOprtationType(element, attributeName, setAttributeType))
+                        element.SetAttribute(attributeName, attributeValue);
+                    else
+                        element.SetProperty(attributeName, attributeValue);
+                }
             }
-            SwitchToDefaultFrame(search);
+            finally 
+            { 
+                SwitchToDefaultFrame(search); 
+            }
         }
 
         private bool IsAttributeOprtationType(IWebElement element, string attributeName, AttributeOperationType setAttributeType)
@@ -382,28 +408,35 @@ namespace G1ANT.Addon.Selenium
 
         public string GetAttributeValue(string attributeName, SeleniumCommandArguments search)
         {
-            var element = GetElementInFrame(search, search.Timeout.Value);
-
-            var result = element?.GetAttribute(attributeName);
-
-            SwitchToDefaultFrame(search);
-
-            return result ?? string.Empty;
+            try
+            {
+                var element = FindElementInFrame(search, search.Timeout.Value);
+                var result = element?.GetAttribute(attributeName);
+                return result ?? string.Empty;
+            }
+            finally 
+            { 
+                SwitchToDefaultFrame(search); 
+            }
         }
 
         public string GetAttributeValue(string attributeName, string elementXPath, SeleniumIFrameArguments search)
         {
-            var element = GetElementInFrame(new SeleniumCommandArguments()
+            try
             {
-                By = new TextStructure("xpath"),
-                IFrameBy = search.IFrameBy,
-                IFrameSearch = search.IFrameSearch,
-                Search = new TextStructure(elementXPath),
-            }, search.Timeout.Value);
-            var res = element?.GetAttribute(attributeName) ?? string.Empty;
-            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
-                webDriver.SwitchTo().DefaultContent();
-            return res;
+                var element = FindElementInFrame(new SeleniumCommandArguments()
+                {
+                    By = new TextStructure("xpath"),
+                    IFrameBy = search.IFrameBy,
+                    IFrameSearch = search.IFrameSearch,
+                    Search = new TextStructure(elementXPath),
+                }, search.Timeout.Value);
+                return element?.GetAttribute(attributeName) ?? string.Empty;
+            }
+            finally
+            {
+                SwitchToDefaultFrame(search);
+            }
         }
 
         public string GetHtml(SeleniumIFrameArguments search)
@@ -423,35 +456,43 @@ namespace G1ANT.Addon.Selenium
 
         public string GetTextValue(SeleniumCommandArguments search, TimeSpan timeout)
         {
-            var element = GetElementInFrame(search, timeout);
-
-            var res = element?.Text ?? string.Empty;
-            if (!string.IsNullOrEmpty(search.IFrameSearch?.Value))
-                webDriver.SwitchTo().DefaultContent();
-            return res;
+            try
+            {
+                var element = FindElementInFrame(search, timeout);
+                return element?.Text ?? string.Empty;
+            }
+            finally
+            {
+                SwitchToDefaultFrame(search);
+            }
         }
 
         public DataTable GetTableElement(SeleniumCommandArguments search, TimeSpan timeout)
         {
-            var element = GetElementInFrame(search, timeout);
-
-            if (element == null)
-                throw new Exception("Cannot find the HTML element. Try to change the search phrase or \"by\" argument value so that the correct element is found");
-            else if (element.TagName != "table")
-                throw new Exception($"The element found has the \"{element.TagName}\" tag name. Try to change the search phrase so that the \"table\" element is found instead");
-
-            var dataTable = new DataTable();
-            var trElements = element.FindElements(By.TagName("tr"));
-            dataTable = AddColumnNamesFromThElements(dataTable, trElements[0].FindElements(By.TagName("th")));
-
-            foreach (var trElement in trElements)
+            try
             {
-                var tdElements = trElement.FindElements(By.TagName("td"));
-                dataTable = AddColumnsIfThereAreMoreTdElements(dataTable, tdElements.Count);
-                dataTable = AddRowToDataTable(dataTable, tdElements);
-            }
+                var element = FindElementInFrame(search, timeout);
+                if (element == null)
+                    throw new Exception("Cannot find the HTML element. Try to change the search phrase or \"by\" argument value so that the correct element is found");
+                else if (element.TagName != "table")
+                    throw new Exception($"The element found has the \"{element.TagName}\" tag name. Try to change the search phrase so that the \"table\" element is found instead");
 
-            return dataTable;
+                var dataTable = new DataTable();
+                var trElements = element.FindElements(By.TagName("tr"));
+                dataTable = AddColumnNamesFromThElements(dataTable, trElements[0].FindElements(By.TagName("th")));
+
+                foreach (var trElement in trElements)
+                {
+                    var tdElements = trElement.FindElements(By.TagName("td"));
+                    dataTable = AddColumnsIfThereAreMoreTdElements(dataTable, tdElements.Count);
+                    dataTable = AddRowToDataTable(dataTable, tdElements);
+                }
+                return dataTable;
+            }
+            finally 
+            { 
+                SwitchToDefaultFrame(search); 
+            }
         }
 
         private static DataTable AddColumnNamesFromThElements(DataTable dataTable, System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> thElements)
@@ -484,35 +525,80 @@ namespace G1ANT.Addon.Selenium
             return dataTable;
         }
 
+        private void SwitchFrameWhenNeeded(TextStructure search, Structure searchBy, TimeSpan timeout)
+        {
+            if (searchBy is TextStructure textIFrameBy)
+                webDriver.SwitchTo().Frame(FindElement(search.Value, textIFrameBy.Value, timeout));
+            else
+                throw new ArgumentException("IFrameBy argument should be text structure.");
+        }
+
+        private void SwitchFrameWhenNeeded(ListStructure search, TextStructure searchBy, TimeSpan timeout)
+        {
+            foreach (var frameSearch in search.Value)
+                webDriver.SwitchTo().Frame(FindElement(frameSearch.ToString(), searchBy.Value, timeout));
+        }
+
+        private void SwitchFrameWhenNeeded(ListStructure search, ListStructure searchBy, TimeSpan timeout)
+        {
+            if (search.Value == null || search.Value?.Count == 0)
+                throw new ArgumentException("IFrameSearch is empty.");
+            if (search.Value?.Count != searchBy.Value?.Count)
+                throw new ArgumentException("IFrameSearch and IFrameBy elements number are not equal.");
+
+            for (int idx = 0; idx < search.Value?.Count; idx++)
+                webDriver.SwitchTo().Frame(FindElement(search.Value[idx].ToString(), searchBy.Value[idx].ToString(), timeout));
+        }
+
+        private void SwitchFrameWhenNeeded(ListStructure search, Structure searchBy, TimeSpan timeout)
+        {
+            if (searchBy is TextStructure textIFrameBy)
+                SwitchFrameWhenNeeded(search, textIFrameBy, timeout);
+            else if (searchBy is ListStructure listIFrameBy)
+                SwitchFrameWhenNeeded(search, listIFrameBy, timeout);
+            else
+                throw new ArgumentException("IFrameBy argument should be text or list structure.");
+        }
+
         private void SwitchFrameWhenNeeded(SeleniumIFrameArguments search, TimeSpan timeout)
         {
-            if (!string.IsNullOrEmpty(search?.IFrameSearch?.Value))
-                webDriver.SwitchTo().Frame(FindElement(search.IFrameSearch.Value, search.IFrameBy.Value, timeout));
+            if (search?.IFrameSearch is TextStructure textIFrameSearch)
+                SwitchFrameWhenNeeded(textIFrameSearch, search?.IFrameBy, timeout);
+            else if (search?.IFrameSearch is ListStructure listIFrameSearch)
+                SwitchFrameWhenNeeded(listIFrameSearch, search.IFrameBy, timeout);
         }
 
         private void SwitchToDefaultFrame(SeleniumIFrameArguments search)
         {
-            if (string.IsNullOrEmpty(search?.IFrameSearch?.Value) == false)
+            if (search?.IFrameSearch is TextStructure || search?.IFrameSearch is ListStructure)
                 webDriver.SwitchTo().DefaultContent();
         }
 
-        private IWebElement GetElementInFrame(SeleniumCommandArguments search, TimeSpan timeout)
+        private IWebElement FindElementInFrame(SeleniumCommandArguments search, TimeSpan timeout)
         {
             PreCheckCurrentWindowHandle();
             SwitchFrameWhenNeeded(search, timeout);
-            var element = FindElement(search.Search.Value, search.By.Value, timeout);
-            return element;
+            return FindElement(search.Search.Value, search.By.Value, timeout);
         }
 
         public void CallFunction(string functionName, object[] arguments, string type, SeleniumCommandArguments search, TimeSpan timeout)
         {
             NewPopupWindowHandler popupHandler = new NewPopupWindowHandler(webDriver);
             PreCheckCurrentWindowHandle();
-            SwitchFrameWhenNeeded(search, timeout);
-            IWebElement element = FindElement(search.Search.Value, search.By.Value, timeout);
-            element?.CallFunction(functionName, arguments, type);
-            SwitchToDefaultFrame(search);
-            popupHandler.Finish();
+            try
+            {
+                IWebElement element = FindElementInFrame(search, timeout);
+                element?.CallFunction(functionName, arguments, type);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                SwitchToDefaultFrame(search);
+                popupHandler.Finish();
+            }
         }
 
         public void BringWindowToForeground()
