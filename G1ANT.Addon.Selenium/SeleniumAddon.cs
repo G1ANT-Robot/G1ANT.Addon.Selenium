@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using G1ANT.Language;
 using G1ANT.Addon.Selenium.Api;
+using G1ANT.Addon.Selenium.Api.Interfaces;
+using G1ANT.Addon.Selenium.Api.Services;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -32,24 +34,15 @@ namespace G1ANT.Addon.Selenium
         
         private void UnpackDrivers()
         {
-            var driverResources = new List<SeleniumDriverResourceDescription>()
-            { 
-                new SeleniumDriverResourceDescription("chromedriver.exe", "chromedriver"),
-                new SeleniumDriverResourceDescription("geckodriver.exe", "geckodriver_32", "geckodriver_64"),
-                new SeleniumDriverResourceDescription("IEDriverServer.exe", "IEDriverServer"),
-                new SeleniumDriverResourceDescription("msedgedriver.exe", "msedgedriver_32", "msedgedriver_64")
-            };
-
-            foreach (var driver in driverResources)
+            try
             {
-                try
-                {
-                    driver.UnpackIfNeeded(Assembly, UnpackFolder);
-                }
-                catch (Exception ex)
-                {
-                    RobotMessageBox.Show(ex.Message);
-                }
+                var seleniumDrivers = new SeleniumDrivers();
+                seleniumDrivers.Unpack(Assembly, UnpackFolder);
+                seleniumDrivers.InstallAll(UnpackFolder);
+            }
+            catch (Exception ex)
+            {
+                RobotMessageBox.Show(ex.Message);
             }
         }
     }

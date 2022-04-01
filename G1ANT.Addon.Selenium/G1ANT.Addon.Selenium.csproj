@@ -81,13 +81,19 @@
     <Compile Include="Api\Enums\AttributeOperationType.cs" />
     <Compile Include="Api\Enums\BrowserType.cs" />
     <Compile Include="Api\Enums\ElementSearchBy.cs" />
-    <Compile Include="Api\SeleniumDriverResourceDescription.cs" />
+    <Compile Include="Api\Interfaces\ISeleniumDriverInstaller.cs" />
+    <Compile Include="Api\Models\SeleniumDriverModel.cs" />
+    <Compile Include="Api\SeleniumDrivers.cs" />
+    <Compile Include="Api\Services\SeleniumChromeDriverInstaller.cs" />
+    <Compile Include="Api\Services\SeleniumDriverInstaller.cs" />
     <Compile Include="Api\SeleniumIFrameArguments.cs" />
     <Compile Include="Api\SeleniumCommandArguments.cs" />
     <Compile Include="Api\SeleniumExtensions.cs" />
     <Compile Include="Api\SeleniumManager.cs" />
     <Compile Include="Api\SeleniumSettings.cs" />
     <Compile Include="Api\SeleniumWrapper.cs" />
+    <Compile Include="Api\Services\SeleniumEdgeDriverInstaller.cs" />
+    <Compile Include="Api\Services\SeleniumGeckoDriverInstaller.cs" />
     <Compile Include="Commands\SeleniumGetTableCommand.cs" />
     <Compile Include="Commands\SeleniumAlertActionCommand.cs" />
     <Compile Include="Commands\SeleniumCloseTabCommand.cs" />
@@ -132,10 +138,6 @@
     <None Include="Resources\image36.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\chromedriver.exe" />
-    <EmbeddedResource Include="Resources\IEDriverServer.exe" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="..\packages\*\lib\net45\WebDriver.dll">
       <Link>WebDriver.dll</Link>
     </EmbeddedResource>
@@ -151,6 +153,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include=".\drivers\*.*">
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -158,18 +164,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="License.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\msedgedriver-32.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\msedgedriver-64.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\geckodriver-32.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\geckodriver-64.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
