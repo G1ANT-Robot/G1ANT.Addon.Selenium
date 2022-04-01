@@ -1,6 +1,6 @@
 $driverFolder = ".\drivers"
 $tmpFolder = ".\drivers\_tmp"
-$chromeDriverLimit = 3
+$chromeDriverLimit = 2
 if (Test-Path $tmpFolder)
 {
 	Remove-Item $tmpFolder -Recurse
@@ -73,7 +73,7 @@ function Download-Edge-Drivers
 	$wc = New-Object System.Net.WebClient
 	$res = $wc.DownloadString("https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/")
 	$html = ConvertFrom-Html -Content $res
-	$stableChannel = $html.SelectNodes("//*[@id='webdriver']//*[@aria-label='Microsoft Edge Driver for stable channel']")
+	$stableChannel = $html.SelectNodes("//*[@id='webdriver']//*[contains(@aria-label, 'stable channel') and contains(@aria-label, 'Edge')]")
 	$download = $stableChannel[0].SelectNodes("..//*[@class='driver-download__meta']")
 	
 	$lastVersion = Extract-Version $download[0].innerText
