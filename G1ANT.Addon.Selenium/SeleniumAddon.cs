@@ -38,11 +38,10 @@ namespace G1ANT.Addon.Selenium
             {
                 var seleniumDrivers = new SeleniumDrivers();
                 seleniumDrivers.Unpack(Assembly, UnpackFolder);
-                seleniumDrivers.InstallAll(UnpackFolder);
             }
-            catch (Exception ex)
+            catch
             {
-                RobotMessageBox.Show(ex.Message);
+                //RobotMessageBox.Show(ex.Message);
             }
         }
     }
