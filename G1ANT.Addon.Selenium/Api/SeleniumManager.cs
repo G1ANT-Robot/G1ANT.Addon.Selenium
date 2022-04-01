@@ -83,6 +83,12 @@ namespace G1ANT.Addon.Selenium
             return (BrowserType)type;
         }
 
+        private static void InstallDriver(BrowserType type)
+        {
+            var seleniumDrivers = new SeleniumDrivers();
+            seleniumDrivers.Install(type, AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName);
+        }
+
         public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory, bool silentMode,
             List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
         {
@@ -103,14 +109,18 @@ namespace G1ANT.Addon.Selenium
                 {
                     // code 0x80131509 (-2146233079) is thrown when driver is in wrong version according to the browser version
                     // lets try to install correct version if it is available in the selenium repository
-
-                    var seleniumDrivers = new SeleniumDrivers();
-                    seleniumDrivers.Install(type, AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName);
+                    InstallDriver(type);
                     driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
                 }
                 else
                     throw;
             }
+            catch (DriverServiceNotFoundException ex)
+            {
+                InstallDriver(type);
+                driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
+            }
+
             SeleniumWrapper wrapper = new SeleniumWrapper(driver, mainWindowHandle, type, scr)
             {
                 Id = wrappers.Count > 0 ? wrappers.Max(x => x.Id) + 1 : 0
