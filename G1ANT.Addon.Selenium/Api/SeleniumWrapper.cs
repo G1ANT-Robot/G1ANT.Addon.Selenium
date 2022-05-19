@@ -313,6 +313,39 @@ namespace G1ANT.Addon.Selenium
             }
         }
 
+        public void Select(string selectValue, string selectBy, SeleniumCommandArguments search, TimeSpan timeout)
+        {
+            var element = GetElementInFrame(search, timeout);
+            var select = new SelectElement(element);
+
+            if (selectBy.ToLower()=="index")
+            {
+                try
+                {
+                    int index = int.Parse(selectValue);
+                }
+                catch (Exception)
+                {
+
+                    throw new ApplicationException($"{selectValue} is not an integer number");
+                }
+                select.SelectByIndex(int.Parse(selectValue));
+            }
+            else if (selectBy.ToLower() == "text")
+            {
+                select.SelectByText(selectValue);
+            }
+            else if (selectBy.ToLower() == "value")
+            {
+                select.SelectByValue(selectValue);
+            }
+            else
+            {
+                throw new ApplicationException($"{selectBy} is not a proper value for selectby argument. See possible values in the command description");
+            }
+
+        }
+
         public void Click(SeleniumCommandArguments search, TimeSpan timeout, bool waitForNewWindow = false)
         {
             var popupHandler = new NewPopupWindowHandler(webDriver);
@@ -520,5 +553,7 @@ namespace G1ANT.Addon.Selenium
             if (MainWindowHandle != IntPtr.Zero)
                 RobotWin32.SetForegroundWindow(MainWindowHandle);
         }
+
+
     }
 }
