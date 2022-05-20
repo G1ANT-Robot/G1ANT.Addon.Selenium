@@ -321,17 +321,14 @@ namespace G1ANT.Addon.Selenium
             switch (selectBy.ToLower())
             {
                 case "index":
-                    int index;
-
                     try
                     {
-                        index = int.Parse(selectValue);
+                        select.SelectByIndex(int.Parse(selectValue));
                     }
-                    catch (Exception)
+                    catch (FormatException)
                     {
                         throw new ApplicationException($"{selectValue} is not an integer number");
                     }
-                    select.SelectByIndex(index);
                     break;
 
                 case "text":
