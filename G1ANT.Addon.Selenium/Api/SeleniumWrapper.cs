@@ -318,30 +318,32 @@ namespace G1ANT.Addon.Selenium
             var element = GetElementInFrame(search, timeout);
             var select = new SelectElement(element);
 
-            if (selectBy.ToLower()=="index")
+            switch (selectBy.ToLower())
             {
-                try
-                {
-                    int index = int.Parse(selectValue);
-                }
-                catch (Exception)
-                {
+                case "index":
+                    int index;
 
-                    throw new ApplicationException($"{selectValue} is not an integer number");
-                }
-                select.SelectByIndex(int.Parse(selectValue));
-            }
-            else if (selectBy.ToLower() == "text")
-            {
-                select.SelectByText(selectValue);
-            }
-            else if (selectBy.ToLower() == "value")
-            {
-                select.SelectByValue(selectValue);
-            }
-            else
-            {
-                throw new ApplicationException($"{selectBy} is not a proper value for selectby argument. See possible values in the command description");
+                    try
+                    {
+                        index = int.Parse(selectValue);
+                    }
+                    catch (Exception)
+                    {
+                        throw new ApplicationException($"{selectValue} is not an integer number");
+                    }
+                    select.SelectByIndex(index);
+                    break;
+
+                case "text":
+                    select.SelectByText(selectValue);
+                    break;
+
+                case "value":
+                    select.SelectByValue(selectValue);
+                    break;
+
+                default:
+                    throw new ApplicationException($"{selectBy} is not a proper value for selectby argument. See possible values in the command description");
             }
 
         }
