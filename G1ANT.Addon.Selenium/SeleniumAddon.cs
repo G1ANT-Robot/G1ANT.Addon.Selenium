@@ -35,8 +35,15 @@ namespace G1ANT.Addon.Selenium
         
         private void InstallLatestSeleniumDrivers()
         {
-            var seleniumDrivers = new SeleniumDrivers();
-            seleniumDrivers.InstallAll(UnpackFolder);
+            try
+            {
+                var seleniumDrivers = new SeleniumDrivers();
+                seleniumDrivers.InstallAll(UnpackFolder);
+            }
+            catch
+            {
+                // ignore driver exceptions during addon loading
+            }
         }
 
         private void UnpackDrivers()
