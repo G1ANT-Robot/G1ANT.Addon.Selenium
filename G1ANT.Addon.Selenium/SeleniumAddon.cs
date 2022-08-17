@@ -27,11 +27,25 @@ namespace G1ANT.Addon.Selenium
         public override void LoadDlls()
         {
             UnpackDrivers();
+            InstallLatestSeleniumDrivers();
             base.LoadDlls();
         }
 
         private string UnpackFolder { get => AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName; }
         
+        private void InstallLatestSeleniumDrivers()
+        {
+            try
+            {
+                var seleniumDrivers = new SeleniumDrivers();
+                seleniumDrivers.InstallAll(UnpackFolder);
+            }
+            catch
+            {
+                // ignore driver exceptions during addon loading
+            }
+        }
+
         private void UnpackDrivers()
         {
             try
