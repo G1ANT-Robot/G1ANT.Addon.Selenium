@@ -94,6 +94,7 @@
     <Compile Include="Api\SeleniumWrapper.cs" />
     <Compile Include="Api\Services\SeleniumEdgeDriverInstaller.cs" />
     <Compile Include="Api\Services\SeleniumGeckoDriverInstaller.cs" />
+    <Compile Include="Commands\SeleniumEdgeAttachCommand.cs" />
     <Compile Include="Commands\SeleniumSelectCommand.cs" />
     <Compile Include="Commands\SeleniumGetTableCommand.cs" />
     <Compile Include="Commands\SeleniumAlertActionCommand.cs" />

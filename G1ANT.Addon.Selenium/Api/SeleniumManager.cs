@@ -226,7 +226,7 @@ namespace G1ANT.Addon.Selenium
                     break;
 
                 case BrowserType.Edge:
-                    iWebDriver = CreateEdgeWebDriver(silentMode);
+                    iWebDriver = CreateEdgeWebDriver(silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
                     newProcessFilter = "edge";
                     break;
                 default:
@@ -300,7 +300,7 @@ namespace G1ANT.Addon.Selenium
             return new IE.InternetExplorerDriver(ieService, options);
         }
 
-        private static IWebDriver CreateEdgeWebDriver(bool silentMode)
+        private static IWebDriver CreateEdgeWebDriver(bool silentMode, List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
         {
             try
             {
@@ -310,6 +310,7 @@ namespace G1ANT.Addon.Selenium
                 {
                     PageLoadStrategy = PageLoadStrategy.Eager,
                 };
+                SetupChromiumOptions(edgeOptions, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
                 return new Edge.EdgeDriver(edgeService, edgeOptions);
             }
             catch (DriverServiceNotFoundException ex)
