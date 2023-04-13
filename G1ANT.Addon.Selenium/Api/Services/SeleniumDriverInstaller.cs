@@ -228,7 +228,6 @@ namespace G1ANT.Addon.Selenium.Api.Services
                 string driverFileName = $"chromedriver_{driverVersion}.exe";
                 driverPath = Path.Combine($"{destinationFolder}\\SeleniumDrivers", driverFileName);
 
-                // Zmiana nazwy pliku WebDrivera na nazwę z wersją
                 File.Move(Path.Combine(driverDir, "chromedriver.exe"), driverPath);
             }
 
