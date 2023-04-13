@@ -155,15 +155,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include=".\drivers\chromedriver_107.0.5304.62.exe" />
-    <EmbeddedResource Include=".\drivers\chromedriver_109.0.5414.74.exe" />
-    <EmbeddedResource Include=".\drivers\geckodriver_32_0.31.0.exe" />
-    <EmbeddedResource Include=".\drivers\geckodriver_64_0.31.0.exe" />
-    <EmbeddedResource Include=".\drivers\IEDriverServer.exe" />
-    <EmbeddedResource Include=".\drivers\msedgedriver_32_101.0.1210.53.exe" />
-    <EmbeddedResource Include=".\drivers\msedgedriver_32_102.0.1245.30.exe" />
-    <EmbeddedResource Include=".\drivers\msedgedriver_64_101.0.1210.53.exe" />
-    <EmbeddedResource Include=".\drivers\msedgedriver_64_102.0.1245.30.exe" />
+    <EmbeddedResource Include=".\drivers\*.*">
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
