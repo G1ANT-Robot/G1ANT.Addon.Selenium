@@ -8,6 +8,8 @@ using System.Linq;
 using System.Collections.Generic;
 using G1ANT.Addon.Selenium.Api.Interfaces;
 using G1ANT.Addon.Selenium.Api.Models;
+using System.Net;
+using System.IO.Compression;
 
 namespace G1ANT.Addon.Selenium.Api.Services
 {
@@ -68,7 +70,14 @@ namespace G1ANT.Addon.Selenium.Api.Services
             }
             if (driverToInstall == null)
                 throw new FileNotFoundException($"Cannot find {driverName} driver for browser version {currentBrowserVersion}.");
-            InstallDriverFromRepositoryFolder(driverToInstall.FilePath, destinationFolder);
+
+            if (driverToInstall.Version.Major < currentBrowserVersion.Major && this.BrowserType == BrowserType.Chrome)
+            {
+                var newDriverPath = DownloadChromedriver(currentBrowserVersion.Major.ToString(), destinationFolder);
+                InstallDriverFromRepositoryFolder(newDriverPath, destinationFolder);
+            }
+            else
+                InstallDriverFromRepositoryFolder(driverToInstall.FilePath, destinationFolder);
         }
 
         private SeleniumDriverModel[] FindDriversInRepository(string repositoryFolder)
@@ -190,6 +199,40 @@ namespace G1ANT.Addon.Selenium.Api.Services
             {
 
             }
+        }
+
+        static string DownloadChromedriver(string chromeVersion, string destinationFolder)
+        {
+            string driverPath = string.Empty;
+
+            string driverDir = Path.Combine(Path.GetTempPath(), "chromedriver");
+            if (Directory.Exists(driverDir))
+            {
+                Directory.Delete(driverDir, true);
+            }
+
+            string webDriverUrl = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_" + chromeVersion;
+            string driverVersion = new WebClient().DownloadString(webDriverUrl);
+
+            if (!string.IsNullOrEmpty(driverVersion))
+            {
+                string driverUrl = $"https://chromedriver.storage.googleapis.com/{driverVersion}/chromedriver_win32.zip";
+
+                string zipFilePath = Path.Combine(Path.GetTempPath(), "chromedriver_win32.zip");
+                WebClient webClient = new WebClient();
+                webClient.DownloadFile(driverUrl, zipFilePath);
+
+                Directory.CreateDirectory(driverDir);
+                ZipFile.ExtractToDirectory(zipFilePath, driverDir);
+
+                string driverFileName = $"chromedriver_{driverVersion}.exe";
+                driverPath = Path.Combine($"{destinationFolder}\\SeleniumDrivers", driverFileName);
+
+                // Zmiana nazwy pliku WebDrivera na nazwę z wersją
+                File.Move(Path.Combine(driverDir, "chromedriver.exe"), driverPath);
+            }
+
+            return driverPath;
         }
     }
 }
