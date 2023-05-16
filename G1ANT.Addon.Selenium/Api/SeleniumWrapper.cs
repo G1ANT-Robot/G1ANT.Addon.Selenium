@@ -372,9 +372,13 @@ namespace G1ANT.Addon.Selenium
             popupHandler.Finish(waitForNewWindow, timeout);
         }
 
-        public void TypeText(string text, SeleniumCommandArguments search, TimeSpan timeout)
+        public void TypeText(string text, SeleniumCommandArguments search, TimeSpan timeout, bool clear)
         {
             var elem = GetElementInFrame(search, timeout);
+            var clearAction = new Actions(webDriver);
+            if (clear)
+                clearAction.MoveToElement(elem).Click().KeyDown(Keys.Control).SendKeys("a")
+                    .KeyUp(Keys.Control).SendKeys(Keys.Delete).Perform();
             elem.SendKeys(text);
             SwitchToDefaultFrame(search);
         }
