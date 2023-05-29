@@ -43,6 +43,9 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "Run selenium in silent mode")]
             public BooleanStructure SilentMode { get; set; } = new BooleanStructure(false);
 
+            [Argument(Tooltip = "Profile name or folder for the Firefox")]
+            public TextStructure FirefoxProfile { get; set; }
+
             [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
@@ -73,7 +76,8 @@ namespace G1ANT.Addon.Selenium
                         arguments.ChromeSwitches?.Value,
                         chromeProfiles,
                         chromePort,
-                        false);
+                        false,
+                        arguments.FirefoxProfile?.Value);
                 int wrapperId = wrapper.Id;
                 OnScriptEnd = () =>
                 {
