@@ -20,7 +20,6 @@ using Chrome = OpenQA.Selenium.Chrome;
 using IE = OpenQA.Selenium.IE;
 using Edge = OpenQA.Selenium.Edge;
 using Safari = OpenQA.Selenium.Safari;
-using Opera = OpenQA.Selenium.Opera;
 
 using System.IO;
 using OpenQA.Selenium.Remote;
@@ -30,6 +29,7 @@ using G1ANT.Language;
 using System.Reflection;
 using OpenQA.Selenium.Chromium;
 using G1ANT.Addon.Selenium.Api;
+using OpenQA.Selenium.Firefox;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -90,7 +90,7 @@ namespace G1ANT.Addon.Selenium
         }
 
         public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory, bool silentMode,
-            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
+            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false, string firefoxProfile = null)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
             BrowserType type = GetBrowserType(webBrowserName);
@@ -101,7 +101,7 @@ namespace G1ANT.Addon.Selenium
             IWebDriver driver = null;
             try
             {
-                driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
+                driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach, firefoxProfile);
             }
             catch (InvalidOperationException ex)
             {
@@ -202,7 +202,7 @@ namespace G1ANT.Addon.Selenium
         }
 
         private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory, bool silentMode,
-            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
+            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false, string firefoxProfile = null)
         {
             webBrowserName = webBrowserName.ToLower();
             IWebDriver iWebDriver = null;
@@ -216,7 +216,7 @@ namespace G1ANT.Addon.Selenium
                     break;
 
                 case BrowserType.Firefox:
-                    iWebDriver = CreateFireFoxDriver(driversDirectory);
+                    iWebDriver = CreateFireFoxDriver(driversDirectory, firefoxProfile);
                     newProcessFilter = "firefox";
                     break;
 
@@ -238,7 +238,8 @@ namespace G1ANT.Addon.Selenium
         }
 
         private static void SetupChromiumOptions(ChromiumOptions options, bool silentMode,
-            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
+            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false,
+            string profile = null)
         {
             if (chromeAttach)
             {
@@ -266,8 +267,8 @@ namespace G1ANT.Addon.Selenium
                     if (argument != null)
                         options.AddArgument(argument?.ToString());
             if (chromeProfiles != null)
-                foreach (var profile in chromeProfiles)
-                    options.AddUserProfilePreference(profile.Key, profile.Value);
+                foreach (var chromeProfile in chromeProfiles)
+                    options.AddUserProfilePreference(chromeProfile.Key, chromeProfile.Value);
         }
 
         private static IWebDriver CreateChromeDriver(string driversDirectory, bool silentMode, List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
@@ -282,11 +283,26 @@ namespace G1ANT.Addon.Selenium
             return new Chrome.ChromeDriver(chromeService, chromeOptions);
         }
 
-        private static IWebDriver CreateFireFoxDriver(string driversDirectory)
+        private static FirefoxProfile GetFirefoxProfile(string profile)
         {
-            var firefoxService = Firefox.FirefoxDriverService.CreateDefaultService(driversDirectory);
+            if (string.IsNullOrEmpty(profile))
+                return null;
+
+            if (Directory.Exists(profile))
+                return new FirefoxProfile(profile);
+
+            var profileManager = new FirefoxProfileManager();
+            return profileManager.GetProfile(profile);
+        }
+
+        private static IWebDriver CreateFireFoxDriver(string driversDirectory, string profile)
+        {
+            var options = new FirefoxOptions();
+            options.Profile = GetFirefoxProfile(profile);
+
+            var firefoxService = FirefoxDriverService.CreateDefaultService(driversDirectory);
             firefoxService.HideCommandPromptWindow = true;
-            return new Firefox.FirefoxDriver(firefoxService);
+            return new FirefoxDriver(firefoxService, options);
         }
 
         private static IWebDriver CreateIEDriver(string driversDirectory)
