@@ -8,4 +8,18 @@ Download latest _MS Windows_ [geckodriver release](https://github.com/mozilla/ge
 
 ## Selenium drivers to download
 
-* [https://googlechromelabs.github.io/chrome-for-testing/#stable](https://googlechromelabs.github.io/chrome-for-testing/#stable)
+Suggesstion: Having said the above, if you use latest selenium version v4.12.0, you do not have to worry about downloading the chromedriver manually, selenium's new in-built tool Selenium Manager will download and manage the drivers for you automatically.
+
+Code to launch browser can be as simple as:
+
+```python
+from selenium import webdriver
+
+driver = webdriver.Chrome()
+driver.get("https://www.google.com/")
+```
+
+Few references:
+* [Selenium drivers for download](https://googlechromelabs.github.io/chrome-for-testing/#stable)
+* [Introducing Selenium Manager](https://www.selenium.dev/blog/2022/introducing-selenium-manager/)
+* [Stackoverflow](https://stackoverflow.com/a/76463081/7598774)
