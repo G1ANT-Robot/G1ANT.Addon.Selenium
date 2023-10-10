@@ -516,6 +516,14 @@ namespace G1ANT.Addon.Selenium
             return dataTable;
         }
 
+        public void SwitchFrame(string search, string by, TimeSpan timeout)
+        {
+            if (string.IsNullOrEmpty(search))
+                webDriver.SwitchTo().DefaultContent();
+            else
+                webDriver.SwitchTo().Frame(FindElement(search, by, timeout));
+        }
+
         private void SwitchFrameWhenNeeded(SeleniumIFrameArguments search, TimeSpan timeout)
         {
             if (!string.IsNullOrEmpty(search?.IFrameSearch?.Value))
