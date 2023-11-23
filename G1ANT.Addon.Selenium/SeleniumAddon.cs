@@ -14,6 +14,8 @@ using G1ANT.Language;
 using G1ANT.Addon.Selenium.Api;
 using G1ANT.Addon.Selenium.Api.Interfaces;
 using G1ANT.Addon.Selenium.Api.Services;
+using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager;
 
 namespace G1ANT.Addon.Selenium
 {
@@ -26,36 +28,20 @@ namespace G1ANT.Addon.Selenium
     {
         public override void LoadDlls()
         {
-            UnpackDrivers();
             InstallLatestSeleniumDrivers();
             base.LoadDlls();
         }
 
-        private string UnpackFolder { get => AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName; }
-        
         private void InstallLatestSeleniumDrivers()
         {
             try
             {
                 var seleniumDrivers = new SeleniumDrivers();
-                seleniumDrivers.InstallAll(UnpackFolder);
+                seleniumDrivers.InstallAll();
             }
             catch
             {
                 // ignore driver exceptions during addon loading
-            }
-        }
-
-        private void UnpackDrivers()
-        {
-            try
-            {
-                var seleniumDrivers = new SeleniumDrivers();
-                seleniumDrivers.Unpack(Assembly, UnpackFolder);
-            }
-            catch
-            {
-                //RobotMessageBox.Show(ex.Message);
             }
         }
     }
