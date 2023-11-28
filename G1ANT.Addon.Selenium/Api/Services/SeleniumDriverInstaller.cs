@@ -8,81 +8,37 @@ using System.Linq;
 using System.Collections.Generic;
 using G1ANT.Addon.Selenium.Api.Interfaces;
 using G1ANT.Addon.Selenium.Api.Models;
+using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs;
 
 namespace G1ANT.Addon.Selenium.Api.Services
 {
-    public class SeleniumDriverInstaller : ISeleniumDriverInstaller
+    public abstract class SeleniumDriverInstaller : ISeleniumDriverInstaller
     {
-        private string driverName;
-        private string resourceName;
         private const int killingProcessTimeout = 10000;
         private const int createFileTimeout = 10000;
         private const string driverSubfolder = "SeleniumDrivers";
-        private const string driverResourceNamePrefix = "G1ANT.Addon.Selenium.drivers.";
 
         public BrowserType BrowserType { get; }
 
 
-        public SeleniumDriverInstaller(BrowserType type, string driverName, string resourceName)
+        public SeleniumDriverInstaller(BrowserType type)
         {
             BrowserType = type;
-            Init(driverName, resourceName);
         }
 
-        public void Unpack(Assembly assembly, string destinationFolder)
-        {
-            var diverNames = new List<string>();
-            var driversRepositoryFolder = GetDriverRepositoryFolder(destinationFolder);
-
-            if (!string.IsNullOrEmpty(resourceName))
-                diverNames.AddRange(GetResourceNames(assembly));
-
-            foreach (var name in diverNames)
-            {
-                var resourceBinary = assembly.GetManifestResourceBytes(name.Remove(0, assembly.GetName().Name.Length+1));
-                CreateDriverFileFromResoure(name.Remove(0, driverResourceNamePrefix.Length), resourceBinary, driversRepositoryFolder);
-            }
-        }
-
-        public virtual Version GetInstalledBrowserVersion() => null;
+        protected abstract IDriverConfig GetDriverConfig();
 
         public void Install(string destinationFolder)
         {
             var driversRepositoryFolder = GetDriverRepositoryFolder(destinationFolder);
-            var currentBrowserVersion = GetInstalledBrowserVersion();
-            var repositoryDrivers = FindDriversInRepository(driversRepositoryFolder);
-            SeleniumDriverModel driverToInstall;
 
-            if (currentBrowserVersion == null)
-            {
-                driverToInstall = repositoryDrivers
-                    .OrderByDescending(s => s.Version)
-                    .FirstOrDefault();
-            }
-            else
-            {
-                driverToInstall = repositoryDrivers
-                    .Where(x => new Version(x.Version.Major, x.Version.Minor) <= currentBrowserVersion)
-                    .OrderByDescending(s => s.Version)
-                    .FirstOrDefault();
-            }
-            if (driverToInstall == null)
-                throw new FileNotFoundException($"Cannot find {driverName} driver for browser version {currentBrowserVersion}.");
-            InstallDriverFromRepositoryFolder(driverToInstall.FilePath, destinationFolder);
-        }
+            var driverManager = new DriverManager(driversRepositoryFolder);
+            var config = GetDriverConfig();
+            var driverPath = driverManager.SetUpDriver(config);
 
-        private SeleniumDriverModel[] FindDriversInRepository(string repositoryFolder)
-        {
-            return Directory
-                .GetFiles(repositoryFolder, $"{resourceName}*")
-                .Select(x => new SeleniumDriverModel(x))
-                .ToArray();
-        }
-
-        private IEnumerable<string> GetResourceNames(Assembly assembly)
-        {
-            var resourcePrefix = $"{driverResourceNamePrefix}{resourceName}";
-            return assembly.GetManifestResourceNames().Where(x => x.StartsWith(resourcePrefix));
+            InstallDriverFromRepositoryFolder(driverPath, destinationFolder, config.GetBinaryName());
         }
 
         private string GetDriverRepositoryFolder(string rootFolder)
@@ -92,17 +48,7 @@ namespace G1ANT.Addon.Selenium.Api.Services
             return path;
         }
 
-
-        private void Init(string driverName, string resourceName)
-        {
-            this.driverName = driverName;
-            this.resourceName = resourceName;
-        }
-
-        private bool DriverNeedsUpdate(string filename, byte[] resourceData, string unpackFolder) 
-            => !DoesFileExist(unpackFolder, filename) || !AreFilesOfTheSameLength(resourceData.Length, unpackFolder, filename);
-
-        private void InstallDriverFromRepositoryFolder(string driverFile, string unpackFolder)
+        private void InstallDriverFromRepositoryFolder(string driverFile, string unpackFolder, string driverName)
         {
             KillWorkingProcess(Path.GetFileNameWithoutExtension(driverName), unpackFolder);
             var startTickCount = Environment.TickCount;
@@ -127,25 +73,6 @@ namespace G1ANT.Addon.Selenium.Api.Services
         private bool TimeoutOccured(int startTime, int timeout) 
             => Environment.TickCount - startTime > timeout;
 
-        private bool CreateDriverFileFromResoure(string filename, byte[] resourceData, string unpackFolder)
-        {
-            try
-            {
-                var filePath = Path.Combine(unpackFolder, filename);
-                if (File.Exists(filePath))
-                    return true;
-                using (FileStream stream = File.Create(filePath))
-                    stream.Write(resourceData, 0, resourceData.Length);
-
-                return true;
-            }
-            catch
-            {
-
-                return false;
-            }
-        }
-
         private void KillWorkingProcess(string processName, string unpackFolder)
         {
             foreach (Process process in Process.GetProcessesByName(processName))
@@ -159,14 +86,6 @@ namespace G1ANT.Addon.Selenium.Api.Services
                 }
 
         }
-
-        private bool DoesFileExist(string folder, string fileName)
-            => File.Exists(Path.Combine(folder, fileName));
-
-
-        private bool AreFilesOfTheSameLength(int length, string folder, string fileName)
-            => length == new FileInfo(Path.Combine(folder, fileName)).Length;
-
 
         private static void KillProcessAndChildren(int pid)
         {

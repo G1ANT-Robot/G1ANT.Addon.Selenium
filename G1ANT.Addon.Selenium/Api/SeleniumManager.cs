@@ -86,7 +86,7 @@ namespace G1ANT.Addon.Selenium
         private static void InstallDriver(BrowserType type)
         {
             var seleniumDrivers = new SeleniumDrivers();
-            seleniumDrivers.Install(type, AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName);
+            seleniumDrivers.Install(type);
         }
 
         public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory, bool silentMode,

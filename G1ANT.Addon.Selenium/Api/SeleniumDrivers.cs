@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using G1ANT.Language;
 
 namespace G1ANT.Addon.Selenium.Api
 {
@@ -11,61 +12,35 @@ namespace G1ANT.Addon.Selenium.Api
     {
         private List<ISeleniumDriverInstaller> drivers;
 
+        private string UnpackFolder { get => AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName; }
+
         public SeleniumDrivers()
         {
             drivers = new List<ISeleniumDriverInstaller>()
             {
-                new SeleniumChromeDriverInstaller(BrowserType.Chrome, "chromedriver.exe", "chromedriver"),
-                new SeleniumDriverInstaller(BrowserType.InternetExplorer, "IEDriverServer.exe", "IEDriverServer"),
+                new SeleniumChromeDriverInstaller(BrowserType.Chrome),
+                new SeleniumIEDriverInstaller(BrowserType.InternetExplorer),
+                new SeleniumEdgeDriverInstaller(BrowserType.Edge),
+                new SeleniumGeckoDriverInstaller(BrowserType.Firefox),
             };
-            if (Environment.Is64BitOperatingSystem)
-                drivers.AddRange(new[]
-                {
-                    (ISeleniumDriverInstaller)new SeleniumEdgeDriverInstaller(BrowserType.Edge, "msedgedriver.exe", "msedgedriver_64"),
-                    new SeleniumGeckoDriverInstaller(BrowserType.Firefox, "geckodriver.exe", "geckodriver_64"),
-                });
-            else
-                drivers.AddRange(new[]
-                {
-                    (ISeleniumDriverInstaller)new SeleniumEdgeDriverInstaller(BrowserType.Edge, "msedgedriver.exe", "msedgedriver_32"),
-                    new SeleniumGeckoDriverInstaller(BrowserType.Firefox, "geckodriver.exe", "geckodriver_32"),
-                });
         }
 
-        public void Unpack(Assembly assembly, string destinationFolder)
-        {
-            var exceptions = new List<Exception>();
-            foreach (var driver in drivers)
-            {
-                try
-                {
-                    driver.Unpack(assembly, destinationFolder);
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
-            }
-            if (exceptions.Count > 0)
-                throw new AggregateException(string.Join("\r\n", exceptions.Select(x => x.Message)), exceptions);
-        }
-
-        public void Install(BrowserType type, string destinationFolder)
+        public void Install(BrowserType type)
         {
             var driver = drivers.FirstOrDefault(x => x.BrowserType == type);
             if (driver == null)
                 throw new DllNotFoundException($"Driver {type.ToString()} does not exist.");
-            driver.Install(destinationFolder);
+            driver.Install(UnpackFolder);
         }
 
-        public void InstallAll(string destinationFolder)
+        public void InstallAll()
         {
             var exceptions = new List<Exception>();
             foreach (var driver in drivers)
             {
                 try
                 {
-                    driver.Install(destinationFolder);
+                    driver.Install(UnpackFolder);
                 }
                 catch (Exception ex)
                 {
