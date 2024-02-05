@@ -11,6 +11,7 @@ using G1ANT.Addon.Selenium.Api.Models;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs;
+using System.Net;
 
 namespace G1ANT.Addon.Selenium.Api.Services
 {
@@ -35,6 +36,9 @@ namespace G1ANT.Addon.Selenium.Api.Services
             var driversRepositoryFolder = GetDriverRepositoryFolder(destinationFolder);
 
             var driverManager = new DriverManager(driversRepositoryFolder);
+            var defProxy = WebRequest.GetSystemWebProxy();
+            if (defProxy != null)
+                driverManager = driverManager.WithProxy(defProxy);
             var config = GetDriverConfig();
             var driverPath = driverManager.SetUpDriver(config);
 
