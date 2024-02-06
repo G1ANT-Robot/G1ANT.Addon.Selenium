@@ -115,7 +115,7 @@ namespace G1ANT.Addon.Selenium
                 else
                     throw;
             }
-            catch (DriverServiceNotFoundException ex)
+            catch (WebDriverException ex)
             {
                 InstallDriver(type);
                 driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
