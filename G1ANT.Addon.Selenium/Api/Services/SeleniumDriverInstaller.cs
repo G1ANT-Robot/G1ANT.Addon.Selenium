@@ -40,7 +40,7 @@ namespace G1ANT.Addon.Selenium.Api.Services
             if (defProxy != null)
                 driverManager = driverManager.WithProxy(defProxy);
             var config = GetDriverConfig();
-            var driverPath = driverManager.SetUpDriver(config);
+            var driverPath = driverManager.SetUpDriver(config, version: "MatchingBrowser");
 
             InstallDriverFromRepositoryFolder(driverPath, destinationFolder, config.GetBinaryName());
         }
