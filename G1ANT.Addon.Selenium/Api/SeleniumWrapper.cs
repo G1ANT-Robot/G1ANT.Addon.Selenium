@@ -237,7 +237,7 @@ namespace G1ANT.Addon.Selenium
         {
             PreCheckCurrentWindowHandle();
             webDriver.Close();
-            webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+            webDriver.SwitchTo().Window(webDriver.WindowHandles.First());
         }
 
         public void NewTab(TimeSpan timeout, string url, bool noWait)
