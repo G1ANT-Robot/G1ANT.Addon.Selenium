@@ -90,7 +90,8 @@ namespace G1ANT.Addon.Selenium
         }
 
         public static SeleniumWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait, AbstractLogger scr, string driversDirectory, bool silentMode,
-            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false, string firefoxProfile = null)
+            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false, string firefoxProfile = null,
+            bool verboseLogging = false)
         {
             IntPtr mainWindowHandle = IntPtr.Zero;
             BrowserType type = GetBrowserType(webBrowserName);
@@ -101,7 +102,8 @@ namespace G1ANT.Addon.Selenium
             IWebDriver driver = null;
             try
             {
-                driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach, firefoxProfile);
+                driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, 
+                    chromeProfiles, chromePort, chromeAttach, firefoxProfile, verboseLogging: verboseLogging);
             }
             catch (InvalidOperationException ex)
             {
@@ -110,7 +112,8 @@ namespace G1ANT.Addon.Selenium
                     // code 0x80131509 (-2146233079) is thrown when driver is in wrong version according to the browser version
                     // lets try to install correct version if it is available in the selenium repository
                     InstallDriver(type);
-                    driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
+                    driver = CreateNewWebDriver(webBrowserName, type, out mainWindowHandle, driversDirectory, silentMode, chromeSwitches, chromeProfiles, 
+                        chromePort, chromeAttach, verboseLogging: verboseLogging);
                 }
                 else
                     throw;
@@ -202,7 +205,8 @@ namespace G1ANT.Addon.Selenium
         }
 
         private static IWebDriver CreateNewWebDriver(string webBrowserName, BrowserType type, out IntPtr mainWindowHandle, string driversDirectory, bool silentMode,
-            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false, string firefoxProfile = null)
+            List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false, string firefoxProfile = null,
+            bool verboseLogging = false)
         {
             webBrowserName = webBrowserName.ToLower();
             IWebDriver iWebDriver = null;
@@ -211,7 +215,7 @@ namespace G1ANT.Addon.Selenium
             switch (type)
             {
                 case BrowserType.Chrome:
-                    iWebDriver = CreateChromeDriver(driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
+                    iWebDriver = CreateChromeDriver(driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach, verboseLogging: verboseLogging);
                     newProcessFilter = "chrome";
                     break;
 
@@ -226,7 +230,7 @@ namespace G1ANT.Addon.Selenium
                     break;
 
                 case BrowserType.Edge:
-                    iWebDriver = CreateEdgeWebDriver(silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach);
+                    iWebDriver = CreateEdgeWebDriver(driversDirectory, silentMode, chromeSwitches, chromeProfiles, chromePort, chromeAttach, verboseLogging: verboseLogging);
                     newProcessFilter = "edge";
                     break;
                 default:
@@ -260,7 +264,7 @@ namespace G1ANT.Addon.Selenium
                 options.AddUserProfilePreference("profile.password_manager_enabled", false);
                 options.AddUserProfilePreference("auto-open-devtools-for-tabs", false);
                 if (chromePort != 0)
-                    options.AddArgument($"--remote-debugging-port={chromePort}");
+                    options.AddArgument($"--remote-debugging-pipe={chromePort}");
             }
             if (chromeSwitches != null)
                 foreach (var argument in chromeSwitches)
@@ -271,10 +275,14 @@ namespace G1ANT.Addon.Selenium
                     options.AddUserProfilePreference(chromeProfile.Key, chromeProfile.Value);
         }
 
-        private static IWebDriver CreateChromeDriver(string driversDirectory, bool silentMode, List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
+        private static IWebDriver CreateChromeDriver(string driversDirectory, bool silentMode, List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, 
+            int chromePort = 0, bool chromeAttach = false, bool verboseLogging = false)
         {
             var chromeService = Chrome.ChromeDriverService.CreateDefaultService(driversDirectory);
             chromeService.HideCommandPromptWindow = true;
+            chromeService.EnableVerboseLogging = verboseLogging;
+            if (verboseLogging)
+                chromeService.LogPath = Path.Combine(driversDirectory, "selenium.log");
             var chromeOptions = new Chrome.ChromeOptions
             {
                 PageLoadStrategy = PageLoadStrategy.None
@@ -316,12 +324,18 @@ namespace G1ANT.Addon.Selenium
             return new IE.InternetExplorerDriver(ieService, options);
         }
 
-        private static IWebDriver CreateEdgeWebDriver(bool silentMode, List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, int chromePort = 0, bool chromeAttach = false)
+        private static IWebDriver CreateEdgeWebDriver(string driversDirectory, bool silentMode, List<object> chromeSwitches = null, Dictionary<string, bool> chromeProfiles = null, 
+            int chromePort = 0, bool chromeAttach = false, bool verboseLogging = false)
         {
             try
             {
-                var edgeService = Edge.EdgeDriverService.CreateDefaultService();
+                var edgeService = Edge.EdgeDriverService.CreateDefaultService(driversDirectory);
                 edgeService.HideCommandPromptWindow = true;
+                edgeService.EnableVerboseLogging = verboseLogging;
+                if (chromePort != 0)
+                    edgeService.Port = chromePort;
+                if (verboseLogging)
+                    edgeService.LogPath = Path.Combine(driversDirectory, "selenium.log");
                 var edgeOptions = new Edge.EdgeOptions
                 {
                     PageLoadStrategy = PageLoadStrategy.Eager,
