@@ -46,6 +46,9 @@ namespace G1ANT.Addon.Selenium
             [Argument(Tooltip = "Profile name or folder for the Firefox")]
             public TextStructure FirefoxProfile { get; set; }
 
+            [Argument(Tooltip = "Turn on/off verbose logging")]
+            public BooleanStructure VerboseLogging{ get; set; } = new BooleanStructure(false);
+
             [Argument(Tooltip = "Name of a variable where the command's result will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
@@ -77,7 +80,9 @@ namespace G1ANT.Addon.Selenium
                         chromeProfiles,
                         chromePort,
                         false,
-                        arguments.FirefoxProfile?.Value);
+                        arguments.FirefoxProfile?.Value,
+                        verboseLogging: arguments.VerboseLogging.Value
+                        );
                 int wrapperId = wrapper.Id;
                 OnScriptEnd = () =>
                 {
