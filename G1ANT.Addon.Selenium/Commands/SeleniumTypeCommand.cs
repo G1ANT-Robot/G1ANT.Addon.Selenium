@@ -20,6 +20,9 @@ namespace G1ANT.Addon.Selenium
             [Argument(Required = true, Tooltip = "Text to be typed")]
             public TextStructure Text { get; set; }
 
+            [Argument(Required = false, Tooltip = "If set to true, robot will clear values in input, before typing text. Default false.")]
+            public BooleanStructure Clear { get; set; } = new BooleanStructure(false);
+
             [Argument(DefaultVariable = "timeoutselenium", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
             public  override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(SeleniumSettings.SeleniumTimeout);
         }
@@ -33,7 +36,8 @@ namespace G1ANT.Addon.Selenium
                 SeleniumManager.CurrentWrapper.TypeText(
                     arguments.Text.Value,
                     arguments,
-                    arguments.Timeout.Value);
+                    arguments.Timeout.Value,
+                    arguments.Clear.Value);
             }
             catch (Exception ex)
             {
